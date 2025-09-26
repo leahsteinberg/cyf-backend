@@ -27,16 +27,16 @@ import cors from 'cors';
     return res.json(session);
   });
 
-    app.get("/api/signup", async (req, res) => {
-    console.log("hit API / SIGNUP!!!", req);
+  app.post("/api/signup", async (req, res) => {
+    console.log("hit API / SIGNUP!!!");
     const data = await auth.api.signUpEmail({
-        body: {
-            name: "John Doe", // required
-            email: "john.doe@example.com", // required
-            password: "password1234", // required
-        },
+      body: {
+          name: "John Doe2", // required
+          email: "john.doe2@example.com", // required
+          password: "password1234", // required
+      },
     });
-      console.log("in signup - data", data);
+    console.log("in signup - data", data);
     return res.json(data);
   });
   
