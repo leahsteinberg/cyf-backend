@@ -19,27 +19,36 @@ import cors from 'cors';
   app.use(express.json());
 
   app.get("/api/me", async (req, res) => {
-    console.log("hit API / ME!!!");
     const session = await auth.api.getSession({
         headers: fromNodeHeaders(req.headers),
       });
-      console.log("session-- from me", session);
     return res.json(session);
   });
 
   app.post("/api/signup", async (req, res) => {
-    console.log("hit API / SIGNUP!!!");
     const data = await auth.api.signUpEmail({
       body: {
-          name: "John Doe2", // required
-          email: "john.doe2@example.com", // required
-          password: "password1234", // required
+          name: "Unknown Name", // required
+          email: req.body.email, // required
+          password: req.body.password, // required
       },
     });
-    console.log("in signup - data", data);
     return res.json(data);
   });
-  
+
+    app.post("/api/signInEmail", async (req, res) => {
+    const session = await auth.api.signInEmail({
+        body: {
+          email: req.body.email,
+          password: req.body.password,
+          rememberMe: true,
+        },
+        headers: fromNodeHeaders(req.headers),
+      });
+      console.log("signed in???--", session);
+    return res.json(session);
+  });
+
   app.get('/', (req, res) => {
     res.send('{"message": "Hello World! from port 3000!"}');
   });
