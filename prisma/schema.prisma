@@ -18,9 +18,12 @@ model User {
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
-  phoneNumber   String    @unique
+
+  phoneNumber         String?
+  phoneNumberVerified Boolean?
 
   @@map("user")
+  @@unique([phoneNumber])
 }
 
 model Session {
@@ -67,4 +70,3 @@ model Verification {
 
   @@map("verification")
 }
-
