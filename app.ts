@@ -4,7 +4,7 @@ import { toNodeHandler, fromNodeHeaders } from "better-auth/node";
 import cors from 'cors';
 import { findUserByPhone, createUser } from './user.ts';
 import { findInvite } from './invite.ts';
-import { getAllFriendships, createFriendship} from './friendship.ts';
+import { createFriendship, getFriends} from './friendship.ts';
 
 
   const app = express();
@@ -78,7 +78,7 @@ import { getAllFriendships, createFriendship} from './friendship.ts';
     app.post('/api/get-friends', async (req, res) => {
     const {id} = req.body;
     console.log("In get friends - ", id)
-    const friends = await getAllFriendships(id);
+    const friends = await getFriends(id);
     console.log("friends are", friends);
     //const user = await findUserByPhone(userPhoneNumber);
     res.json(friends);// TODO - switch to res.json()?
