@@ -12,8 +12,6 @@ export const createUser = async ({ email, phoneNumber, name, password }) => {
     return user;
 };
 
-export const checkFriendshipExists = async () => {};
-
 export const findUserByPhone = async (phoneNumber) => {
     const user = await prisma.user.findUnique({
         where: { phoneNumber },
