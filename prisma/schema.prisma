@@ -1,6 +1,6 @@
-
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -9,21 +9,27 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  email         String    @unique
-  name          String?
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-
+  id                  String       @id
+  email               String       @unique
+  name                String?
+  emailVerified       Boolean      @default(false)
+  image               String?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @default(now()) @updatedAt
+  sessions            Session[]
+  accounts            Account[]
   phoneNumber         String?
   phoneNumberVerified Boolean?
+  friendsWith         Friendship[] @relation("friendsWith")
+  friendsOf           Friendship[] @relation("friendsOf")
+  invitesSent         Invitation[] @relation("invitesSent")
 
-  @@map("user")
+  username        String?
+  displayUsername String?
+
   @@unique([phoneNumber])
+  @@unique([username])
+  @@map("user")
 }
 
 model Session {
@@ -69,4 +75,27 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+model Friendship {
+  id    String @id @default(uuid())
+  user1 User   @relation("friendsOf", fields: [userId1], references: [id])
+  user2 User   @relation("friendsWith", fields: [userId2], references: [id])
+
+  userId1 String
+  userId2 String
+  
+  @@map("friendship")
+}
+
+model Invitation {
+  id                String    @id @default(uuid())
+  token             String    @default(uuid())
+  userFrom          User      @relation("invitesSent", fields: [userFromId], references: [id])
+  userFromId        String
+  userToPhoneNumber String
+  createdAt         DateTime  @default(now())
+  accepted          Boolean   @default(false)
+  
+  @@map("invitation")
 }
