@@ -21,9 +21,7 @@ const getFriendIds = async (id) => {
     const friendshipsSide1 = await getFriendshipsUser1Side(id);
     const friendshipsSide2 = await getFriendshipsUser2Side(id);
     const friendships = [...friendshipsSide1, ...friendshipsSide2];
-    console.log({friendships});
     const friendIds = getFriendIdsFromFriendships(id, friendships)
-    console.log ({friendIds})
     return friendIds;
 }
 
@@ -39,7 +37,6 @@ const getFriendUsersFromIds = async (friendIds) => {
 }
 
 const getFriendIdsFromFriendships = (selfId, friendships) =>  {
-    console.log("in get friend Ids", {selfId, friendships})
     return friendships.map((friend) => {
         return selfId === friend.userId1 ? friend.userId2 : friend.userId1
     })

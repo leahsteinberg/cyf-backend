@@ -5,15 +5,25 @@ import cors from 'cors';
 import { findUserByPhone, createUser } from './user.ts';
 import { findInvite } from './invite.ts';
 import { createFriendship, getFriends} from './friendship.ts';
+import { createInvite, getSentInvites } from './invite.ts';
 
 
   const app = express();
   const port = 3000;
+  const hostname = '192.168.0.30';
+
+
   app.use(cors({
     origin: 'http://localhost:8081'
   }));
+
+
   app.all("/api/auth/*splat", toNodeHandler(auth));
+
+
   app.use(express.json());
+
+
   app.get("/api/me", async (req, res) => {
     const session = await auth.api.getSession({
         headers: fromNodeHeaders(req.headers),
@@ -58,32 +68,24 @@ import { createFriendship, getFriends} from './friendship.ts';
 
   app.post('/api/create-invite', async (req, res) => {
     const {userFromId, userToPhoneNumber} = req.body;
-    console.log("create invite - got - ", {userFromId, userToPhoneNumber})
-    const invitation = await prisma.invitation.create({
-      data: {
-        userFromId,
-        userToPhoneNumber,
-      }
-    })
+    console.log("create invite - got - ", {userFromId, userToPhoneNumber});
+    const invitation = await createInvite({userFromId, userToPhoneNumber});
     res.send(invitation);// TODO - switch to res.json()?
   });
 
   app.post('/api/user-by-phone', async (req, res) => {
     const {userPhoneNumber} = req.body;
-    console.log("In user phone - ", userPhoneNumber)
     const user = await findUserByPhone(userPhoneNumber);
     res.send(user);// TODO - switch to res.json()?
   });
 
-    app.post('/api/get-friends', async (req, res) => {
+  app.post('/api/get-friends', async (req, res) => {
     const {id} = req.body;
-    console.log("In get friends - ", id)
     const friends = await getFriends(id);
-    console.log("friends are", friends);
-    //const user = await findUserByPhone(userPhoneNumber);
+    const sentInvites = await getSentInvites(id)
+    console.log("invites out", sentInvites)
     res.json(friends);// TODO - switch to res.json()?
   });
-
 
   app.post('/api/sign-up-accept-invite', async (req, res) => {
     const {token, email, phoneNumber, name, password} = req.body;
@@ -109,5 +111,26 @@ import { createFriendship, getFriends} from './friendship.ts';
   app.listen(port, () => {
     console.log(`Express app listening at http://localhost:${port}`);
   });
+
+
+// const key = fs.readFileSync("./cert.key");
+// const cert = fs.readFileSync("./cert.crt")
+// console.log({key, cert})
+
+// const server = https.createServer({
+//   key,
+//   cert,
+// }, app);
+
+
+// server.listen(port, hostname, () => {
+//   console.log(`Server running at https://${hostname}:${port}/`);
+// });
+
+  //  const httpsServer = https.createServer(credentials, app);
+
+  //   httpsServer.listen(port, () => {
+  //       console.log(`HTTPS server running on https://localhost:${port}`);
+  //   });
 
 

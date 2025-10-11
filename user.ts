@@ -17,10 +17,10 @@ export const findUserByPhone = async (phoneNumber) => {
         where: { phoneNumber },
         });
         if (user) {
-        console.log('User found:', user);
-        return user;
+            console.log('User found:', user);
+            return user;
         } else {
-        console.log('User not found.');
-        return null;
+            console.log('User not found.');
+            return null;
         }
 };
