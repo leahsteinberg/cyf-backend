@@ -1,5 +1,5 @@
-import { getFriends } from "../backend/friendship";
-import { getSentInvites } from "../backend/invite";
+import { getFriends } from "../backend/friendship.ts";
+import { getSentInvites } from "../backend/invite.ts";
 
 export const handleGetFriends = async (req, res) => {
   const {id} = req.body;

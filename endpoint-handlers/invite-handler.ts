@@ -1,6 +1,6 @@
-import { createInvite, findInvite } from "../backend/invite";
-import { findUserByPhone, createUser } from "../backend/user";
-import { createFriendship } from "../backend/friendship";
+import { createInvite, findInvite, getSentInvites } from "../backend/invite.ts";
+import { findUserByPhone, createUser } from "../backend/user.ts";
+import { createFriendship } from "../backend/friendship.ts";
 
 
 export const handleCreateInvite = async (req, res) => {
@@ -25,3 +25,10 @@ export const handleInviteSignUp = async (req, res) => {
       }
     }
   }
+
+export const handleGetSentInvites = async(req, res) => {
+    const {id} = req.body;
+    const sentInvites = await getSentInvites({userFromId: id})
+    console.log("invites out", sentInvites)
+    res.json(sentInvites);// TODO - switch to res.json()?
+  };
