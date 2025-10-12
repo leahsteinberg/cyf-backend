@@ -43,6 +43,35 @@ export type Friendship = $Result.DefaultSelection<Prisma.$FriendshipPayload>
  * 
  */
 export type Invitation = $Result.DefaultSelection<Prisma.$InvitationPayload>
+/**
+ * Model Meeting
+ * 
+ */
+export type Meeting = $Result.DefaultSelection<Prisma.$MeetingPayload>
+/**
+ * Model Offer
+ * 
+ */
+export type Offer = $Result.DefaultSelection<Prisma.$OfferPayload>
+
+/**
+ * Enums
+ */
+export namespace $Enums {
+  export const OfferState: {
+  OPEN: 'OPEN',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  EXPIRED: 'EXPIRED'
+};
+
+export type OfferState = (typeof OfferState)[keyof typeof OfferState]
+
+}
+
+export type OfferState = $Enums.OfferState
+
+export const OfferState: typeof $Enums.OfferState
 
 /**
  * ##  Prisma Client ʲˢ
@@ -221,6 +250,26 @@ export class PrismaClient<
     * ```
     */
   get invitation(): Prisma.InvitationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.meeting`: Exposes CRUD operations for the **Meeting** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Meetings
+    * const meetings = await prisma.meeting.findMany()
+    * ```
+    */
+  get meeting(): Prisma.MeetingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.offer`: Exposes CRUD operations for the **Offer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Offers
+    * const offers = await prisma.offer.findMany()
+    * ```
+    */
+  get offer(): Prisma.OfferDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -666,7 +715,9 @@ export namespace Prisma {
     Account: 'Account',
     Verification: 'Verification',
     Friendship: 'Friendship',
-    Invitation: 'Invitation'
+    Invitation: 'Invitation',
+    Meeting: 'Meeting',
+    Offer: 'Offer'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -685,7 +736,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "friendship" | "invitation"
+      modelProps: "user" | "session" | "account" | "verification" | "friendship" | "invitation" | "meeting" | "offer"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1133,6 +1184,154 @@ export namespace Prisma {
           }
         }
       }
+      Meeting: {
+        payload: Prisma.$MeetingPayload<ExtArgs>
+        fields: Prisma.MeetingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MeetingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MeetingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload>
+          }
+          findFirst: {
+            args: Prisma.MeetingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MeetingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload>
+          }
+          findMany: {
+            args: Prisma.MeetingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload>[]
+          }
+          create: {
+            args: Prisma.MeetingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload>
+          }
+          createMany: {
+            args: Prisma.MeetingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MeetingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload>[]
+          }
+          delete: {
+            args: Prisma.MeetingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload>
+          }
+          update: {
+            args: Prisma.MeetingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload>
+          }
+          deleteMany: {
+            args: Prisma.MeetingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MeetingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MeetingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload>[]
+          }
+          upsert: {
+            args: Prisma.MeetingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeetingPayload>
+          }
+          aggregate: {
+            args: Prisma.MeetingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMeeting>
+          }
+          groupBy: {
+            args: Prisma.MeetingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MeetingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MeetingCountArgs<ExtArgs>
+            result: $Utils.Optional<MeetingCountAggregateOutputType> | number
+          }
+        }
+      }
+      Offer: {
+        payload: Prisma.$OfferPayload<ExtArgs>
+        fields: Prisma.OfferFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OfferFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OfferFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          findFirst: {
+            args: Prisma.OfferFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OfferFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          findMany: {
+            args: Prisma.OfferFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>[]
+          }
+          create: {
+            args: Prisma.OfferCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          createMany: {
+            args: Prisma.OfferCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OfferCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>[]
+          }
+          delete: {
+            args: Prisma.OfferDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          update: {
+            args: Prisma.OfferUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          deleteMany: {
+            args: Prisma.OfferDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OfferUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OfferUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>[]
+          }
+          upsert: {
+            args: Prisma.OfferUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfferPayload>
+          }
+          aggregate: {
+            args: Prisma.OfferAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOffer>
+          }
+          groupBy: {
+            args: Prisma.OfferGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OfferGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OfferCountArgs<ExtArgs>
+            result: $Utils.Optional<OfferCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1235,6 +1434,8 @@ export namespace Prisma {
     verification?: VerificationOmit
     friendship?: FriendshipOmit
     invitation?: InvitationOmit
+    meeting?: MeetingOmit
+    offer?: OfferOmit
   }
 
   /* Types for Logging */
@@ -1320,6 +1521,8 @@ export namespace Prisma {
     friendsWith: number
     friendsOf: number
     invitesSent: number
+    meetingsCreated: number
+    offersReceived: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1328,6 +1531,8 @@ export namespace Prisma {
     friendsWith?: boolean | UserCountOutputTypeCountFriendsWithArgs
     friendsOf?: boolean | UserCountOutputTypeCountFriendsOfArgs
     invitesSent?: boolean | UserCountOutputTypeCountInvitesSentArgs
+    meetingsCreated?: boolean | UserCountOutputTypeCountMeetingsCreatedArgs
+    offersReceived?: boolean | UserCountOutputTypeCountOffersReceivedArgs
   }
 
   // Custom InputTypes
@@ -1374,6 +1579,51 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountInvitesSentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InvitationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMeetingsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MeetingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountOffersReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfferWhereInput
+  }
+
+
+  /**
+   * Count Type MeetingCountOutputType
+   */
+
+  export type MeetingCountOutputType = {
+    offers: number
+  }
+
+  export type MeetingCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    offers?: boolean | MeetingCountOutputTypeCountOffersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MeetingCountOutputType without action
+   */
+  export type MeetingCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MeetingCountOutputType
+     */
+    select?: MeetingCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MeetingCountOutputType without action
+   */
+  export type MeetingCountOutputTypeCountOffersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfferWhereInput
   }
 
 
@@ -1598,6 +1848,8 @@ export namespace Prisma {
     friendsWith?: boolean | User$friendsWithArgs<ExtArgs>
     friendsOf?: boolean | User$friendsOfArgs<ExtArgs>
     invitesSent?: boolean | User$invitesSentArgs<ExtArgs>
+    meetingsCreated?: boolean | User$meetingsCreatedArgs<ExtArgs>
+    offersReceived?: boolean | User$offersReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1650,6 +1902,8 @@ export namespace Prisma {
     friendsWith?: boolean | User$friendsWithArgs<ExtArgs>
     friendsOf?: boolean | User$friendsOfArgs<ExtArgs>
     invitesSent?: boolean | User$invitesSentArgs<ExtArgs>
+    meetingsCreated?: boolean | User$meetingsCreatedArgs<ExtArgs>
+    offersReceived?: boolean | User$offersReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1663,6 +1917,8 @@ export namespace Prisma {
       friendsWith: Prisma.$FriendshipPayload<ExtArgs>[]
       friendsOf: Prisma.$FriendshipPayload<ExtArgs>[]
       invitesSent: Prisma.$InvitationPayload<ExtArgs>[]
+      meetingsCreated: Prisma.$MeetingPayload<ExtArgs>[]
+      offersReceived: Prisma.$OfferPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2075,6 +2331,8 @@ export namespace Prisma {
     friendsWith<T extends User$friendsWithArgs<ExtArgs> = {}>(args?: Subset<T, User$friendsWithArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     friendsOf<T extends User$friendsOfArgs<ExtArgs> = {}>(args?: Subset<T, User$friendsOfArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invitesSent<T extends User$invitesSentArgs<ExtArgs> = {}>(args?: Subset<T, User$invitesSentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    meetingsCreated<T extends User$meetingsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$meetingsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    offersReceived<T extends User$offersReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$offersReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2620,6 +2878,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: InvitationScalarFieldEnum | InvitationScalarFieldEnum[]
+  }
+
+  /**
+   * User.meetingsCreated
+   */
+  export type User$meetingsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    where?: MeetingWhereInput
+    orderBy?: MeetingOrderByWithRelationInput | MeetingOrderByWithRelationInput[]
+    cursor?: MeetingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MeetingScalarFieldEnum | MeetingScalarFieldEnum[]
+  }
+
+  /**
+   * User.offersReceived
+   */
+  export type User$offersReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    where?: OfferWhereInput
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    cursor?: OfferWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfferScalarFieldEnum | OfferScalarFieldEnum[]
   }
 
   /**
@@ -8020,6 +8326,2147 @@ export namespace Prisma {
 
 
   /**
+   * Model Meeting
+   */
+
+  export type AggregateMeeting = {
+    _count: MeetingCountAggregateOutputType | null
+    _min: MeetingMinAggregateOutputType | null
+    _max: MeetingMaxAggregateOutputType | null
+  }
+
+  export type MeetingMinAggregateOutputType = {
+    id: string | null
+    userFromId: string | null
+    createdAt: Date | null
+    scheduledFor: Date | null
+    scheduledEnd: Date | null
+  }
+
+  export type MeetingMaxAggregateOutputType = {
+    id: string | null
+    userFromId: string | null
+    createdAt: Date | null
+    scheduledFor: Date | null
+    scheduledEnd: Date | null
+  }
+
+  export type MeetingCountAggregateOutputType = {
+    id: number
+    userFromId: number
+    createdAt: number
+    scheduledFor: number
+    scheduledEnd: number
+    _all: number
+  }
+
+
+  export type MeetingMinAggregateInputType = {
+    id?: true
+    userFromId?: true
+    createdAt?: true
+    scheduledFor?: true
+    scheduledEnd?: true
+  }
+
+  export type MeetingMaxAggregateInputType = {
+    id?: true
+    userFromId?: true
+    createdAt?: true
+    scheduledFor?: true
+    scheduledEnd?: true
+  }
+
+  export type MeetingCountAggregateInputType = {
+    id?: true
+    userFromId?: true
+    createdAt?: true
+    scheduledFor?: true
+    scheduledEnd?: true
+    _all?: true
+  }
+
+  export type MeetingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Meeting to aggregate.
+     */
+    where?: MeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Meetings to fetch.
+     */
+    orderBy?: MeetingOrderByWithRelationInput | MeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Meetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Meetings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Meetings
+    **/
+    _count?: true | MeetingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MeetingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MeetingMaxAggregateInputType
+  }
+
+  export type GetMeetingAggregateType<T extends MeetingAggregateArgs> = {
+        [P in keyof T & keyof AggregateMeeting]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMeeting[P]>
+      : GetScalarType<T[P], AggregateMeeting[P]>
+  }
+
+
+
+
+  export type MeetingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MeetingWhereInput
+    orderBy?: MeetingOrderByWithAggregationInput | MeetingOrderByWithAggregationInput[]
+    by: MeetingScalarFieldEnum[] | MeetingScalarFieldEnum
+    having?: MeetingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MeetingCountAggregateInputType | true
+    _min?: MeetingMinAggregateInputType
+    _max?: MeetingMaxAggregateInputType
+  }
+
+  export type MeetingGroupByOutputType = {
+    id: string
+    userFromId: string
+    createdAt: Date
+    scheduledFor: Date
+    scheduledEnd: Date
+    _count: MeetingCountAggregateOutputType | null
+    _min: MeetingMinAggregateOutputType | null
+    _max: MeetingMaxAggregateOutputType | null
+  }
+
+  type GetMeetingGroupByPayload<T extends MeetingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MeetingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MeetingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MeetingGroupByOutputType[P]>
+            : GetScalarType<T[P], MeetingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MeetingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userFromId?: boolean
+    createdAt?: boolean
+    scheduledFor?: boolean
+    scheduledEnd?: boolean
+    userFrom?: boolean | UserDefaultArgs<ExtArgs>
+    offers?: boolean | Meeting$offersArgs<ExtArgs>
+    _count?: boolean | MeetingCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["meeting"]>
+
+  export type MeetingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userFromId?: boolean
+    createdAt?: boolean
+    scheduledFor?: boolean
+    scheduledEnd?: boolean
+    userFrom?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["meeting"]>
+
+  export type MeetingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userFromId?: boolean
+    createdAt?: boolean
+    scheduledFor?: boolean
+    scheduledEnd?: boolean
+    userFrom?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["meeting"]>
+
+  export type MeetingSelectScalar = {
+    id?: boolean
+    userFromId?: boolean
+    createdAt?: boolean
+    scheduledFor?: boolean
+    scheduledEnd?: boolean
+  }
+
+  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "createdAt" | "scheduledFor" | "scheduledEnd", ExtArgs["result"]["meeting"]>
+  export type MeetingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    userFrom?: boolean | UserDefaultArgs<ExtArgs>
+    offers?: boolean | Meeting$offersArgs<ExtArgs>
+    _count?: boolean | MeetingCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MeetingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    userFrom?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MeetingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    userFrom?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $MeetingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Meeting"
+    objects: {
+      userFrom: Prisma.$UserPayload<ExtArgs>
+      offers: Prisma.$OfferPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userFromId: string
+      createdAt: Date
+      scheduledFor: Date
+      scheduledEnd: Date
+    }, ExtArgs["result"]["meeting"]>
+    composites: {}
+  }
+
+  type MeetingGetPayload<S extends boolean | null | undefined | MeetingDefaultArgs> = $Result.GetResult<Prisma.$MeetingPayload, S>
+
+  type MeetingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MeetingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MeetingCountAggregateInputType | true
+    }
+
+  export interface MeetingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Meeting'], meta: { name: 'Meeting' } }
+    /**
+     * Find zero or one Meeting that matches the filter.
+     * @param {MeetingFindUniqueArgs} args - Arguments to find a Meeting
+     * @example
+     * // Get one Meeting
+     * const meeting = await prisma.meeting.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MeetingFindUniqueArgs>(args: SelectSubset<T, MeetingFindUniqueArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Meeting that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MeetingFindUniqueOrThrowArgs} args - Arguments to find a Meeting
+     * @example
+     * // Get one Meeting
+     * const meeting = await prisma.meeting.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MeetingFindUniqueOrThrowArgs>(args: SelectSubset<T, MeetingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Meeting that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeetingFindFirstArgs} args - Arguments to find a Meeting
+     * @example
+     * // Get one Meeting
+     * const meeting = await prisma.meeting.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MeetingFindFirstArgs>(args?: SelectSubset<T, MeetingFindFirstArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Meeting that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeetingFindFirstOrThrowArgs} args - Arguments to find a Meeting
+     * @example
+     * // Get one Meeting
+     * const meeting = await prisma.meeting.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MeetingFindFirstOrThrowArgs>(args?: SelectSubset<T, MeetingFindFirstOrThrowArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Meetings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeetingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Meetings
+     * const meetings = await prisma.meeting.findMany()
+     * 
+     * // Get first 10 Meetings
+     * const meetings = await prisma.meeting.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const meetingWithIdOnly = await prisma.meeting.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MeetingFindManyArgs>(args?: SelectSubset<T, MeetingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Meeting.
+     * @param {MeetingCreateArgs} args - Arguments to create a Meeting.
+     * @example
+     * // Create one Meeting
+     * const Meeting = await prisma.meeting.create({
+     *   data: {
+     *     // ... data to create a Meeting
+     *   }
+     * })
+     * 
+     */
+    create<T extends MeetingCreateArgs>(args: SelectSubset<T, MeetingCreateArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Meetings.
+     * @param {MeetingCreateManyArgs} args - Arguments to create many Meetings.
+     * @example
+     * // Create many Meetings
+     * const meeting = await prisma.meeting.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MeetingCreateManyArgs>(args?: SelectSubset<T, MeetingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Meetings and returns the data saved in the database.
+     * @param {MeetingCreateManyAndReturnArgs} args - Arguments to create many Meetings.
+     * @example
+     * // Create many Meetings
+     * const meeting = await prisma.meeting.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Meetings and only return the `id`
+     * const meetingWithIdOnly = await prisma.meeting.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MeetingCreateManyAndReturnArgs>(args?: SelectSubset<T, MeetingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Meeting.
+     * @param {MeetingDeleteArgs} args - Arguments to delete one Meeting.
+     * @example
+     * // Delete one Meeting
+     * const Meeting = await prisma.meeting.delete({
+     *   where: {
+     *     // ... filter to delete one Meeting
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MeetingDeleteArgs>(args: SelectSubset<T, MeetingDeleteArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Meeting.
+     * @param {MeetingUpdateArgs} args - Arguments to update one Meeting.
+     * @example
+     * // Update one Meeting
+     * const meeting = await prisma.meeting.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MeetingUpdateArgs>(args: SelectSubset<T, MeetingUpdateArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Meetings.
+     * @param {MeetingDeleteManyArgs} args - Arguments to filter Meetings to delete.
+     * @example
+     * // Delete a few Meetings
+     * const { count } = await prisma.meeting.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MeetingDeleteManyArgs>(args?: SelectSubset<T, MeetingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Meetings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeetingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Meetings
+     * const meeting = await prisma.meeting.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MeetingUpdateManyArgs>(args: SelectSubset<T, MeetingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Meetings and returns the data updated in the database.
+     * @param {MeetingUpdateManyAndReturnArgs} args - Arguments to update many Meetings.
+     * @example
+     * // Update many Meetings
+     * const meeting = await prisma.meeting.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Meetings and only return the `id`
+     * const meetingWithIdOnly = await prisma.meeting.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MeetingUpdateManyAndReturnArgs>(args: SelectSubset<T, MeetingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Meeting.
+     * @param {MeetingUpsertArgs} args - Arguments to update or create a Meeting.
+     * @example
+     * // Update or create a Meeting
+     * const meeting = await prisma.meeting.upsert({
+     *   create: {
+     *     // ... data to create a Meeting
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Meeting we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MeetingUpsertArgs>(args: SelectSubset<T, MeetingUpsertArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Meetings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeetingCountArgs} args - Arguments to filter Meetings to count.
+     * @example
+     * // Count the number of Meetings
+     * const count = await prisma.meeting.count({
+     *   where: {
+     *     // ... the filter for the Meetings we want to count
+     *   }
+     * })
+    **/
+    count<T extends MeetingCountArgs>(
+      args?: Subset<T, MeetingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MeetingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Meeting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeetingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MeetingAggregateArgs>(args: Subset<T, MeetingAggregateArgs>): Prisma.PrismaPromise<GetMeetingAggregateType<T>>
+
+    /**
+     * Group by Meeting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeetingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MeetingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MeetingGroupByArgs['orderBy'] }
+        : { orderBy?: MeetingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MeetingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMeetingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Meeting model
+   */
+  readonly fields: MeetingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Meeting.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MeetingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    userFrom<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    offers<T extends Meeting$offersArgs<ExtArgs> = {}>(args?: Subset<T, Meeting$offersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Meeting model
+   */
+  interface MeetingFieldRefs {
+    readonly id: FieldRef<"Meeting", 'String'>
+    readonly userFromId: FieldRef<"Meeting", 'String'>
+    readonly createdAt: FieldRef<"Meeting", 'DateTime'>
+    readonly scheduledFor: FieldRef<"Meeting", 'DateTime'>
+    readonly scheduledEnd: FieldRef<"Meeting", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Meeting findUnique
+   */
+  export type MeetingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which Meeting to fetch.
+     */
+    where: MeetingWhereUniqueInput
+  }
+
+  /**
+   * Meeting findUniqueOrThrow
+   */
+  export type MeetingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which Meeting to fetch.
+     */
+    where: MeetingWhereUniqueInput
+  }
+
+  /**
+   * Meeting findFirst
+   */
+  export type MeetingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which Meeting to fetch.
+     */
+    where?: MeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Meetings to fetch.
+     */
+    orderBy?: MeetingOrderByWithRelationInput | MeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Meetings.
+     */
+    cursor?: MeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Meetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Meetings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Meetings.
+     */
+    distinct?: MeetingScalarFieldEnum | MeetingScalarFieldEnum[]
+  }
+
+  /**
+   * Meeting findFirstOrThrow
+   */
+  export type MeetingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which Meeting to fetch.
+     */
+    where?: MeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Meetings to fetch.
+     */
+    orderBy?: MeetingOrderByWithRelationInput | MeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Meetings.
+     */
+    cursor?: MeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Meetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Meetings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Meetings.
+     */
+    distinct?: MeetingScalarFieldEnum | MeetingScalarFieldEnum[]
+  }
+
+  /**
+   * Meeting findMany
+   */
+  export type MeetingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which Meetings to fetch.
+     */
+    where?: MeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Meetings to fetch.
+     */
+    orderBy?: MeetingOrderByWithRelationInput | MeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Meetings.
+     */
+    cursor?: MeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Meetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Meetings.
+     */
+    skip?: number
+    distinct?: MeetingScalarFieldEnum | MeetingScalarFieldEnum[]
+  }
+
+  /**
+   * Meeting create
+   */
+  export type MeetingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Meeting.
+     */
+    data: XOR<MeetingCreateInput, MeetingUncheckedCreateInput>
+  }
+
+  /**
+   * Meeting createMany
+   */
+  export type MeetingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Meetings.
+     */
+    data: MeetingCreateManyInput | MeetingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Meeting createManyAndReturn
+   */
+  export type MeetingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * The data used to create many Meetings.
+     */
+    data: MeetingCreateManyInput | MeetingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Meeting update
+   */
+  export type MeetingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Meeting.
+     */
+    data: XOR<MeetingUpdateInput, MeetingUncheckedUpdateInput>
+    /**
+     * Choose, which Meeting to update.
+     */
+    where: MeetingWhereUniqueInput
+  }
+
+  /**
+   * Meeting updateMany
+   */
+  export type MeetingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Meetings.
+     */
+    data: XOR<MeetingUpdateManyMutationInput, MeetingUncheckedUpdateManyInput>
+    /**
+     * Filter which Meetings to update
+     */
+    where?: MeetingWhereInput
+    /**
+     * Limit how many Meetings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Meeting updateManyAndReturn
+   */
+  export type MeetingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * The data used to update Meetings.
+     */
+    data: XOR<MeetingUpdateManyMutationInput, MeetingUncheckedUpdateManyInput>
+    /**
+     * Filter which Meetings to update
+     */
+    where?: MeetingWhereInput
+    /**
+     * Limit how many Meetings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Meeting upsert
+   */
+  export type MeetingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Meeting to update in case it exists.
+     */
+    where: MeetingWhereUniqueInput
+    /**
+     * In case the Meeting found by the `where` argument doesn't exist, create a new Meeting with this data.
+     */
+    create: XOR<MeetingCreateInput, MeetingUncheckedCreateInput>
+    /**
+     * In case the Meeting was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MeetingUpdateInput, MeetingUncheckedUpdateInput>
+  }
+
+  /**
+   * Meeting delete
+   */
+  export type MeetingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    /**
+     * Filter which Meeting to delete.
+     */
+    where: MeetingWhereUniqueInput
+  }
+
+  /**
+   * Meeting deleteMany
+   */
+  export type MeetingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Meetings to delete
+     */
+    where?: MeetingWhereInput
+    /**
+     * Limit how many Meetings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Meeting.offers
+   */
+  export type Meeting$offersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    where?: OfferWhereInput
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    cursor?: OfferWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfferScalarFieldEnum | OfferScalarFieldEnum[]
+  }
+
+  /**
+   * Meeting without action
+   */
+  export type MeetingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Offer
+   */
+
+  export type AggregateOffer = {
+    _count: OfferCountAggregateOutputType | null
+    _min: OfferMinAggregateOutputType | null
+    _max: OfferMaxAggregateOutputType | null
+  }
+
+  export type OfferMinAggregateOutputType = {
+    id: string | null
+    meetingId: string | null
+    userOfferedId: string | null
+    offerState: $Enums.OfferState | null
+  }
+
+  export type OfferMaxAggregateOutputType = {
+    id: string | null
+    meetingId: string | null
+    userOfferedId: string | null
+    offerState: $Enums.OfferState | null
+  }
+
+  export type OfferCountAggregateOutputType = {
+    id: number
+    meetingId: number
+    userOfferedId: number
+    offerState: number
+    _all: number
+  }
+
+
+  export type OfferMinAggregateInputType = {
+    id?: true
+    meetingId?: true
+    userOfferedId?: true
+    offerState?: true
+  }
+
+  export type OfferMaxAggregateInputType = {
+    id?: true
+    meetingId?: true
+    userOfferedId?: true
+    offerState?: true
+  }
+
+  export type OfferCountAggregateInputType = {
+    id?: true
+    meetingId?: true
+    userOfferedId?: true
+    offerState?: true
+    _all?: true
+  }
+
+  export type OfferAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Offer to aggregate.
+     */
+    where?: OfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Offers to fetch.
+     */
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Offers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Offers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Offers
+    **/
+    _count?: true | OfferCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OfferMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OfferMaxAggregateInputType
+  }
+
+  export type GetOfferAggregateType<T extends OfferAggregateArgs> = {
+        [P in keyof T & keyof AggregateOffer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOffer[P]>
+      : GetScalarType<T[P], AggregateOffer[P]>
+  }
+
+
+
+
+  export type OfferGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfferWhereInput
+    orderBy?: OfferOrderByWithAggregationInput | OfferOrderByWithAggregationInput[]
+    by: OfferScalarFieldEnum[] | OfferScalarFieldEnum
+    having?: OfferScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OfferCountAggregateInputType | true
+    _min?: OfferMinAggregateInputType
+    _max?: OfferMaxAggregateInputType
+  }
+
+  export type OfferGroupByOutputType = {
+    id: string
+    meetingId: string
+    userOfferedId: string
+    offerState: $Enums.OfferState
+    _count: OfferCountAggregateOutputType | null
+    _min: OfferMinAggregateOutputType | null
+    _max: OfferMaxAggregateOutputType | null
+  }
+
+  type GetOfferGroupByPayload<T extends OfferGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OfferGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OfferGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OfferGroupByOutputType[P]>
+            : GetScalarType<T[P], OfferGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OfferSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    meetingId?: boolean
+    userOfferedId?: boolean
+    offerState?: boolean
+    meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    userOffered?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["offer"]>
+
+  export type OfferSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    meetingId?: boolean
+    userOfferedId?: boolean
+    offerState?: boolean
+    meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    userOffered?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["offer"]>
+
+  export type OfferSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    meetingId?: boolean
+    userOfferedId?: boolean
+    offerState?: boolean
+    meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    userOffered?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["offer"]>
+
+  export type OfferSelectScalar = {
+    id?: boolean
+    meetingId?: boolean
+    userOfferedId?: boolean
+    offerState?: boolean
+  }
+
+  export type OfferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "meetingId" | "userOfferedId" | "offerState", ExtArgs["result"]["offer"]>
+  export type OfferInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    userOffered?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OfferIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    userOffered?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OfferIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    userOffered?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $OfferPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Offer"
+    objects: {
+      meeting: Prisma.$MeetingPayload<ExtArgs>
+      userOffered: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      meetingId: string
+      userOfferedId: string
+      offerState: $Enums.OfferState
+    }, ExtArgs["result"]["offer"]>
+    composites: {}
+  }
+
+  type OfferGetPayload<S extends boolean | null | undefined | OfferDefaultArgs> = $Result.GetResult<Prisma.$OfferPayload, S>
+
+  type OfferCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OfferFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OfferCountAggregateInputType | true
+    }
+
+  export interface OfferDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Offer'], meta: { name: 'Offer' } }
+    /**
+     * Find zero or one Offer that matches the filter.
+     * @param {OfferFindUniqueArgs} args - Arguments to find a Offer
+     * @example
+     * // Get one Offer
+     * const offer = await prisma.offer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OfferFindUniqueArgs>(args: SelectSubset<T, OfferFindUniqueArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Offer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OfferFindUniqueOrThrowArgs} args - Arguments to find a Offer
+     * @example
+     * // Get one Offer
+     * const offer = await prisma.offer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OfferFindUniqueOrThrowArgs>(args: SelectSubset<T, OfferFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Offer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferFindFirstArgs} args - Arguments to find a Offer
+     * @example
+     * // Get one Offer
+     * const offer = await prisma.offer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OfferFindFirstArgs>(args?: SelectSubset<T, OfferFindFirstArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Offer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferFindFirstOrThrowArgs} args - Arguments to find a Offer
+     * @example
+     * // Get one Offer
+     * const offer = await prisma.offer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OfferFindFirstOrThrowArgs>(args?: SelectSubset<T, OfferFindFirstOrThrowArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Offers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Offers
+     * const offers = await prisma.offer.findMany()
+     * 
+     * // Get first 10 Offers
+     * const offers = await prisma.offer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const offerWithIdOnly = await prisma.offer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OfferFindManyArgs>(args?: SelectSubset<T, OfferFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Offer.
+     * @param {OfferCreateArgs} args - Arguments to create a Offer.
+     * @example
+     * // Create one Offer
+     * const Offer = await prisma.offer.create({
+     *   data: {
+     *     // ... data to create a Offer
+     *   }
+     * })
+     * 
+     */
+    create<T extends OfferCreateArgs>(args: SelectSubset<T, OfferCreateArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Offers.
+     * @param {OfferCreateManyArgs} args - Arguments to create many Offers.
+     * @example
+     * // Create many Offers
+     * const offer = await prisma.offer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OfferCreateManyArgs>(args?: SelectSubset<T, OfferCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Offers and returns the data saved in the database.
+     * @param {OfferCreateManyAndReturnArgs} args - Arguments to create many Offers.
+     * @example
+     * // Create many Offers
+     * const offer = await prisma.offer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Offers and only return the `id`
+     * const offerWithIdOnly = await prisma.offer.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OfferCreateManyAndReturnArgs>(args?: SelectSubset<T, OfferCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Offer.
+     * @param {OfferDeleteArgs} args - Arguments to delete one Offer.
+     * @example
+     * // Delete one Offer
+     * const Offer = await prisma.offer.delete({
+     *   where: {
+     *     // ... filter to delete one Offer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OfferDeleteArgs>(args: SelectSubset<T, OfferDeleteArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Offer.
+     * @param {OfferUpdateArgs} args - Arguments to update one Offer.
+     * @example
+     * // Update one Offer
+     * const offer = await prisma.offer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OfferUpdateArgs>(args: SelectSubset<T, OfferUpdateArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Offers.
+     * @param {OfferDeleteManyArgs} args - Arguments to filter Offers to delete.
+     * @example
+     * // Delete a few Offers
+     * const { count } = await prisma.offer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OfferDeleteManyArgs>(args?: SelectSubset<T, OfferDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Offers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Offers
+     * const offer = await prisma.offer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OfferUpdateManyArgs>(args: SelectSubset<T, OfferUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Offers and returns the data updated in the database.
+     * @param {OfferUpdateManyAndReturnArgs} args - Arguments to update many Offers.
+     * @example
+     * // Update many Offers
+     * const offer = await prisma.offer.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Offers and only return the `id`
+     * const offerWithIdOnly = await prisma.offer.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OfferUpdateManyAndReturnArgs>(args: SelectSubset<T, OfferUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Offer.
+     * @param {OfferUpsertArgs} args - Arguments to update or create a Offer.
+     * @example
+     * // Update or create a Offer
+     * const offer = await prisma.offer.upsert({
+     *   create: {
+     *     // ... data to create a Offer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Offer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OfferUpsertArgs>(args: SelectSubset<T, OfferUpsertArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Offers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferCountArgs} args - Arguments to filter Offers to count.
+     * @example
+     * // Count the number of Offers
+     * const count = await prisma.offer.count({
+     *   where: {
+     *     // ... the filter for the Offers we want to count
+     *   }
+     * })
+    **/
+    count<T extends OfferCountArgs>(
+      args?: Subset<T, OfferCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OfferCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Offer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OfferAggregateArgs>(args: Subset<T, OfferAggregateArgs>): Prisma.PrismaPromise<GetOfferAggregateType<T>>
+
+    /**
+     * Group by Offer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfferGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OfferGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OfferGroupByArgs['orderBy'] }
+        : { orderBy?: OfferGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OfferGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOfferGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Offer model
+   */
+  readonly fields: OfferFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Offer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OfferClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    meeting<T extends MeetingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MeetingDefaultArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    userOffered<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Offer model
+   */
+  interface OfferFieldRefs {
+    readonly id: FieldRef<"Offer", 'String'>
+    readonly meetingId: FieldRef<"Offer", 'String'>
+    readonly userOfferedId: FieldRef<"Offer", 'String'>
+    readonly offerState: FieldRef<"Offer", 'OfferState'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Offer findUnique
+   */
+  export type OfferFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offer to fetch.
+     */
+    where: OfferWhereUniqueInput
+  }
+
+  /**
+   * Offer findUniqueOrThrow
+   */
+  export type OfferFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offer to fetch.
+     */
+    where: OfferWhereUniqueInput
+  }
+
+  /**
+   * Offer findFirst
+   */
+  export type OfferFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offer to fetch.
+     */
+    where?: OfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Offers to fetch.
+     */
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Offers.
+     */
+    cursor?: OfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Offers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Offers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Offers.
+     */
+    distinct?: OfferScalarFieldEnum | OfferScalarFieldEnum[]
+  }
+
+  /**
+   * Offer findFirstOrThrow
+   */
+  export type OfferFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offer to fetch.
+     */
+    where?: OfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Offers to fetch.
+     */
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Offers.
+     */
+    cursor?: OfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Offers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Offers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Offers.
+     */
+    distinct?: OfferScalarFieldEnum | OfferScalarFieldEnum[]
+  }
+
+  /**
+   * Offer findMany
+   */
+  export type OfferFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter, which Offers to fetch.
+     */
+    where?: OfferWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Offers to fetch.
+     */
+    orderBy?: OfferOrderByWithRelationInput | OfferOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Offers.
+     */
+    cursor?: OfferWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Offers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Offers.
+     */
+    skip?: number
+    distinct?: OfferScalarFieldEnum | OfferScalarFieldEnum[]
+  }
+
+  /**
+   * Offer create
+   */
+  export type OfferCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Offer.
+     */
+    data: XOR<OfferCreateInput, OfferUncheckedCreateInput>
+  }
+
+  /**
+   * Offer createMany
+   */
+  export type OfferCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Offers.
+     */
+    data: OfferCreateManyInput | OfferCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Offer createManyAndReturn
+   */
+  export type OfferCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * The data used to create many Offers.
+     */
+    data: OfferCreateManyInput | OfferCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Offer update
+   */
+  export type OfferUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Offer.
+     */
+    data: XOR<OfferUpdateInput, OfferUncheckedUpdateInput>
+    /**
+     * Choose, which Offer to update.
+     */
+    where: OfferWhereUniqueInput
+  }
+
+  /**
+   * Offer updateMany
+   */
+  export type OfferUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Offers.
+     */
+    data: XOR<OfferUpdateManyMutationInput, OfferUncheckedUpdateManyInput>
+    /**
+     * Filter which Offers to update
+     */
+    where?: OfferWhereInput
+    /**
+     * Limit how many Offers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Offer updateManyAndReturn
+   */
+  export type OfferUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * The data used to update Offers.
+     */
+    data: XOR<OfferUpdateManyMutationInput, OfferUncheckedUpdateManyInput>
+    /**
+     * Filter which Offers to update
+     */
+    where?: OfferWhereInput
+    /**
+     * Limit how many Offers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Offer upsert
+   */
+  export type OfferUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Offer to update in case it exists.
+     */
+    where: OfferWhereUniqueInput
+    /**
+     * In case the Offer found by the `where` argument doesn't exist, create a new Offer with this data.
+     */
+    create: XOR<OfferCreateInput, OfferUncheckedCreateInput>
+    /**
+     * In case the Offer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OfferUpdateInput, OfferUncheckedUpdateInput>
+  }
+
+  /**
+   * Offer delete
+   */
+  export type OfferDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    /**
+     * Filter which Offer to delete.
+     */
+    where: OfferWhereUniqueInput
+  }
+
+  /**
+   * Offer deleteMany
+   */
+  export type OfferDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Offers to delete
+     */
+    where?: OfferWhereInput
+    /**
+     * Limit how many Offers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Offer without action
+   */
+  export type OfferDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8116,6 +10563,27 @@ export namespace Prisma {
   export type InvitationScalarFieldEnum = (typeof InvitationScalarFieldEnum)[keyof typeof InvitationScalarFieldEnum]
 
 
+  export const MeetingScalarFieldEnum: {
+    id: 'id',
+    userFromId: 'userFromId',
+    createdAt: 'createdAt',
+    scheduledFor: 'scheduledFor',
+    scheduledEnd: 'scheduledEnd'
+  };
+
+  export type MeetingScalarFieldEnum = (typeof MeetingScalarFieldEnum)[keyof typeof MeetingScalarFieldEnum]
+
+
+  export const OfferScalarFieldEnum: {
+    id: 'id',
+    meetingId: 'meetingId',
+    userOfferedId: 'userOfferedId',
+    offerState: 'offerState'
+  };
+
+  export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -8181,6 +10649,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'OfferState'
+   */
+  export type EnumOfferStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfferState'>
+    
+
+
+  /**
+   * Reference to a field of type 'OfferState[]'
+   */
+  export type ListEnumOfferStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfferState[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -8217,6 +10699,8 @@ export namespace Prisma {
     friendsWith?: FriendshipListRelationFilter
     friendsOf?: FriendshipListRelationFilter
     invitesSent?: InvitationListRelationFilter
+    meetingsCreated?: MeetingListRelationFilter
+    offersReceived?: OfferListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -8236,6 +10720,8 @@ export namespace Prisma {
     friendsWith?: FriendshipOrderByRelationAggregateInput
     friendsOf?: FriendshipOrderByRelationAggregateInput
     invitesSent?: InvitationOrderByRelationAggregateInput
+    meetingsCreated?: MeetingOrderByRelationAggregateInput
+    offersReceived?: OfferOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -8258,6 +10744,8 @@ export namespace Prisma {
     friendsWith?: FriendshipListRelationFilter
     friendsOf?: FriendshipListRelationFilter
     invitesSent?: InvitationListRelationFilter
+    meetingsCreated?: MeetingListRelationFilter
+    offersReceived?: OfferListRelationFilter
   }, "id" | "email" | "phoneNumber" | "username">
 
   export type UserOrderByWithAggregationInput = {
@@ -8624,6 +11112,117 @@ export namespace Prisma {
     accepted?: BoolWithAggregatesFilter<"Invitation"> | boolean
   }
 
+  export type MeetingWhereInput = {
+    AND?: MeetingWhereInput | MeetingWhereInput[]
+    OR?: MeetingWhereInput[]
+    NOT?: MeetingWhereInput | MeetingWhereInput[]
+    id?: StringFilter<"Meeting"> | string
+    userFromId?: StringFilter<"Meeting"> | string
+    createdAt?: DateTimeFilter<"Meeting"> | Date | string
+    scheduledFor?: DateTimeFilter<"Meeting"> | Date | string
+    scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
+    userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
+    offers?: OfferListRelationFilter
+  }
+
+  export type MeetingOrderByWithRelationInput = {
+    id?: SortOrder
+    userFromId?: SortOrder
+    createdAt?: SortOrder
+    scheduledFor?: SortOrder
+    scheduledEnd?: SortOrder
+    userFrom?: UserOrderByWithRelationInput
+    offers?: OfferOrderByRelationAggregateInput
+  }
+
+  export type MeetingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MeetingWhereInput | MeetingWhereInput[]
+    OR?: MeetingWhereInput[]
+    NOT?: MeetingWhereInput | MeetingWhereInput[]
+    userFromId?: StringFilter<"Meeting"> | string
+    createdAt?: DateTimeFilter<"Meeting"> | Date | string
+    scheduledFor?: DateTimeFilter<"Meeting"> | Date | string
+    scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
+    userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
+    offers?: OfferListRelationFilter
+  }, "id">
+
+  export type MeetingOrderByWithAggregationInput = {
+    id?: SortOrder
+    userFromId?: SortOrder
+    createdAt?: SortOrder
+    scheduledFor?: SortOrder
+    scheduledEnd?: SortOrder
+    _count?: MeetingCountOrderByAggregateInput
+    _max?: MeetingMaxOrderByAggregateInput
+    _min?: MeetingMinOrderByAggregateInput
+  }
+
+  export type MeetingScalarWhereWithAggregatesInput = {
+    AND?: MeetingScalarWhereWithAggregatesInput | MeetingScalarWhereWithAggregatesInput[]
+    OR?: MeetingScalarWhereWithAggregatesInput[]
+    NOT?: MeetingScalarWhereWithAggregatesInput | MeetingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Meeting"> | string
+    userFromId?: StringWithAggregatesFilter<"Meeting"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Meeting"> | Date | string
+    scheduledFor?: DateTimeWithAggregatesFilter<"Meeting"> | Date | string
+    scheduledEnd?: DateTimeWithAggregatesFilter<"Meeting"> | Date | string
+  }
+
+  export type OfferWhereInput = {
+    AND?: OfferWhereInput | OfferWhereInput[]
+    OR?: OfferWhereInput[]
+    NOT?: OfferWhereInput | OfferWhereInput[]
+    id?: StringFilter<"Offer"> | string
+    meetingId?: StringFilter<"Offer"> | string
+    userOfferedId?: StringFilter<"Offer"> | string
+    offerState?: EnumOfferStateFilter<"Offer"> | $Enums.OfferState
+    meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
+    userOffered?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type OfferOrderByWithRelationInput = {
+    id?: SortOrder
+    meetingId?: SortOrder
+    userOfferedId?: SortOrder
+    offerState?: SortOrder
+    meeting?: MeetingOrderByWithRelationInput
+    userOffered?: UserOrderByWithRelationInput
+  }
+
+  export type OfferWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OfferWhereInput | OfferWhereInput[]
+    OR?: OfferWhereInput[]
+    NOT?: OfferWhereInput | OfferWhereInput[]
+    meetingId?: StringFilter<"Offer"> | string
+    userOfferedId?: StringFilter<"Offer"> | string
+    offerState?: EnumOfferStateFilter<"Offer"> | $Enums.OfferState
+    meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
+    userOffered?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type OfferOrderByWithAggregationInput = {
+    id?: SortOrder
+    meetingId?: SortOrder
+    userOfferedId?: SortOrder
+    offerState?: SortOrder
+    _count?: OfferCountOrderByAggregateInput
+    _max?: OfferMaxOrderByAggregateInput
+    _min?: OfferMinOrderByAggregateInput
+  }
+
+  export type OfferScalarWhereWithAggregatesInput = {
+    AND?: OfferScalarWhereWithAggregatesInput | OfferScalarWhereWithAggregatesInput[]
+    OR?: OfferScalarWhereWithAggregatesInput[]
+    NOT?: OfferScalarWhereWithAggregatesInput | OfferScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Offer"> | string
+    meetingId?: StringWithAggregatesFilter<"Offer"> | string
+    userOfferedId?: StringWithAggregatesFilter<"Offer"> | string
+    offerState?: EnumOfferStateWithAggregatesFilter<"Offer"> | $Enums.OfferState
+  }
+
   export type UserCreateInput = {
     id: string
     email: string
@@ -8641,6 +11240,8 @@ export namespace Prisma {
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -8660,6 +11261,8 @@ export namespace Prisma {
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserUpdateInput = {
@@ -8679,6 +11282,8 @@ export namespace Prisma {
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -8698,6 +11303,8 @@ export namespace Prisma {
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -9094,6 +11701,112 @@ export namespace Prisma {
     accepted?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type MeetingCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+    userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
+    offers?: OfferCreateNestedManyWithoutMeetingInput
+  }
+
+  export type MeetingUncheckedCreateInput = {
+    id?: string
+    userFromId: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+    offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
+  }
+
+  export type MeetingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
+    offers?: OfferUpdateManyWithoutMeetingNestedInput
+  }
+
+  export type MeetingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userFromId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
+  }
+
+  export type MeetingCreateManyInput = {
+    id?: string
+    userFromId: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+  }
+
+  export type MeetingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MeetingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userFromId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferCreateInput = {
+    id?: string
+    offerState?: $Enums.OfferState
+    meeting: MeetingCreateNestedOneWithoutOffersInput
+    userOffered: UserCreateNestedOneWithoutOffersReceivedInput
+  }
+
+  export type OfferUncheckedCreateInput = {
+    id?: string
+    meetingId: string
+    userOfferedId: string
+    offerState?: $Enums.OfferState
+  }
+
+  export type OfferUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+    meeting?: MeetingUpdateOneRequiredWithoutOffersNestedInput
+    userOffered?: UserUpdateOneRequiredWithoutOffersReceivedNestedInput
+  }
+
+  export type OfferUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    meetingId?: StringFieldUpdateOperationsInput | string
+    userOfferedId?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+  }
+
+  export type OfferCreateManyInput = {
+    id?: string
+    meetingId: string
+    userOfferedId: string
+    offerState?: $Enums.OfferState
+  }
+
+  export type OfferUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+  }
+
+  export type OfferUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    meetingId?: StringFieldUpdateOperationsInput | string
+    userOfferedId?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -9169,6 +11882,18 @@ export namespace Prisma {
     none?: InvitationWhereInput
   }
 
+  export type MeetingListRelationFilter = {
+    every?: MeetingWhereInput
+    some?: MeetingWhereInput
+    none?: MeetingWhereInput
+  }
+
+  export type OfferListRelationFilter = {
+    every?: OfferWhereInput
+    some?: OfferWhereInput
+    none?: OfferWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -9187,6 +11912,14 @@ export namespace Prisma {
   }
 
   export type InvitationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MeetingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OfferOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9481,6 +12214,73 @@ export namespace Prisma {
     accepted?: SortOrder
   }
 
+  export type MeetingCountOrderByAggregateInput = {
+    id?: SortOrder
+    userFromId?: SortOrder
+    createdAt?: SortOrder
+    scheduledFor?: SortOrder
+    scheduledEnd?: SortOrder
+  }
+
+  export type MeetingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userFromId?: SortOrder
+    createdAt?: SortOrder
+    scheduledFor?: SortOrder
+    scheduledEnd?: SortOrder
+  }
+
+  export type MeetingMinOrderByAggregateInput = {
+    id?: SortOrder
+    userFromId?: SortOrder
+    createdAt?: SortOrder
+    scheduledFor?: SortOrder
+    scheduledEnd?: SortOrder
+  }
+
+  export type EnumOfferStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.OfferState | EnumOfferStateFieldRefInput<$PrismaModel>
+    in?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumOfferStateFilter<$PrismaModel> | $Enums.OfferState
+  }
+
+  export type MeetingScalarRelationFilter = {
+    is?: MeetingWhereInput
+    isNot?: MeetingWhereInput
+  }
+
+  export type OfferCountOrderByAggregateInput = {
+    id?: SortOrder
+    meetingId?: SortOrder
+    userOfferedId?: SortOrder
+    offerState?: SortOrder
+  }
+
+  export type OfferMaxOrderByAggregateInput = {
+    id?: SortOrder
+    meetingId?: SortOrder
+    userOfferedId?: SortOrder
+    offerState?: SortOrder
+  }
+
+  export type OfferMinOrderByAggregateInput = {
+    id?: SortOrder
+    meetingId?: SortOrder
+    userOfferedId?: SortOrder
+    offerState?: SortOrder
+  }
+
+  export type EnumOfferStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OfferState | EnumOfferStateFieldRefInput<$PrismaModel>
+    in?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumOfferStateWithAggregatesFilter<$PrismaModel> | $Enums.OfferState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOfferStateFilter<$PrismaModel>
+    _max?: NestedEnumOfferStateFilter<$PrismaModel>
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -9516,6 +12316,20 @@ export namespace Prisma {
     connect?: InvitationWhereUniqueInput | InvitationWhereUniqueInput[]
   }
 
+  export type MeetingCreateNestedManyWithoutUserFromInput = {
+    create?: XOR<MeetingCreateWithoutUserFromInput, MeetingUncheckedCreateWithoutUserFromInput> | MeetingCreateWithoutUserFromInput[] | MeetingUncheckedCreateWithoutUserFromInput[]
+    connectOrCreate?: MeetingCreateOrConnectWithoutUserFromInput | MeetingCreateOrConnectWithoutUserFromInput[]
+    createMany?: MeetingCreateManyUserFromInputEnvelope
+    connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+  }
+
+  export type OfferCreateNestedManyWithoutUserOfferedInput = {
+    create?: XOR<OfferCreateWithoutUserOfferedInput, OfferUncheckedCreateWithoutUserOfferedInput> | OfferCreateWithoutUserOfferedInput[] | OfferUncheckedCreateWithoutUserOfferedInput[]
+    connectOrCreate?: OfferCreateOrConnectWithoutUserOfferedInput | OfferCreateOrConnectWithoutUserOfferedInput[]
+    createMany?: OfferCreateManyUserOfferedInputEnvelope
+    connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -9549,6 +12363,20 @@ export namespace Prisma {
     connectOrCreate?: InvitationCreateOrConnectWithoutUserFromInput | InvitationCreateOrConnectWithoutUserFromInput[]
     createMany?: InvitationCreateManyUserFromInputEnvelope
     connect?: InvitationWhereUniqueInput | InvitationWhereUniqueInput[]
+  }
+
+  export type MeetingUncheckedCreateNestedManyWithoutUserFromInput = {
+    create?: XOR<MeetingCreateWithoutUserFromInput, MeetingUncheckedCreateWithoutUserFromInput> | MeetingCreateWithoutUserFromInput[] | MeetingUncheckedCreateWithoutUserFromInput[]
+    connectOrCreate?: MeetingCreateOrConnectWithoutUserFromInput | MeetingCreateOrConnectWithoutUserFromInput[]
+    createMany?: MeetingCreateManyUserFromInputEnvelope
+    connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+  }
+
+  export type OfferUncheckedCreateNestedManyWithoutUserOfferedInput = {
+    create?: XOR<OfferCreateWithoutUserOfferedInput, OfferUncheckedCreateWithoutUserOfferedInput> | OfferCreateWithoutUserOfferedInput[] | OfferUncheckedCreateWithoutUserOfferedInput[]
+    connectOrCreate?: OfferCreateOrConnectWithoutUserOfferedInput | OfferCreateOrConnectWithoutUserOfferedInput[]
+    createMany?: OfferCreateManyUserOfferedInputEnvelope
+    connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -9641,6 +12469,34 @@ export namespace Prisma {
     deleteMany?: InvitationScalarWhereInput | InvitationScalarWhereInput[]
   }
 
+  export type MeetingUpdateManyWithoutUserFromNestedInput = {
+    create?: XOR<MeetingCreateWithoutUserFromInput, MeetingUncheckedCreateWithoutUserFromInput> | MeetingCreateWithoutUserFromInput[] | MeetingUncheckedCreateWithoutUserFromInput[]
+    connectOrCreate?: MeetingCreateOrConnectWithoutUserFromInput | MeetingCreateOrConnectWithoutUserFromInput[]
+    upsert?: MeetingUpsertWithWhereUniqueWithoutUserFromInput | MeetingUpsertWithWhereUniqueWithoutUserFromInput[]
+    createMany?: MeetingCreateManyUserFromInputEnvelope
+    set?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    disconnect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    delete?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    update?: MeetingUpdateWithWhereUniqueWithoutUserFromInput | MeetingUpdateWithWhereUniqueWithoutUserFromInput[]
+    updateMany?: MeetingUpdateManyWithWhereWithoutUserFromInput | MeetingUpdateManyWithWhereWithoutUserFromInput[]
+    deleteMany?: MeetingScalarWhereInput | MeetingScalarWhereInput[]
+  }
+
+  export type OfferUpdateManyWithoutUserOfferedNestedInput = {
+    create?: XOR<OfferCreateWithoutUserOfferedInput, OfferUncheckedCreateWithoutUserOfferedInput> | OfferCreateWithoutUserOfferedInput[] | OfferUncheckedCreateWithoutUserOfferedInput[]
+    connectOrCreate?: OfferCreateOrConnectWithoutUserOfferedInput | OfferCreateOrConnectWithoutUserOfferedInput[]
+    upsert?: OfferUpsertWithWhereUniqueWithoutUserOfferedInput | OfferUpsertWithWhereUniqueWithoutUserOfferedInput[]
+    createMany?: OfferCreateManyUserOfferedInputEnvelope
+    set?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    disconnect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    delete?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    update?: OfferUpdateWithWhereUniqueWithoutUserOfferedInput | OfferUpdateWithWhereUniqueWithoutUserOfferedInput[]
+    updateMany?: OfferUpdateManyWithWhereWithoutUserOfferedInput | OfferUpdateManyWithWhereWithoutUserOfferedInput[]
+    deleteMany?: OfferScalarWhereInput | OfferScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -9709,6 +12565,34 @@ export namespace Prisma {
     update?: InvitationUpdateWithWhereUniqueWithoutUserFromInput | InvitationUpdateWithWhereUniqueWithoutUserFromInput[]
     updateMany?: InvitationUpdateManyWithWhereWithoutUserFromInput | InvitationUpdateManyWithWhereWithoutUserFromInput[]
     deleteMany?: InvitationScalarWhereInput | InvitationScalarWhereInput[]
+  }
+
+  export type MeetingUncheckedUpdateManyWithoutUserFromNestedInput = {
+    create?: XOR<MeetingCreateWithoutUserFromInput, MeetingUncheckedCreateWithoutUserFromInput> | MeetingCreateWithoutUserFromInput[] | MeetingUncheckedCreateWithoutUserFromInput[]
+    connectOrCreate?: MeetingCreateOrConnectWithoutUserFromInput | MeetingCreateOrConnectWithoutUserFromInput[]
+    upsert?: MeetingUpsertWithWhereUniqueWithoutUserFromInput | MeetingUpsertWithWhereUniqueWithoutUserFromInput[]
+    createMany?: MeetingCreateManyUserFromInputEnvelope
+    set?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    disconnect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    delete?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    update?: MeetingUpdateWithWhereUniqueWithoutUserFromInput | MeetingUpdateWithWhereUniqueWithoutUserFromInput[]
+    updateMany?: MeetingUpdateManyWithWhereWithoutUserFromInput | MeetingUpdateManyWithWhereWithoutUserFromInput[]
+    deleteMany?: MeetingScalarWhereInput | MeetingScalarWhereInput[]
+  }
+
+  export type OfferUncheckedUpdateManyWithoutUserOfferedNestedInput = {
+    create?: XOR<OfferCreateWithoutUserOfferedInput, OfferUncheckedCreateWithoutUserOfferedInput> | OfferCreateWithoutUserOfferedInput[] | OfferUncheckedCreateWithoutUserOfferedInput[]
+    connectOrCreate?: OfferCreateOrConnectWithoutUserOfferedInput | OfferCreateOrConnectWithoutUserOfferedInput[]
+    upsert?: OfferUpsertWithWhereUniqueWithoutUserOfferedInput | OfferUpsertWithWhereUniqueWithoutUserOfferedInput[]
+    createMany?: OfferCreateManyUserOfferedInputEnvelope
+    set?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    disconnect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    delete?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    update?: OfferUpdateWithWhereUniqueWithoutUserOfferedInput | OfferUpdateWithWhereUniqueWithoutUserOfferedInput[]
+    updateMany?: OfferUpdateManyWithWhereWithoutUserOfferedInput | OfferUpdateManyWithWhereWithoutUserOfferedInput[]
+    deleteMany?: OfferScalarWhereInput | OfferScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -9783,6 +12667,94 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutInvitesSentInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutInvitesSentInput, UserUpdateWithoutInvitesSentInput>, UserUncheckedUpdateWithoutInvitesSentInput>
+  }
+
+  export type UserCreateNestedOneWithoutMeetingsCreatedInput = {
+    create?: XOR<UserCreateWithoutMeetingsCreatedInput, UserUncheckedCreateWithoutMeetingsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMeetingsCreatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type OfferCreateNestedManyWithoutMeetingInput = {
+    create?: XOR<OfferCreateWithoutMeetingInput, OfferUncheckedCreateWithoutMeetingInput> | OfferCreateWithoutMeetingInput[] | OfferUncheckedCreateWithoutMeetingInput[]
+    connectOrCreate?: OfferCreateOrConnectWithoutMeetingInput | OfferCreateOrConnectWithoutMeetingInput[]
+    createMany?: OfferCreateManyMeetingInputEnvelope
+    connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+  }
+
+  export type OfferUncheckedCreateNestedManyWithoutMeetingInput = {
+    create?: XOR<OfferCreateWithoutMeetingInput, OfferUncheckedCreateWithoutMeetingInput> | OfferCreateWithoutMeetingInput[] | OfferUncheckedCreateWithoutMeetingInput[]
+    connectOrCreate?: OfferCreateOrConnectWithoutMeetingInput | OfferCreateOrConnectWithoutMeetingInput[]
+    createMany?: OfferCreateManyMeetingInputEnvelope
+    connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput = {
+    create?: XOR<UserCreateWithoutMeetingsCreatedInput, UserUncheckedCreateWithoutMeetingsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMeetingsCreatedInput
+    upsert?: UserUpsertWithoutMeetingsCreatedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMeetingsCreatedInput, UserUpdateWithoutMeetingsCreatedInput>, UserUncheckedUpdateWithoutMeetingsCreatedInput>
+  }
+
+  export type OfferUpdateManyWithoutMeetingNestedInput = {
+    create?: XOR<OfferCreateWithoutMeetingInput, OfferUncheckedCreateWithoutMeetingInput> | OfferCreateWithoutMeetingInput[] | OfferUncheckedCreateWithoutMeetingInput[]
+    connectOrCreate?: OfferCreateOrConnectWithoutMeetingInput | OfferCreateOrConnectWithoutMeetingInput[]
+    upsert?: OfferUpsertWithWhereUniqueWithoutMeetingInput | OfferUpsertWithWhereUniqueWithoutMeetingInput[]
+    createMany?: OfferCreateManyMeetingInputEnvelope
+    set?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    disconnect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    delete?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    update?: OfferUpdateWithWhereUniqueWithoutMeetingInput | OfferUpdateWithWhereUniqueWithoutMeetingInput[]
+    updateMany?: OfferUpdateManyWithWhereWithoutMeetingInput | OfferUpdateManyWithWhereWithoutMeetingInput[]
+    deleteMany?: OfferScalarWhereInput | OfferScalarWhereInput[]
+  }
+
+  export type OfferUncheckedUpdateManyWithoutMeetingNestedInput = {
+    create?: XOR<OfferCreateWithoutMeetingInput, OfferUncheckedCreateWithoutMeetingInput> | OfferCreateWithoutMeetingInput[] | OfferUncheckedCreateWithoutMeetingInput[]
+    connectOrCreate?: OfferCreateOrConnectWithoutMeetingInput | OfferCreateOrConnectWithoutMeetingInput[]
+    upsert?: OfferUpsertWithWhereUniqueWithoutMeetingInput | OfferUpsertWithWhereUniqueWithoutMeetingInput[]
+    createMany?: OfferCreateManyMeetingInputEnvelope
+    set?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    disconnect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    delete?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+    update?: OfferUpdateWithWhereUniqueWithoutMeetingInput | OfferUpdateWithWhereUniqueWithoutMeetingInput[]
+    updateMany?: OfferUpdateManyWithWhereWithoutMeetingInput | OfferUpdateManyWithWhereWithoutMeetingInput[]
+    deleteMany?: OfferScalarWhereInput | OfferScalarWhereInput[]
+  }
+
+  export type MeetingCreateNestedOneWithoutOffersInput = {
+    create?: XOR<MeetingCreateWithoutOffersInput, MeetingUncheckedCreateWithoutOffersInput>
+    connectOrCreate?: MeetingCreateOrConnectWithoutOffersInput
+    connect?: MeetingWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutOffersReceivedInput = {
+    create?: XOR<UserCreateWithoutOffersReceivedInput, UserUncheckedCreateWithoutOffersReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOffersReceivedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumOfferStateFieldUpdateOperationsInput = {
+    set?: $Enums.OfferState
+  }
+
+  export type MeetingUpdateOneRequiredWithoutOffersNestedInput = {
+    create?: XOR<MeetingCreateWithoutOffersInput, MeetingUncheckedCreateWithoutOffersInput>
+    connectOrCreate?: MeetingCreateOrConnectWithoutOffersInput
+    upsert?: MeetingUpsertWithoutOffersInput
+    connect?: MeetingWhereUniqueInput
+    update?: XOR<XOR<MeetingUpdateToOneWithWhereWithoutOffersInput, MeetingUpdateWithoutOffersInput>, MeetingUncheckedUpdateWithoutOffersInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutOffersReceivedNestedInput = {
+    create?: XOR<UserCreateWithoutOffersReceivedInput, UserUncheckedCreateWithoutOffersReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOffersReceivedInput
+    upsert?: UserUpsertWithoutOffersReceivedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOffersReceivedInput, UserUpdateWithoutOffersReceivedInput>, UserUncheckedUpdateWithoutOffersReceivedInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -9945,6 +12917,23 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumOfferStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.OfferState | EnumOfferStateFieldRefInput<$PrismaModel>
+    in?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumOfferStateFilter<$PrismaModel> | $Enums.OfferState
+  }
+
+  export type NestedEnumOfferStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OfferState | EnumOfferStateFieldRefInput<$PrismaModel>
+    in?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumOfferStateWithAggregatesFilter<$PrismaModel> | $Enums.OfferState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOfferStateFilter<$PrismaModel>
+    _max?: NestedEnumOfferStateFilter<$PrismaModel>
+  }
+
   export type SessionCreateWithoutUserInput = {
     id: string
     expiresAt: Date | string
@@ -10078,6 +13067,54 @@ export namespace Prisma {
 
   export type InvitationCreateManyUserFromInputEnvelope = {
     data: InvitationCreateManyUserFromInput | InvitationCreateManyUserFromInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MeetingCreateWithoutUserFromInput = {
+    id?: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+    offers?: OfferCreateNestedManyWithoutMeetingInput
+  }
+
+  export type MeetingUncheckedCreateWithoutUserFromInput = {
+    id?: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+    offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
+  }
+
+  export type MeetingCreateOrConnectWithoutUserFromInput = {
+    where: MeetingWhereUniqueInput
+    create: XOR<MeetingCreateWithoutUserFromInput, MeetingUncheckedCreateWithoutUserFromInput>
+  }
+
+  export type MeetingCreateManyUserFromInputEnvelope = {
+    data: MeetingCreateManyUserFromInput | MeetingCreateManyUserFromInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfferCreateWithoutUserOfferedInput = {
+    id?: string
+    offerState?: $Enums.OfferState
+    meeting: MeetingCreateNestedOneWithoutOffersInput
+  }
+
+  export type OfferUncheckedCreateWithoutUserOfferedInput = {
+    id?: string
+    meetingId: string
+    offerState?: $Enums.OfferState
+  }
+
+  export type OfferCreateOrConnectWithoutUserOfferedInput = {
+    where: OfferWhereUniqueInput
+    create: XOR<OfferCreateWithoutUserOfferedInput, OfferUncheckedCreateWithoutUserOfferedInput>
+  }
+
+  export type OfferCreateManyUserOfferedInputEnvelope = {
+    data: OfferCreateManyUserOfferedInput | OfferCreateManyUserOfferedInput[]
     skipDuplicates?: boolean
   }
 
@@ -10215,6 +13252,59 @@ export namespace Prisma {
     accepted?: BoolFilter<"Invitation"> | boolean
   }
 
+  export type MeetingUpsertWithWhereUniqueWithoutUserFromInput = {
+    where: MeetingWhereUniqueInput
+    update: XOR<MeetingUpdateWithoutUserFromInput, MeetingUncheckedUpdateWithoutUserFromInput>
+    create: XOR<MeetingCreateWithoutUserFromInput, MeetingUncheckedCreateWithoutUserFromInput>
+  }
+
+  export type MeetingUpdateWithWhereUniqueWithoutUserFromInput = {
+    where: MeetingWhereUniqueInput
+    data: XOR<MeetingUpdateWithoutUserFromInput, MeetingUncheckedUpdateWithoutUserFromInput>
+  }
+
+  export type MeetingUpdateManyWithWhereWithoutUserFromInput = {
+    where: MeetingScalarWhereInput
+    data: XOR<MeetingUpdateManyMutationInput, MeetingUncheckedUpdateManyWithoutUserFromInput>
+  }
+
+  export type MeetingScalarWhereInput = {
+    AND?: MeetingScalarWhereInput | MeetingScalarWhereInput[]
+    OR?: MeetingScalarWhereInput[]
+    NOT?: MeetingScalarWhereInput | MeetingScalarWhereInput[]
+    id?: StringFilter<"Meeting"> | string
+    userFromId?: StringFilter<"Meeting"> | string
+    createdAt?: DateTimeFilter<"Meeting"> | Date | string
+    scheduledFor?: DateTimeFilter<"Meeting"> | Date | string
+    scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
+  }
+
+  export type OfferUpsertWithWhereUniqueWithoutUserOfferedInput = {
+    where: OfferWhereUniqueInput
+    update: XOR<OfferUpdateWithoutUserOfferedInput, OfferUncheckedUpdateWithoutUserOfferedInput>
+    create: XOR<OfferCreateWithoutUserOfferedInput, OfferUncheckedCreateWithoutUserOfferedInput>
+  }
+
+  export type OfferUpdateWithWhereUniqueWithoutUserOfferedInput = {
+    where: OfferWhereUniqueInput
+    data: XOR<OfferUpdateWithoutUserOfferedInput, OfferUncheckedUpdateWithoutUserOfferedInput>
+  }
+
+  export type OfferUpdateManyWithWhereWithoutUserOfferedInput = {
+    where: OfferScalarWhereInput
+    data: XOR<OfferUpdateManyMutationInput, OfferUncheckedUpdateManyWithoutUserOfferedInput>
+  }
+
+  export type OfferScalarWhereInput = {
+    AND?: OfferScalarWhereInput | OfferScalarWhereInput[]
+    OR?: OfferScalarWhereInput[]
+    NOT?: OfferScalarWhereInput | OfferScalarWhereInput[]
+    id?: StringFilter<"Offer"> | string
+    meetingId?: StringFilter<"Offer"> | string
+    userOfferedId?: StringFilter<"Offer"> | string
+    offerState?: EnumOfferStateFilter<"Offer"> | $Enums.OfferState
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     email: string
@@ -10231,6 +13321,8 @@ export namespace Prisma {
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -10249,6 +13341,8 @@ export namespace Prisma {
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -10283,6 +13377,8 @@ export namespace Prisma {
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -10301,6 +13397,8 @@ export namespace Prisma {
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -10319,6 +13417,8 @@ export namespace Prisma {
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -10337,6 +13437,8 @@ export namespace Prisma {
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -10371,6 +13473,8 @@ export namespace Prisma {
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -10389,6 +13493,8 @@ export namespace Prisma {
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserCreateWithoutFriendsOfInput = {
@@ -10407,6 +13513,8 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserUncheckedCreateWithoutFriendsOfInput = {
@@ -10425,6 +13533,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserCreateOrConnectWithoutFriendsOfInput = {
@@ -10448,6 +13558,8 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserUncheckedCreateWithoutFriendsWithInput = {
@@ -10466,6 +13578,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserCreateOrConnectWithoutFriendsWithInput = {
@@ -10500,6 +13614,8 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendsOfInput = {
@@ -10518,6 +13634,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserUpsertWithoutFriendsWithInput = {
@@ -10547,6 +13665,8 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendsWithInput = {
@@ -10565,6 +13685,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserCreateWithoutInvitesSentInput = {
@@ -10583,6 +13705,8 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserUncheckedCreateWithoutInvitesSentInput = {
@@ -10601,6 +13725,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
   }
 
   export type UserCreateOrConnectWithoutInvitesSentInput = {
@@ -10635,6 +13761,8 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitesSentInput = {
@@ -10653,6 +13781,286 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+  }
+
+  export type UserCreateWithoutMeetingsCreatedInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+  }
+
+  export type UserUncheckedCreateWithoutMeetingsCreatedInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+  }
+
+  export type UserCreateOrConnectWithoutMeetingsCreatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMeetingsCreatedInput, UserUncheckedCreateWithoutMeetingsCreatedInput>
+  }
+
+  export type OfferCreateWithoutMeetingInput = {
+    id?: string
+    offerState?: $Enums.OfferState
+    userOffered: UserCreateNestedOneWithoutOffersReceivedInput
+  }
+
+  export type OfferUncheckedCreateWithoutMeetingInput = {
+    id?: string
+    userOfferedId: string
+    offerState?: $Enums.OfferState
+  }
+
+  export type OfferCreateOrConnectWithoutMeetingInput = {
+    where: OfferWhereUniqueInput
+    create: XOR<OfferCreateWithoutMeetingInput, OfferUncheckedCreateWithoutMeetingInput>
+  }
+
+  export type OfferCreateManyMeetingInputEnvelope = {
+    data: OfferCreateManyMeetingInput | OfferCreateManyMeetingInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutMeetingsCreatedInput = {
+    update: XOR<UserUpdateWithoutMeetingsCreatedInput, UserUncheckedUpdateWithoutMeetingsCreatedInput>
+    create: XOR<UserCreateWithoutMeetingsCreatedInput, UserUncheckedCreateWithoutMeetingsCreatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMeetingsCreatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMeetingsCreatedInput, UserUncheckedUpdateWithoutMeetingsCreatedInput>
+  }
+
+  export type UserUpdateWithoutMeetingsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMeetingsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+  }
+
+  export type OfferUpsertWithWhereUniqueWithoutMeetingInput = {
+    where: OfferWhereUniqueInput
+    update: XOR<OfferUpdateWithoutMeetingInput, OfferUncheckedUpdateWithoutMeetingInput>
+    create: XOR<OfferCreateWithoutMeetingInput, OfferUncheckedCreateWithoutMeetingInput>
+  }
+
+  export type OfferUpdateWithWhereUniqueWithoutMeetingInput = {
+    where: OfferWhereUniqueInput
+    data: XOR<OfferUpdateWithoutMeetingInput, OfferUncheckedUpdateWithoutMeetingInput>
+  }
+
+  export type OfferUpdateManyWithWhereWithoutMeetingInput = {
+    where: OfferScalarWhereInput
+    data: XOR<OfferUpdateManyMutationInput, OfferUncheckedUpdateManyWithoutMeetingInput>
+  }
+
+  export type MeetingCreateWithoutOffersInput = {
+    id?: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+    userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
+  }
+
+  export type MeetingUncheckedCreateWithoutOffersInput = {
+    id?: string
+    userFromId: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+  }
+
+  export type MeetingCreateOrConnectWithoutOffersInput = {
+    where: MeetingWhereUniqueInput
+    create: XOR<MeetingCreateWithoutOffersInput, MeetingUncheckedCreateWithoutOffersInput>
+  }
+
+  export type UserCreateWithoutOffersReceivedInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+  }
+
+  export type UserUncheckedCreateWithoutOffersReceivedInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+  }
+
+  export type UserCreateOrConnectWithoutOffersReceivedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOffersReceivedInput, UserUncheckedCreateWithoutOffersReceivedInput>
+  }
+
+  export type MeetingUpsertWithoutOffersInput = {
+    update: XOR<MeetingUpdateWithoutOffersInput, MeetingUncheckedUpdateWithoutOffersInput>
+    create: XOR<MeetingCreateWithoutOffersInput, MeetingUncheckedCreateWithoutOffersInput>
+    where?: MeetingWhereInput
+  }
+
+  export type MeetingUpdateToOneWithWhereWithoutOffersInput = {
+    where?: MeetingWhereInput
+    data: XOR<MeetingUpdateWithoutOffersInput, MeetingUncheckedUpdateWithoutOffersInput>
+  }
+
+  export type MeetingUpdateWithoutOffersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
+  }
+
+  export type MeetingUncheckedUpdateWithoutOffersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userFromId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutOffersReceivedInput = {
+    update: XOR<UserUpdateWithoutOffersReceivedInput, UserUncheckedUpdateWithoutOffersReceivedInput>
+    create: XOR<UserCreateWithoutOffersReceivedInput, UserUncheckedCreateWithoutOffersReceivedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOffersReceivedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOffersReceivedInput, UserUncheckedUpdateWithoutOffersReceivedInput>
+  }
+
+  export type UserUpdateWithoutOffersReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOffersReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -10696,6 +14104,19 @@ export namespace Prisma {
     userToPhoneNumber: string
     createdAt?: Date | string
     accepted?: boolean
+  }
+
+  export type MeetingCreateManyUserFromInput = {
+    id?: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+  }
+
+  export type OfferCreateManyUserOfferedInput = {
+    id?: string
+    meetingId: string
+    offerState?: $Enums.OfferState
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -10825,6 +14246,71 @@ export namespace Prisma {
     userToPhoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accepted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type MeetingUpdateWithoutUserFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    offers?: OfferUpdateManyWithoutMeetingNestedInput
+  }
+
+  export type MeetingUncheckedUpdateWithoutUserFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
+  }
+
+  export type MeetingUncheckedUpdateManyWithoutUserFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfferUpdateWithoutUserOfferedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+    meeting?: MeetingUpdateOneRequiredWithoutOffersNestedInput
+  }
+
+  export type OfferUncheckedUpdateWithoutUserOfferedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    meetingId?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+  }
+
+  export type OfferUncheckedUpdateManyWithoutUserOfferedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    meetingId?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+  }
+
+  export type OfferCreateManyMeetingInput = {
+    id?: string
+    userOfferedId: string
+    offerState?: $Enums.OfferState
+  }
+
+  export type OfferUpdateWithoutMeetingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+    userOffered?: UserUpdateOneRequiredWithoutOffersReceivedNestedInput
+  }
+
+  export type OfferUncheckedUpdateWithoutMeetingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userOfferedId?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+  }
+
+  export type OfferUncheckedUpdateManyWithoutMeetingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userOfferedId?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
   }
 
 

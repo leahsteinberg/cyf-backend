@@ -185,6 +185,21 @@ exports.Prisma.InvitationScalarFieldEnum = {
   accepted: 'accepted'
 };
 
+exports.Prisma.MeetingScalarFieldEnum = {
+  id: 'id',
+  userFromId: 'userFromId',
+  createdAt: 'createdAt',
+  scheduledFor: 'scheduledFor',
+  scheduledEnd: 'scheduledEnd'
+};
+
+exports.Prisma.OfferScalarFieldEnum = {
+  id: 'id',
+  meetingId: 'meetingId',
+  userOfferedId: 'userOfferedId',
+  offerState: 'offerState'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -199,7 +214,12 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.OfferState = exports.$Enums.OfferState = {
+  OPEN: 'OPEN',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  EXPIRED: 'EXPIRED'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -207,7 +227,9 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   Friendship: 'Friendship',
-  Invitation: 'Invitation'
+  Invitation: 'Invitation',
+  Meeting: 'Meeting',
+  Offer: 'Offer'
 };
 
 /**

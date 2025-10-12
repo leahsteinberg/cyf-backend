@@ -23,6 +23,9 @@ model User {
   friendsWith         Friendship[] @relation("friendsWith")
   friendsOf           Friendship[] @relation("friendsOf")
   invitesSent         Invitation[] @relation("invitesSent")
+  meetingsCreated     Meeting[]    @relation("meetingsCreated")
+  offersReceived      Offer[]      @relation("offersReceived")
+  // meetingsAccepted    Meeting[]     @relation("meetingsAccepted")
 
   username        String?
   displayUsername String?
@@ -98,4 +101,36 @@ model Invitation {
   accepted          Boolean  @default(false)
 
   @@map("invitation")
+}
+
+model Meeting {
+  id           String   @id @default(uuid())
+  userFrom     User     @relation("meetingsCreated", fields: [userFromId], references: [id])
+  userFromId   String
+  createdAt    DateTime @default(now())
+  scheduledFor DateTime
+  scheduledEnd DateTime
+  offers       Offer[]  @relation("offers")
+  // acceptedBy      User      @relation("meetingsAccepted", fields: [acceptedById], references: [id])
+  // acceptedById    String
+
+  @@map("meeting")
+}
+
+model Offer {
+  id            String     @id @default(uuid())
+  meeting       Meeting    @relation("offers", fields: [meetingId], references: [id])
+  meetingId     String
+  userOffered   User       @relation("offersReceived", fields: [userOfferedId], references: [id])
+  userOfferedId String
+  offerState    OfferState @default(OPEN)
+
+  @@map("offer")
+}
+
+enum OfferState {
+  OPEN
+  ACCEPTED
+  REJECTED
+  EXPIRED
 }
