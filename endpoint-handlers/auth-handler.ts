@@ -3,6 +3,7 @@ import { toNodeHandler, fromNodeHeaders } from "better-auth/node";
 import { createUser } from '../backend/user.ts';
 
 export const handleSignIn = async (req, res) => {
+    console.log("sign in - ", req.body.email)
     const session = await auth.api.signInEmail({
         body: {
           email: req.body.email,
@@ -11,6 +12,7 @@ export const handleSignIn = async (req, res) => {
         },
         headers: fromNodeHeaders(req.headers),
       });
+
     return res.json(session);
 };
 

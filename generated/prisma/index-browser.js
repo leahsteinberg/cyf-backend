@@ -190,14 +190,17 @@ exports.Prisma.MeetingScalarFieldEnum = {
   userFromId: 'userFromId',
   createdAt: 'createdAt',
   scheduledFor: 'scheduledFor',
-  scheduledEnd: 'scheduledEnd'
+  scheduledEnd: 'scheduledEnd',
+  title: 'title',
+  meetingState: 'meetingState'
 };
 
 exports.Prisma.OfferScalarFieldEnum = {
   id: 'id',
   meetingId: 'meetingId',
   userOfferedId: 'userOfferedId',
-  offerState: 'offerState'
+  offerState: 'offerState',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -214,6 +217,13 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.MeetingState = exports.$Enums.MeetingState = {
+  SEARCHING: 'SEARCHING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  PAST: 'PAST'
+};
+
 exports.OfferState = exports.$Enums.OfferState = {
   OPEN: 'OPEN',
   ACCEPTED: 'ACCEPTED',

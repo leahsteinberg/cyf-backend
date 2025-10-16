@@ -7,6 +7,7 @@ import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites } from './
 import { handleGetUserByPhone } from './endpoint-handlers/user-handler.ts';
 import { handleGetFriends } from './endpoint-handlers/friend-handler.ts';
 import { handleCreateMeeting, handleGetMeetings } from './endpoint-handlers/meeting-handler.ts';
+import { handleSimulateCronRound } from './endpoint-handlers/cron-handler.ts';
 
 const app = express();
 const port = 3000;
@@ -41,6 +42,8 @@ app.post('/api/get-friends', handleGetFriends);
 //MEETING ENDPOINTS
 app.post('/api/create-meeting', handleCreateMeeting);
 app.post('/api/get-meetings', handleGetMeetings);
+
+app.get('/api/simulate-cron-round', handleSimulateCronRound)
 
 
 app.get('/', (req, res) => {

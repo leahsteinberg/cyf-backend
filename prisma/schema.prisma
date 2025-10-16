@@ -104,26 +104,27 @@ model Invitation {
 }
 
 model Meeting {
-  id              String    @id @default(uuid())
-  userFrom        User      @relation("meetingsCreated", fields: [userFromId], references: [id])
+  id              String        @id @default(uuid())
+  userFrom        User          @relation("meetingsCreated", fields: [userFromId], references: [id])
   userFromId      String
-  createdAt       DateTime  @default(now())
+  createdAt       DateTime      @default(now())
   scheduledFor    DateTime
   scheduledEnd    DateTime
-  offers          Offer[]   @relation("offers")
-  // acceptedBy      User      @relation("meetingsAccepted", fields: [acceptedById], references: [id])
-  // acceptedById    String
+  offers          Offer[]       @relation("offers")
+  title           String?
+  meetingState    MeetingState  @default(SEARCHING)
 
   @@map("meeting")
 }
 
 model Offer {
-  id              String      @id @default(uuid())
-  meeting         Meeting     @relation("offers", fields: [meetingId], references: [id])
+  id              String        @id @default(uuid())
+  meeting         Meeting       @relation("offers", fields: [meetingId], references: [id])
   meetingId       String
-  userOffered     User        @relation("offersReceived", fields: [userOfferedId], references: [id])
+  userOffered     User          @relation("offersReceived", fields: [userOfferedId], references: [id])
   userOfferedId   String
-  offerState      OfferState  @default(OPEN)
+  offerState      OfferState    @default(OPEN)
+  createdAt       DateTime      @default(now())
 
   @@map("offer")
 }
@@ -133,4 +134,11 @@ enum OfferState {
   ACCEPTED
   REJECTED
   EXPIRED
+}
+
+enum MeetingState {
+  SEARCHING
+  ACCEPTED
+  REJECTED
+  PAST
 }

@@ -17,7 +17,7 @@ export const getFriends = async (id) => {
     return friends;
 }
 
-const getFriendIds = async (id) => {
+export const getFriendIds = async (id) => {
     const friendshipsSide1 = await getFriendshipsUser1Side(id);
     const friendshipsSide2 = await getFriendshipsUser2Side(id);
     const friendships = [...friendshipsSide1, ...friendshipsSide2];
@@ -25,7 +25,7 @@ const getFriendIds = async (id) => {
     return friendIds;
 }
 
-const getFriendUsersFromIds = async (friendIds) => {
+export const getFriendUsersFromIds = async (friendIds) => {
     const friendsUsers = await prisma.user.findMany({
         where: {
             id: {
@@ -50,8 +50,30 @@ const getFriendshipsUser1Side = async (id) => {
 }
 
 const getFriendshipsUser2Side = async (id) => {
+
     const friendships = await prisma.friendship.findMany({
         where: { userId2: id }
     });
     return friendships || [];
+}
+
+const findUnofferedFriends = (offeredFriends, allUserFriendIds) => {
+    
+    const unOfferedFriendIds = allUserFriendIds.reduce(
+        (unOffered, friendId) => {
+            return offeredFriends.includes(friendId) ? [...unOffered] : [...unOffered, friendId];
+        },
+        []
+    );
+    return unOfferedFriendIds;
+}
+
+
+export const pickFriendIdToOffer = (offeredFriends, allUserFriendIds) => {
+    
+    const unOfferedFriendIds = findUnofferedFriends(offeredFriends, allUserFriendIds);
+    if (unOfferedFriendIds.length === 0) {
+        return null
+    }
+    return unOfferedFriendIds[0]
 }

@@ -29,6 +29,5 @@ export const handleInviteSignUp = async (req, res) => {
 export const handleGetSentInvites = async(req, res) => {
     const {id} = req.body;
     const sentInvites = await getSentInvites({userFromId: id})
-    console.log("invites out", sentInvites)
     res.json(sentInvites);// TODO - switch to res.json()?
   };
