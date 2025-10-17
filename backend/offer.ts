@@ -29,7 +29,7 @@ export const getOfferedFriendsFromOffer = async () => {
 export const findFriendIdToOffer = async ({offers, meetingId}) => {
     const userFrom = await getUserFromMeeting(meetingId);
     const allUserFriendIds = await getFriendIds(userFrom.id);
-
+    console.log("all user FriendIDs", allUserFriendIds)
     const offeredFriends = offers.reduce(
         (friendsOffered, offer) => {
             const userOfferedId = offer.userOfferedId.toString()
@@ -41,6 +41,31 @@ export const findFriendIdToOffer = async ({offers, meetingId}) => {
     return friendToOfferId;
 }
 
+export const findRecentOffer = (offers) => {
+    if (offers.length > 0) {
+        const recentOffer = offers.reduce((recent, curr) => {
+            return  recent.createdAt.getTime() > curr.createdAt.getTime() ? recent : curr
+        }, offers[0])
+        return recentOffer
+    }
+    return null
+    
+}
+
+
+export const setOfferExpired = async ({offerId}) => {
+    const expiredOffer = prisma.offer.update({
+        where: {
+            id: offerId,
+        },
+        data: {
+            offerState: 'EXPIRED',
+        }
+
+    })
+    return expiredOffer;
+
+};
 
 export const acceptOffer = async () => {};
 
@@ -48,6 +73,4 @@ export const rejectOffer = async () => {};
 
 export const findAcceptedOffer = async () => {};// from a particular meeting
 
-export const setOfferExpired = async () => {};
 
-export const findNextFriendForOffer = async () => {};

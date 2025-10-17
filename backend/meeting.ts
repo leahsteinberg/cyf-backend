@@ -1,5 +1,5 @@
 import { prisma } from './auth.ts';  
-import { getMeetingOffers, findFriendIdToOffer } from './offer.ts';
+import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, createOffer, setOfferExpired } from './offer.ts';
 
 
 export const createMeeting = async (
@@ -52,71 +52,79 @@ export const getUserFromMeeting = async (meeting) => {
     return user;
 }
 
+// enum OfferState {
+//   OPEN
+//   ACCEPTED
+//   REJECTED
+//   EXPIRED
+// }
+
 export const simulateProcessMeeting = async (meeting) => {
     const meetingId = meeting.id
 
     const offers = await getMeetingOffers({meetingId})
     
-
-    
-    
-    
     const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId})
-
-
     console.log("friendToOfferId", newFriendToOfferId)
+    const recentOffer = await findRecentOffer(offers);
+    console.log("Recent Offer", recentOffer);
+    
     if (!newFriendToOfferId) {
-        // no more friends left to offer --> set meeting to rejected.
+        console.log("No more friends to offer to! ---");
+        const expiredPrevOffer = setOfferExpired({offerId: recentOffer.id})
+
+        // no more friends left to offer 
+                // --> set last offer to expired.
+                // --> set meeting to rejected.
+        return
     }
 
-    // const openOffers = offers.reduce((openOffers, offer) => {
-    //     return offer.offerState === 'OPEN' ? [...openOffers, offer] : openOffers
-    // }, []);
+
+    if (!recentOffer) {
+        const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
+        console.log("zero offers -> new offer ", newOffer)
+        return newOffer
+    }
+    // IF NO OFFER EXISTS
+        // make a new offer if possible.
+
+    if (recentOffer.offerState === 'OPEN') {
+        // see if it's expired and set it to expired.
+        // if not, leave it open.
+        console.log("CASE: Most recent offer is OPEN")
+
+        const updatedPrevOffer = await setOfferExpired({offerId: recentOffer.id});
+        const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
+        console.log("updated expired offer -> ", updatedPrevOffer)
+        console.log("-> new offer ", newOffer)
+        return newOffer
+
+    } else if (recentOffer.offerState === 'ACCEPTED') {
+        // put it through the "accept offer" path, (which should have)
+        // already been called, but good to be thorough
+        console.log("CASE: Most recent offer is ACCEPTED")
 
 
+    } else if (recentOffer.offerState === 'REJECTED') {
+        // make a new offer if possible.
+        console.log("CASE: Most recent offer is REJECTED")
 
 
-    //console.log("openOffers", openOffers)
-        // find friend ID of each offer, add to 
-        //  offer.userOffer, {})
-    // if (openOffers.length === 0) {
-    //     // if 0 --> see if we can create a new offer, and do if possible
+    } else if (recentOffer.offerState === 'EXPIRED') {
+        // make a new offer if possible. (there should be extra friends here)
+            console.log("CASE: Most recent offer is EXPIRED")
 
-    // } else if (openOffers.length === 1) {
-    //     // if 1 --> set the other offer to expired, create a new one
+    }
 
-    // } else {
-    //     // too many open offers -- deal with it or return error
 
-    // }
-    // ✅ get user
+    // ✅ get user creator
     // ✅ get the friends of this user 
     // ✅ get all the offers
-    // find most recent offer
-    // if no offers, create open offer
-    // if any offers past due, 
-
-
+    // ✅ find most recent offer
+    // ✅ ERROR CHECKING - ensure there's only 0 or 1 that is OPEN or ACCEPTED.
+                    // if not, then in error state.
     // ✅ pick a friend who has not yet been offered (to be offered to)
-    // ✅ ensure there's only 0 or 1. if not, then in error state.
-
-
-    // if one has been accepted, great. mark the meeting as ACCEPTED. (due diligence)
-    // there should be
-    // 0 meetings --> create an offer from first friend
-    // 1 meetings --> set existing meeting to 
-
-    //const offers = await getMeetingOffers({meetingId: meeting.id});
-    /// has all the offers from this meeting.
-    // go through all the offers. 
-    // if there is one out, 
-
-
-    // console.log({
-    //     meetingId: meeting.id, offers
-    // })
-    // return {
-    //     meetingId: meeting.id, offers
-    // }
+    // if no offers, create open offer/
+    // if any offers past due, close them and try to create a new offer.
 }
 

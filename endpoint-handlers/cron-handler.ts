@@ -6,9 +6,7 @@ export const handleSimulateCronRound = async (req, res) => {
     const firstMeeting = openMeetings[0];
     //const newOffer = await createOffer({meetingId: firstMeeting.id})
 
-    const processedFirstMeeting = simulateProcessMeeting(firstMeeting)
-
-
+    const processedFirstMeeting = await simulateProcessMeeting(firstMeeting)
     // const newMeetings = await Promise.all(newOpenMeetings.map(processMeeting));
     // for (let i = 0; i < newMeetings.length; i++) {
     //     console.log("i", i)
@@ -16,7 +14,7 @@ export const handleSimulateCronRound = async (req, res) => {
     //     console.log("offers: ", newMeetings[i].offers);
     // }   
     
-    
+    console.log("-------------------------------- DONE")
 
     // 
 
@@ -24,7 +22,7 @@ export const handleSimulateCronRound = async (req, res) => {
 
     // //const unwrapped = await Promise.all(newMeetings)
 
-    res.json("hi")
+    res.json("hiya")
     // if there is an offer out, set it to expired and create a new one.
     // if there are no more friends to send offers to, then set the meeting
     // as unmatched.
