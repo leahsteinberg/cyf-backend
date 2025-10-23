@@ -32,6 +32,18 @@ const setMeetingRejected = async ({meetingId}) => {
     return updatedMeeting;
 };
 
+export const setMeetingAccepted = async ({meetingId}) => {
+    const updatedMeeting = prisma.meeting.update({
+        where: {
+            id: meetingId,
+        },
+        data: {
+            meetingState: 'ACCEPTED'
+        }
+    })
+    return updatedMeeting;
+};
+
 
 export const deleteMeeting = async ({meetingId}) => {};
 
@@ -46,6 +58,7 @@ export const getCreatedMeetings = async ({userFromId}) => {
 
 
 export const getAllSearchingMeetings = async () => {
+    console.log("getAllSearchingMeetings")
     const meetings = await prisma.meeting.findMany({
         where: {
             meetingState: 'SEARCHING',
@@ -68,12 +81,14 @@ export const simulateProcessMeeting = async (meeting) => {
     const meetingId = meeting.id
 
     const offers = await getMeetingOffers({meetingId})
+    console.log("offers", offers);
     
     const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId})
     console.log("friendToOfferId", newFriendToOfferId)
     const recentOffer = await findRecentOffer(offers);
     console.log("Most recent Offer", recentOffer);
     
+
     if (!newFriendToOfferId) {
         console.log("CASE: No more friends to offer to! ---");
         const expiredPrevOffer = await setOfferExpired({offerId: recentOffer.id})
@@ -89,6 +104,8 @@ export const simulateProcessMeeting = async (meeting) => {
         console.log("CASE: zero offers -> new offer ", newOffer)
         return newOffer
     }
+
+    return;
 
     if (recentOffer.offerState === 'OPEN') {
         // see if it's expired and set it to expired.

@@ -1,12 +1,18 @@
 import { getAllSearchingMeetings, simulateProcessMeeting } from "../backend/meeting.ts";
 
 export const handleSimulateCronRound = async (req, res) => {
-    console.log("handleSimulateCronRound")
     const openMeetings = await getAllSearchingMeetings();
-    const firstMeeting = openMeetings[0];
+
+    for (const meeting of openMeetings) {
+        console.log("meeting is - ", meeting)
+        const processedMeeting = await simulateProcessMeeting(meeting)
+        console.log("-------------------------------- ONE MEETING DONE")
+
+    }
+    // const firstMeeting = openMeetings[0];
     //const newOffer = await createOffer({meetingId: firstMeeting.id})
 
-    const processedFirstMeeting = await simulateProcessMeeting(firstMeeting)
+    //const processedFirstMeeting = await simulateProcessMeeting(firstMeeting)
     // const newMeetings = await Promise.all(newOpenMeetings.map(processMeeting));
     // for (let i = 0; i < newMeetings.length; i++) {
     //     console.log("i", i)
@@ -14,7 +20,6 @@ export const handleSimulateCronRound = async (req, res) => {
     //     console.log("offers: ", newMeetings[i].offers);
     // }   
     
-    console.log("-------------------------------- DONE")
 
     // 
 

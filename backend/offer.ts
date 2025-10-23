@@ -1,5 +1,5 @@
 import { prisma } from './auth.ts';
-import { getUserFromMeeting } from './meeting.ts'
+import { getUserFromMeeting, setMeetingAccepted } from './meeting.ts'
 import { getFriendIds, pickFriendIdToOffer } from './friendship.ts';
 
 export const createOffer = async ({meetingId, userOfferedId}) => {
@@ -70,7 +70,37 @@ export const setOfferExpired = async ({offerId}) => {
 
 };
 
-export const acceptOffer = async () => {};
+export const acceptOffer = async ({ userId, offerId }) => {
+    const offer = await getOfferById({offerId})
+    console.log("got offer", offer);
+    const meetingId = offer?.meetingId;
+    
+    const acceptedOffer = await prisma.offer.update({
+        where: {
+            id: offerId,
+        },
+        data: {
+            offerState: 'ACCEPTED',
+        }
+
+    })
+    console.log("accepted offer --- ", acceptedOffer)
+    const acceptedMeeting = await setMeetingAccepted({meetingId});
+    console.log("accepted meeting - ", acceptedMeeting);
+    return acceptedOffer;
+
+};
+
+export const getOfferById = async ({offerId}) => {
+    console.log("getOfferById", offerId);
+    const offer = await prisma.offer.findUnique({
+        where:
+        {
+            id: offerId
+        }
+    });
+    return offer;
+}
 
 export const rejectOffer = async () => {};
 
