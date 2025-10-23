@@ -90,7 +90,7 @@ export const simulateProcessMeeting = async (meeting) => {
     
 
     if (!newFriendToOfferId) {
-        console.log("CASE: No more friends to offer to! ---");
+        console.log("CASE: No more friends to offer to! --- ");
         const expiredPrevOffer = await setOfferExpired({offerId: recentOffer.id})
         const updatedMeeting = await setMeetingRejected({meetingId})
         console.log("expired prev offer --", expiredPrevOffer)
@@ -105,11 +105,11 @@ export const simulateProcessMeeting = async (meeting) => {
         return newOffer
     }
 
-    return;
 
     if (recentOffer.offerState === 'OPEN') {
         // see if it's expired and set it to expired.
         // if not, leave it open.
+        // TODO - change this so it is actually based on when it expires.....?
         console.log("CASE: Most recent offer is OPEN")
         const updatedPrevOffer = await setOfferExpired({offerId: recentOffer.id});
         const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
@@ -126,12 +126,14 @@ export const simulateProcessMeeting = async (meeting) => {
     } else if (recentOffer.offerState === 'REJECTED') {
         // make a new offer if possible.
         console.log("CASE: Most recent offer is REJECTED")
+        const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
+        console.log("-> new offer ", newOffer)
+        return newOffer
 
 
     } else if (recentOffer.offerState === 'EXPIRED') {
         // make a new offer if possible. (there should be extra friends here)
         console.log("CASE: Most recent offer is EXPIRED")
-
     }
     // if no offers, create open offer/
     // if any offers past due, close them and try to create a new offer.
