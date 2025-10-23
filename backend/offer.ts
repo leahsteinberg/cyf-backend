@@ -28,6 +28,9 @@ export const getOfferedFriendsFromOffer = async () => {
 
 export const findFriendIdToOffer = async ({offers, meetingId}) => {
     const userFrom = await getUserFromMeeting(meetingId);
+    if (!userFrom) {
+        throw new Error('User not found for meeting');
+    }
     const allUserFriendIds = await getFriendIds(userFrom.id);
     console.log("all user FriendIDs", allUserFriendIds)
     const offeredFriends = offers.reduce(
@@ -73,4 +76,29 @@ export const rejectOffer = async () => {};
 
 export const findAcceptedOffer = async () => {};// from a particular meeting
 
-
+export const getOffersForUser = async ({userId}) => {
+    const offers = await prisma.offer.findMany({
+        where: {
+            userOfferedId: userId
+        },
+        include: {
+            meeting: {
+                include: {
+                    userFrom: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            username: true,
+                            displayUsername: true
+                        }
+                    }
+                }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
+    return offers;
+};

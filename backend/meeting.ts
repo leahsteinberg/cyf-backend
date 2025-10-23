@@ -20,6 +20,18 @@ export const createMeeting = async (
     return meeting;
 };
 
+const setMeetingRejected = async ({meetingId}) => {
+    const updatedMeeting = prisma.meeting.update({
+        where: {
+            id: meetingId,
+        },
+        data: {
+            meetingState: 'REJECTED'
+        }
+    })
+    return updatedMeeting;
+};
+
 
 export const deleteMeeting = async ({meetingId}) => {};
 
@@ -52,13 +64,6 @@ export const getUserFromMeeting = async (meeting) => {
     return user;
 }
 
-// enum OfferState {
-//   OPEN
-//   ACCEPTED
-//   REJECTED
-//   EXPIRED
-// }
-
 export const simulateProcessMeeting = async (meeting) => {
     const meetingId = meeting.id
 
@@ -67,32 +72,28 @@ export const simulateProcessMeeting = async (meeting) => {
     const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId})
     console.log("friendToOfferId", newFriendToOfferId)
     const recentOffer = await findRecentOffer(offers);
-    console.log("Recent Offer", recentOffer);
+    console.log("Most recent Offer", recentOffer);
     
     if (!newFriendToOfferId) {
-        console.log("No more friends to offer to! ---");
-        const expiredPrevOffer = setOfferExpired({offerId: recentOffer.id})
-
-        // no more friends left to offer 
-                // --> set last offer to expired.
-                // --> set meeting to rejected.
+        console.log("CASE: No more friends to offer to! ---");
+        const expiredPrevOffer = await setOfferExpired({offerId: recentOffer.id})
+        const updatedMeeting = await setMeetingRejected({meetingId})
+        console.log("expired prev offer --", expiredPrevOffer)
+        console.log("updated meeting --", updatedMeeting)
         return
     }
 
 
     if (!recentOffer) {
         const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
-        console.log("zero offers -> new offer ", newOffer)
+        console.log("CASE: zero offers -> new offer ", newOffer)
         return newOffer
     }
-    // IF NO OFFER EXISTS
-        // make a new offer if possible.
 
     if (recentOffer.offerState === 'OPEN') {
         // see if it's expired and set it to expired.
         // if not, leave it open.
         console.log("CASE: Most recent offer is OPEN")
-
         const updatedPrevOffer = await setOfferExpired({offerId: recentOffer.id});
         const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
         console.log("updated expired offer -> ", updatedPrevOffer)
@@ -112,18 +113,9 @@ export const simulateProcessMeeting = async (meeting) => {
 
     } else if (recentOffer.offerState === 'EXPIRED') {
         // make a new offer if possible. (there should be extra friends here)
-            console.log("CASE: Most recent offer is EXPIRED")
+        console.log("CASE: Most recent offer is EXPIRED")
 
     }
-
-
-    // ✅ get user creator
-    // ✅ get the friends of this user 
-    // ✅ get all the offers
-    // ✅ find most recent offer
-    // ✅ ERROR CHECKING - ensure there's only 0 or 1 that is OPEN or ACCEPTED.
-                    // if not, then in error state.
-    // ✅ pick a friend who has not yet been offered (to be offered to)
     // if no offers, create open offer/
     // if any offers past due, close them and try to create a new offer.
 }

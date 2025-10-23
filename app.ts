@@ -7,6 +7,7 @@ import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites } from './
 import { handleGetUserByPhone } from './endpoint-handlers/user-handler.ts';
 import { handleGetFriends } from './endpoint-handlers/friend-handler.ts';
 import { handleCreateMeeting, handleGetMeetings } from './endpoint-handlers/meeting-handler.ts';
+import { handleGetOffers } from './endpoint-handlers/offer-handler.ts';
 import { handleSimulateCronRound } from './endpoint-handlers/cron-handler.ts';
 
 const app = express();
@@ -43,7 +44,13 @@ app.post('/api/get-friends', handleGetFriends);
 app.post('/api/create-meeting', handleCreateMeeting);
 app.post('/api/get-meetings', handleGetMeetings);
 
+//OFFER ENDPOINTS
+app.post('/api/get-offers', handleGetOffers);
+
+
 app.get('/api/simulate-cron-round', handleSimulateCronRound)
+
+
 
 
 app.get('/', (req, res) => {
