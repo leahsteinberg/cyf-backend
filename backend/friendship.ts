@@ -1,6 +1,9 @@
 import {prisma } from './auth.ts';  
 
 
+//// MUTATE
+
+
 export const createFriendship = async ({userId1, userId2}) => {
     const friendship = await prisma.friendship.create({
         data: {
@@ -10,6 +13,9 @@ export const createFriendship = async ({userId1, userId2}) => {
         });
     return friendship;
 };
+
+
+//// LOOK UP
 
 export const getFriends = async (id) => {
     const friendIds = await getFriendIds(id);

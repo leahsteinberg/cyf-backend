@@ -1,6 +1,6 @@
 import { prisma } from './auth.ts';  
 import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, createOffer, setOfferExpired } from './offer.ts';
-
+import { processOffersForMeeting } from './process-meeting.ts';
 
 export const createMeeting = async (
     {
@@ -17,10 +17,13 @@ export const createMeeting = async (
                 title,
             }
     });
-    return meeting;
+    const processedMeeting = await processOffersForMeeting(meeting);
+    console.log("Processed Meeting-----", processedMeeting)
+
+    return processedMeeting;
 };
 
-const setMeetingRejected = async ({meetingId}) => {
+export const setMeetingRejected = async ({meetingId}) => {
     const updatedMeeting = prisma.meeting.update({
         where: {
             id: meetingId,
@@ -32,13 +35,14 @@ const setMeetingRejected = async ({meetingId}) => {
     return updatedMeeting;
 };
 
-export const setMeetingAccepted = async ({meetingId}) => {
+export const setMeetingAccepted = async ({meetingId, userId}) => {
     const updatedMeeting = prisma.meeting.update({
         where: {
             id: meetingId,
         },
         data: {
-            meetingState: 'ACCEPTED'
+            meetingState: 'ACCEPTED',
+            acceptedUserId: userId,
         }
     })
     return updatedMeeting;
@@ -51,9 +55,25 @@ export const getCreatedMeetings = async ({userFromId}) => {
     const meetings = await prisma.meeting.findMany({
         where: {
             userFromId
-        }
+        },
+        include: {
+            acceptedUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                },
+            },
+        },
     });
+    console.log("get meetings - ", meetings)
+
     return meetings;
+
+
+
 };
 
 
@@ -77,65 +97,4 @@ export const getUserFromMeeting = async (meeting) => {
     return user;
 }
 
-export const simulateProcessMeeting = async (meeting) => {
-    const meetingId = meeting.id
-
-    const offers = await getMeetingOffers({meetingId})
-    console.log("offers", offers);
-    
-    const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId})
-    console.log("friendToOfferId", newFriendToOfferId)
-    const recentOffer = await findRecentOffer(offers);
-    console.log("Most recent Offer", recentOffer);
-    
-
-    if (!newFriendToOfferId) {
-        console.log("CASE: No more friends to offer to! --- ");
-        const expiredPrevOffer = await setOfferExpired({offerId: recentOffer.id})
-        const updatedMeeting = await setMeetingRejected({meetingId})
-        console.log("expired prev offer --", expiredPrevOffer)
-        console.log("updated meeting --", updatedMeeting)
-        return
-    }
-
-
-    if (!recentOffer) {
-        const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
-        console.log("CASE: zero offers -> new offer ", newOffer)
-        return newOffer
-    }
-
-
-    if (recentOffer.offerState === 'OPEN') {
-        // see if it's expired and set it to expired.
-        // if not, leave it open.
-        // TODO - change this so it is actually based on when it expires.....?
-        console.log("CASE: Most recent offer is OPEN")
-        const updatedPrevOffer = await setOfferExpired({offerId: recentOffer.id});
-        const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
-        console.log("updated expired offer -> ", updatedPrevOffer)
-        console.log("-> new offer ", newOffer)
-        return newOffer
-
-    } else if (recentOffer.offerState === 'ACCEPTED') {
-        // put it through the "accept offer" path, (which should have)
-        // already been called, but good to be thorough
-        console.log("CASE: Most recent offer is ACCEPTED")
-
-
-    } else if (recentOffer.offerState === 'REJECTED') {
-        // make a new offer if possible.
-        console.log("CASE: Most recent offer is REJECTED")
-        const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
-        console.log("-> new offer ", newOffer)
-        return newOffer
-
-
-    } else if (recentOffer.offerState === 'EXPIRED') {
-        // make a new offer if possible. (there should be extra friends here)
-        console.log("CASE: Most recent offer is EXPIRED")
-    }
-    // if no offers, create open offer/
-    // if any offers past due, close them and try to create a new offer.
-}
 

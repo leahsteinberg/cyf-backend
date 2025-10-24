@@ -1537,6 +1537,7 @@ export namespace Prisma {
     invitesSent: number
     meetingsCreated: number
     offersReceived: number
+    meetingsAccepted: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1547,6 +1548,7 @@ export namespace Prisma {
     invitesSent?: boolean | UserCountOutputTypeCountInvitesSentArgs
     meetingsCreated?: boolean | UserCountOutputTypeCountMeetingsCreatedArgs
     offersReceived?: boolean | UserCountOutputTypeCountOffersReceivedArgs
+    meetingsAccepted?: boolean | UserCountOutputTypeCountMeetingsAcceptedArgs
   }
 
   // Custom InputTypes
@@ -1607,6 +1609,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountOffersReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OfferWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMeetingsAcceptedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MeetingWhereInput
   }
 
 
@@ -1864,6 +1873,7 @@ export namespace Prisma {
     invitesSent?: boolean | User$invitesSentArgs<ExtArgs>
     meetingsCreated?: boolean | User$meetingsCreatedArgs<ExtArgs>
     offersReceived?: boolean | User$offersReceivedArgs<ExtArgs>
+    meetingsAccepted?: boolean | User$meetingsAcceptedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1918,6 +1928,7 @@ export namespace Prisma {
     invitesSent?: boolean | User$invitesSentArgs<ExtArgs>
     meetingsCreated?: boolean | User$meetingsCreatedArgs<ExtArgs>
     offersReceived?: boolean | User$offersReceivedArgs<ExtArgs>
+    meetingsAccepted?: boolean | User$meetingsAcceptedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1933,6 +1944,7 @@ export namespace Prisma {
       invitesSent: Prisma.$InvitationPayload<ExtArgs>[]
       meetingsCreated: Prisma.$MeetingPayload<ExtArgs>[]
       offersReceived: Prisma.$OfferPayload<ExtArgs>[]
+      meetingsAccepted: Prisma.$MeetingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2347,6 +2359,7 @@ export namespace Prisma {
     invitesSent<T extends User$invitesSentArgs<ExtArgs> = {}>(args?: Subset<T, User$invitesSentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     meetingsCreated<T extends User$meetingsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$meetingsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     offersReceived<T extends User$offersReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$offersReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    meetingsAccepted<T extends User$meetingsAcceptedArgs<ExtArgs> = {}>(args?: Subset<T, User$meetingsAcceptedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2940,6 +2953,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OfferScalarFieldEnum | OfferScalarFieldEnum[]
+  }
+
+  /**
+   * User.meetingsAccepted
+   */
+  export type User$meetingsAcceptedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Meeting
+     */
+    select?: MeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Meeting
+     */
+    omit?: MeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeetingInclude<ExtArgs> | null
+    where?: MeetingWhereInput
+    orderBy?: MeetingOrderByWithRelationInput | MeetingOrderByWithRelationInput[]
+    cursor?: MeetingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MeetingScalarFieldEnum | MeetingScalarFieldEnum[]
   }
 
   /**
@@ -8352,6 +8389,7 @@ export namespace Prisma {
   export type MeetingMinAggregateOutputType = {
     id: string | null
     userFromId: string | null
+    acceptedUserId: string | null
     createdAt: Date | null
     scheduledFor: Date | null
     scheduledEnd: Date | null
@@ -8362,6 +8400,7 @@ export namespace Prisma {
   export type MeetingMaxAggregateOutputType = {
     id: string | null
     userFromId: string | null
+    acceptedUserId: string | null
     createdAt: Date | null
     scheduledFor: Date | null
     scheduledEnd: Date | null
@@ -8372,6 +8411,7 @@ export namespace Prisma {
   export type MeetingCountAggregateOutputType = {
     id: number
     userFromId: number
+    acceptedUserId: number
     createdAt: number
     scheduledFor: number
     scheduledEnd: number
@@ -8384,6 +8424,7 @@ export namespace Prisma {
   export type MeetingMinAggregateInputType = {
     id?: true
     userFromId?: true
+    acceptedUserId?: true
     createdAt?: true
     scheduledFor?: true
     scheduledEnd?: true
@@ -8394,6 +8435,7 @@ export namespace Prisma {
   export type MeetingMaxAggregateInputType = {
     id?: true
     userFromId?: true
+    acceptedUserId?: true
     createdAt?: true
     scheduledFor?: true
     scheduledEnd?: true
@@ -8404,6 +8446,7 @@ export namespace Prisma {
   export type MeetingCountAggregateInputType = {
     id?: true
     userFromId?: true
+    acceptedUserId?: true
     createdAt?: true
     scheduledFor?: true
     scheduledEnd?: true
@@ -8487,6 +8530,7 @@ export namespace Prisma {
   export type MeetingGroupByOutputType = {
     id: string
     userFromId: string
+    acceptedUserId: string | null
     createdAt: Date
     scheduledFor: Date
     scheduledEnd: Date
@@ -8514,12 +8558,14 @@ export namespace Prisma {
   export type MeetingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userFromId?: boolean
+    acceptedUserId?: boolean
     createdAt?: boolean
     scheduledFor?: boolean
     scheduledEnd?: boolean
     title?: boolean
     meetingState?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
     offers?: boolean | Meeting$offersArgs<ExtArgs>
     _count?: boolean | MeetingCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["meeting"]>
@@ -8527,28 +8573,33 @@ export namespace Prisma {
   export type MeetingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userFromId?: boolean
+    acceptedUserId?: boolean
     createdAt?: boolean
     scheduledFor?: boolean
     scheduledEnd?: boolean
     title?: boolean
     meetingState?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
   }, ExtArgs["result"]["meeting"]>
 
   export type MeetingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userFromId?: boolean
+    acceptedUserId?: boolean
     createdAt?: boolean
     scheduledFor?: boolean
     scheduledEnd?: boolean
     title?: boolean
     meetingState?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
   }, ExtArgs["result"]["meeting"]>
 
   export type MeetingSelectScalar = {
     id?: boolean
     userFromId?: boolean
+    acceptedUserId?: boolean
     createdAt?: boolean
     scheduledFor?: boolean
     scheduledEnd?: boolean
@@ -8556,28 +8607,33 @@ export namespace Prisma {
     meetingState?: boolean
   }
 
-  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "createdAt" | "scheduledFor" | "scheduledEnd" | "title" | "meetingState", ExtArgs["result"]["meeting"]>
+  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "acceptedUserId" | "createdAt" | "scheduledFor" | "scheduledEnd" | "title" | "meetingState", ExtArgs["result"]["meeting"]>
   export type MeetingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
     offers?: boolean | Meeting$offersArgs<ExtArgs>
     _count?: boolean | MeetingCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MeetingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
   }
   export type MeetingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
   }
 
   export type $MeetingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Meeting"
     objects: {
       userFrom: Prisma.$UserPayload<ExtArgs>
+      acceptedUser: Prisma.$UserPayload<ExtArgs> | null
       offers: Prisma.$OfferPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userFromId: string
+      acceptedUserId: string | null
       createdAt: Date
       scheduledFor: Date
       scheduledEnd: Date
@@ -8978,6 +9034,7 @@ export namespace Prisma {
   export interface Prisma__MeetingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     userFrom<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    acceptedUser<T extends Meeting$acceptedUserArgs<ExtArgs> = {}>(args?: Subset<T, Meeting$acceptedUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     offers<T extends Meeting$offersArgs<ExtArgs> = {}>(args?: Subset<T, Meeting$offersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -9010,6 +9067,7 @@ export namespace Prisma {
   interface MeetingFieldRefs {
     readonly id: FieldRef<"Meeting", 'String'>
     readonly userFromId: FieldRef<"Meeting", 'String'>
+    readonly acceptedUserId: FieldRef<"Meeting", 'String'>
     readonly createdAt: FieldRef<"Meeting", 'DateTime'>
     readonly scheduledFor: FieldRef<"Meeting", 'DateTime'>
     readonly scheduledEnd: FieldRef<"Meeting", 'DateTime'>
@@ -9408,6 +9466,25 @@ export namespace Prisma {
      * Limit how many Meetings to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Meeting.acceptedUser
+   */
+  export type Meeting$acceptedUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -10619,6 +10696,7 @@ export namespace Prisma {
   export const MeetingScalarFieldEnum: {
     id: 'id',
     userFromId: 'userFromId',
+    acceptedUserId: 'acceptedUserId',
     createdAt: 'createdAt',
     scheduledFor: 'scheduledFor',
     scheduledEnd: 'scheduledEnd',
@@ -10771,6 +10849,7 @@ export namespace Prisma {
     invitesSent?: InvitationListRelationFilter
     meetingsCreated?: MeetingListRelationFilter
     offersReceived?: OfferListRelationFilter
+    meetingsAccepted?: MeetingListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -10792,6 +10871,7 @@ export namespace Prisma {
     invitesSent?: InvitationOrderByRelationAggregateInput
     meetingsCreated?: MeetingOrderByRelationAggregateInput
     offersReceived?: OfferOrderByRelationAggregateInput
+    meetingsAccepted?: MeetingOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -10816,6 +10896,7 @@ export namespace Prisma {
     invitesSent?: InvitationListRelationFilter
     meetingsCreated?: MeetingListRelationFilter
     offersReceived?: OfferListRelationFilter
+    meetingsAccepted?: MeetingListRelationFilter
   }, "id" | "email" | "phoneNumber" | "username">
 
   export type UserOrderByWithAggregationInput = {
@@ -11188,24 +11269,28 @@ export namespace Prisma {
     NOT?: MeetingWhereInput | MeetingWhereInput[]
     id?: StringFilter<"Meeting"> | string
     userFromId?: StringFilter<"Meeting"> | string
+    acceptedUserId?: StringNullableFilter<"Meeting"> | string | null
     createdAt?: DateTimeFilter<"Meeting"> | Date | string
     scheduledFor?: DateTimeFilter<"Meeting"> | Date | string
     scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
     title?: StringNullableFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateFilter<"Meeting"> | $Enums.MeetingState
     userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
+    acceptedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     offers?: OfferListRelationFilter
   }
 
   export type MeetingOrderByWithRelationInput = {
     id?: SortOrder
     userFromId?: SortOrder
+    acceptedUserId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     scheduledFor?: SortOrder
     scheduledEnd?: SortOrder
     title?: SortOrderInput | SortOrder
     meetingState?: SortOrder
     userFrom?: UserOrderByWithRelationInput
+    acceptedUser?: UserOrderByWithRelationInput
     offers?: OfferOrderByRelationAggregateInput
   }
 
@@ -11215,18 +11300,21 @@ export namespace Prisma {
     OR?: MeetingWhereInput[]
     NOT?: MeetingWhereInput | MeetingWhereInput[]
     userFromId?: StringFilter<"Meeting"> | string
+    acceptedUserId?: StringNullableFilter<"Meeting"> | string | null
     createdAt?: DateTimeFilter<"Meeting"> | Date | string
     scheduledFor?: DateTimeFilter<"Meeting"> | Date | string
     scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
     title?: StringNullableFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateFilter<"Meeting"> | $Enums.MeetingState
     userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
+    acceptedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     offers?: OfferListRelationFilter
   }, "id">
 
   export type MeetingOrderByWithAggregationInput = {
     id?: SortOrder
     userFromId?: SortOrder
+    acceptedUserId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     scheduledFor?: SortOrder
     scheduledEnd?: SortOrder
@@ -11243,6 +11331,7 @@ export namespace Prisma {
     NOT?: MeetingScalarWhereWithAggregatesInput | MeetingScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Meeting"> | string
     userFromId?: StringWithAggregatesFilter<"Meeting"> | string
+    acceptedUserId?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Meeting"> | Date | string
     scheduledFor?: DateTimeWithAggregatesFilter<"Meeting"> | Date | string
     scheduledEnd?: DateTimeWithAggregatesFilter<"Meeting"> | Date | string
@@ -11327,6 +11416,7 @@ export namespace Prisma {
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -11348,6 +11438,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserUpdateInput = {
@@ -11369,6 +11460,7 @@ export namespace Prisma {
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -11390,6 +11482,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -11794,12 +11887,14 @@ export namespace Prisma {
     title?: string | null
     meetingState?: $Enums.MeetingState
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
+    acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
   }
 
   export type MeetingUncheckedCreateInput = {
     id?: string
     userFromId: string
+    acceptedUserId?: string | null
     createdAt?: Date | string
     scheduledFor: Date | string
     scheduledEnd: Date | string
@@ -11816,12 +11911,14 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
+    acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
   }
 
   export type MeetingUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userFromId?: StringFieldUpdateOperationsInput | string
+    acceptedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11833,6 +11930,7 @@ export namespace Prisma {
   export type MeetingCreateManyInput = {
     id?: string
     userFromId: string
+    acceptedUserId?: string | null
     createdAt?: Date | string
     scheduledFor: Date | string
     scheduledEnd: Date | string
@@ -11852,6 +11950,7 @@ export namespace Prisma {
   export type MeetingUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userFromId?: StringFieldUpdateOperationsInput | string
+    acceptedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12327,9 +12426,15 @@ export namespace Prisma {
     not?: NestedEnumMeetingStateFilter<$PrismaModel> | $Enums.MeetingState
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type MeetingCountOrderByAggregateInput = {
     id?: SortOrder
     userFromId?: SortOrder
+    acceptedUserId?: SortOrder
     createdAt?: SortOrder
     scheduledFor?: SortOrder
     scheduledEnd?: SortOrder
@@ -12340,6 +12445,7 @@ export namespace Prisma {
   export type MeetingMaxOrderByAggregateInput = {
     id?: SortOrder
     userFromId?: SortOrder
+    acceptedUserId?: SortOrder
     createdAt?: SortOrder
     scheduledFor?: SortOrder
     scheduledEnd?: SortOrder
@@ -12350,6 +12456,7 @@ export namespace Prisma {
   export type MeetingMinOrderByAggregateInput = {
     id?: SortOrder
     userFromId?: SortOrder
+    acceptedUserId?: SortOrder
     createdAt?: SortOrder
     scheduledFor?: SortOrder
     scheduledEnd?: SortOrder
@@ -12462,6 +12569,13 @@ export namespace Prisma {
     connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
   }
 
+  export type MeetingCreateNestedManyWithoutAcceptedUserInput = {
+    create?: XOR<MeetingCreateWithoutAcceptedUserInput, MeetingUncheckedCreateWithoutAcceptedUserInput> | MeetingCreateWithoutAcceptedUserInput[] | MeetingUncheckedCreateWithoutAcceptedUserInput[]
+    connectOrCreate?: MeetingCreateOrConnectWithoutAcceptedUserInput | MeetingCreateOrConnectWithoutAcceptedUserInput[]
+    createMany?: MeetingCreateManyAcceptedUserInputEnvelope
+    connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -12509,6 +12623,13 @@ export namespace Prisma {
     connectOrCreate?: OfferCreateOrConnectWithoutUserOfferedInput | OfferCreateOrConnectWithoutUserOfferedInput[]
     createMany?: OfferCreateManyUserOfferedInputEnvelope
     connect?: OfferWhereUniqueInput | OfferWhereUniqueInput[]
+  }
+
+  export type MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput = {
+    create?: XOR<MeetingCreateWithoutAcceptedUserInput, MeetingUncheckedCreateWithoutAcceptedUserInput> | MeetingCreateWithoutAcceptedUserInput[] | MeetingUncheckedCreateWithoutAcceptedUserInput[]
+    connectOrCreate?: MeetingCreateOrConnectWithoutAcceptedUserInput | MeetingCreateOrConnectWithoutAcceptedUserInput[]
+    createMany?: MeetingCreateManyAcceptedUserInputEnvelope
+    connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -12629,6 +12750,20 @@ export namespace Prisma {
     deleteMany?: OfferScalarWhereInput | OfferScalarWhereInput[]
   }
 
+  export type MeetingUpdateManyWithoutAcceptedUserNestedInput = {
+    create?: XOR<MeetingCreateWithoutAcceptedUserInput, MeetingUncheckedCreateWithoutAcceptedUserInput> | MeetingCreateWithoutAcceptedUserInput[] | MeetingUncheckedCreateWithoutAcceptedUserInput[]
+    connectOrCreate?: MeetingCreateOrConnectWithoutAcceptedUserInput | MeetingCreateOrConnectWithoutAcceptedUserInput[]
+    upsert?: MeetingUpsertWithWhereUniqueWithoutAcceptedUserInput | MeetingUpsertWithWhereUniqueWithoutAcceptedUserInput[]
+    createMany?: MeetingCreateManyAcceptedUserInputEnvelope
+    set?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    disconnect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    delete?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    update?: MeetingUpdateWithWhereUniqueWithoutAcceptedUserInput | MeetingUpdateWithWhereUniqueWithoutAcceptedUserInput[]
+    updateMany?: MeetingUpdateManyWithWhereWithoutAcceptedUserInput | MeetingUpdateManyWithWhereWithoutAcceptedUserInput[]
+    deleteMany?: MeetingScalarWhereInput | MeetingScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -12727,6 +12862,20 @@ export namespace Prisma {
     deleteMany?: OfferScalarWhereInput | OfferScalarWhereInput[]
   }
 
+  export type MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput = {
+    create?: XOR<MeetingCreateWithoutAcceptedUserInput, MeetingUncheckedCreateWithoutAcceptedUserInput> | MeetingCreateWithoutAcceptedUserInput[] | MeetingUncheckedCreateWithoutAcceptedUserInput[]
+    connectOrCreate?: MeetingCreateOrConnectWithoutAcceptedUserInput | MeetingCreateOrConnectWithoutAcceptedUserInput[]
+    upsert?: MeetingUpsertWithWhereUniqueWithoutAcceptedUserInput | MeetingUpsertWithWhereUniqueWithoutAcceptedUserInput[]
+    createMany?: MeetingCreateManyAcceptedUserInputEnvelope
+    set?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    disconnect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    delete?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+    update?: MeetingUpdateWithWhereUniqueWithoutAcceptedUserInput | MeetingUpdateWithWhereUniqueWithoutAcceptedUserInput[]
+    updateMany?: MeetingUpdateManyWithWhereWithoutAcceptedUserInput | MeetingUpdateManyWithWhereWithoutAcceptedUserInput[]
+    deleteMany?: MeetingScalarWhereInput | MeetingScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutSessionsInput = {
     create?: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
@@ -12807,6 +12956,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutMeetingsAcceptedInput = {
+    create?: XOR<UserCreateWithoutMeetingsAcceptedInput, UserUncheckedCreateWithoutMeetingsAcceptedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMeetingsAcceptedInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type OfferCreateNestedManyWithoutMeetingInput = {
     create?: XOR<OfferCreateWithoutMeetingInput, OfferUncheckedCreateWithoutMeetingInput> | OfferCreateWithoutMeetingInput[] | OfferUncheckedCreateWithoutMeetingInput[]
     connectOrCreate?: OfferCreateOrConnectWithoutMeetingInput | OfferCreateOrConnectWithoutMeetingInput[]
@@ -12831,6 +12986,16 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutMeetingsCreatedInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMeetingsCreatedInput, UserUpdateWithoutMeetingsCreatedInput>, UserUncheckedUpdateWithoutMeetingsCreatedInput>
+  }
+
+  export type UserUpdateOneWithoutMeetingsAcceptedNestedInput = {
+    create?: XOR<UserCreateWithoutMeetingsAcceptedInput, UserUncheckedCreateWithoutMeetingsAcceptedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMeetingsAcceptedInput
+    upsert?: UserUpsertWithoutMeetingsAcceptedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMeetingsAcceptedInput, UserUpdateWithoutMeetingsAcceptedInput>, UserUncheckedUpdateWithoutMeetingsAcceptedInput>
   }
 
   export type OfferUpdateManyWithoutMeetingNestedInput = {
@@ -13230,11 +13395,13 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
   }
 
   export type MeetingUncheckedCreateWithoutUserFromInput = {
     id?: string
+    acceptedUserId?: string | null
     createdAt?: Date | string
     scheduledFor: Date | string
     scheduledEnd: Date | string
@@ -13274,6 +13441,38 @@ export namespace Prisma {
 
   export type OfferCreateManyUserOfferedInputEnvelope = {
     data: OfferCreateManyUserOfferedInput | OfferCreateManyUserOfferedInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MeetingCreateWithoutAcceptedUserInput = {
+    id?: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+    title?: string | null
+    meetingState?: $Enums.MeetingState
+    userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
+    offers?: OfferCreateNestedManyWithoutMeetingInput
+  }
+
+  export type MeetingUncheckedCreateWithoutAcceptedUserInput = {
+    id?: string
+    userFromId: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+    title?: string | null
+    meetingState?: $Enums.MeetingState
+    offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
+  }
+
+  export type MeetingCreateOrConnectWithoutAcceptedUserInput = {
+    where: MeetingWhereUniqueInput
+    create: XOR<MeetingCreateWithoutAcceptedUserInput, MeetingUncheckedCreateWithoutAcceptedUserInput>
+  }
+
+  export type MeetingCreateManyAcceptedUserInputEnvelope = {
+    data: MeetingCreateManyAcceptedUserInput | MeetingCreateManyAcceptedUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -13433,6 +13632,7 @@ export namespace Prisma {
     NOT?: MeetingScalarWhereInput | MeetingScalarWhereInput[]
     id?: StringFilter<"Meeting"> | string
     userFromId?: StringFilter<"Meeting"> | string
+    acceptedUserId?: StringNullableFilter<"Meeting"> | string | null
     createdAt?: DateTimeFilter<"Meeting"> | Date | string
     scheduledFor?: DateTimeFilter<"Meeting"> | Date | string
     scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
@@ -13467,6 +13667,22 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Offer"> | Date | string
   }
 
+  export type MeetingUpsertWithWhereUniqueWithoutAcceptedUserInput = {
+    where: MeetingWhereUniqueInput
+    update: XOR<MeetingUpdateWithoutAcceptedUserInput, MeetingUncheckedUpdateWithoutAcceptedUserInput>
+    create: XOR<MeetingCreateWithoutAcceptedUserInput, MeetingUncheckedCreateWithoutAcceptedUserInput>
+  }
+
+  export type MeetingUpdateWithWhereUniqueWithoutAcceptedUserInput = {
+    where: MeetingWhereUniqueInput
+    data: XOR<MeetingUpdateWithoutAcceptedUserInput, MeetingUncheckedUpdateWithoutAcceptedUserInput>
+  }
+
+  export type MeetingUpdateManyWithWhereWithoutAcceptedUserInput = {
+    where: MeetingScalarWhereInput
+    data: XOR<MeetingUpdateManyMutationInput, MeetingUncheckedUpdateManyWithoutAcceptedUserInput>
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     email: string
@@ -13485,6 +13701,7 @@ export namespace Prisma {
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -13505,6 +13722,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -13541,6 +13759,7 @@ export namespace Prisma {
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -13561,6 +13780,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -13581,6 +13801,7 @@ export namespace Prisma {
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -13601,6 +13822,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -13637,6 +13859,7 @@ export namespace Prisma {
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -13657,6 +13880,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserCreateWithoutFriendsOfInput = {
@@ -13677,6 +13901,7 @@ export namespace Prisma {
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserUncheckedCreateWithoutFriendsOfInput = {
@@ -13697,6 +13922,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserCreateOrConnectWithoutFriendsOfInput = {
@@ -13722,6 +13948,7 @@ export namespace Prisma {
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserUncheckedCreateWithoutFriendsWithInput = {
@@ -13742,6 +13969,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserCreateOrConnectWithoutFriendsWithInput = {
@@ -13778,6 +14006,7 @@ export namespace Prisma {
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendsOfInput = {
@@ -13798,6 +14027,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserUpsertWithoutFriendsWithInput = {
@@ -13829,6 +14059,7 @@ export namespace Prisma {
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendsWithInput = {
@@ -13849,6 +14080,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserCreateWithoutInvitesSentInput = {
@@ -13869,6 +14101,7 @@ export namespace Prisma {
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserUncheckedCreateWithoutInvitesSentInput = {
@@ -13889,6 +14122,7 @@ export namespace Prisma {
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserCreateOrConnectWithoutInvitesSentInput = {
@@ -13925,6 +14159,7 @@ export namespace Prisma {
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitesSentInput = {
@@ -13945,6 +14180,7 @@ export namespace Prisma {
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserCreateWithoutMeetingsCreatedInput = {
@@ -13965,6 +14201,7 @@ export namespace Prisma {
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserUncheckedCreateWithoutMeetingsCreatedInput = {
@@ -13985,11 +14222,59 @@ export namespace Prisma {
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserCreateOrConnectWithoutMeetingsCreatedInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutMeetingsCreatedInput, UserUncheckedCreateWithoutMeetingsCreatedInput>
+  }
+
+  export type UserCreateWithoutMeetingsAcceptedInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+  }
+
+  export type UserUncheckedCreateWithoutMeetingsAcceptedInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+  }
+
+  export type UserCreateOrConnectWithoutMeetingsAcceptedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMeetingsAcceptedInput, UserUncheckedCreateWithoutMeetingsAcceptedInput>
   }
 
   export type OfferCreateWithoutMeetingInput = {
@@ -14045,6 +14330,7 @@ export namespace Prisma {
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMeetingsCreatedInput = {
@@ -14064,6 +14350,60 @@ export namespace Prisma {
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+  }
+
+  export type UserUpsertWithoutMeetingsAcceptedInput = {
+    update: XOR<UserUpdateWithoutMeetingsAcceptedInput, UserUncheckedUpdateWithoutMeetingsAcceptedInput>
+    create: XOR<UserCreateWithoutMeetingsAcceptedInput, UserUncheckedCreateWithoutMeetingsAcceptedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMeetingsAcceptedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMeetingsAcceptedInput, UserUncheckedUpdateWithoutMeetingsAcceptedInput>
+  }
+
+  export type UserUpdateWithoutMeetingsAcceptedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMeetingsAcceptedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
   }
 
@@ -14091,11 +14431,13 @@ export namespace Prisma {
     title?: string | null
     meetingState?: $Enums.MeetingState
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
+    acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
   }
 
   export type MeetingUncheckedCreateWithoutOffersInput = {
     id?: string
     userFromId: string
+    acceptedUserId?: string | null
     createdAt?: Date | string
     scheduledFor: Date | string
     scheduledEnd: Date | string
@@ -14126,6 +14468,7 @@ export namespace Prisma {
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserUncheckedCreateWithoutOffersReceivedInput = {
@@ -14146,6 +14489,7 @@ export namespace Prisma {
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
   }
 
   export type UserCreateOrConnectWithoutOffersReceivedInput = {
@@ -14172,11 +14516,13 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
+    acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
   }
 
   export type MeetingUncheckedUpdateWithoutOffersInput = {
     id?: StringFieldUpdateOperationsInput | string
     userFromId?: StringFieldUpdateOperationsInput | string
+    acceptedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14213,6 +14559,7 @@ export namespace Prisma {
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOffersReceivedInput = {
@@ -14233,6 +14580,7 @@ export namespace Prisma {
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -14280,6 +14628,7 @@ export namespace Prisma {
 
   export type MeetingCreateManyUserFromInput = {
     id?: string
+    acceptedUserId?: string | null
     createdAt?: Date | string
     scheduledFor: Date | string
     scheduledEnd: Date | string
@@ -14292,6 +14641,16 @@ export namespace Prisma {
     meetingId: string
     offerState?: $Enums.OfferState
     createdAt?: Date | string
+  }
+
+  export type MeetingCreateManyAcceptedUserInput = {
+    id?: string
+    userFromId: string
+    createdAt?: Date | string
+    scheduledFor: Date | string
+    scheduledEnd: Date | string
+    title?: string | null
+    meetingState?: $Enums.MeetingState
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -14430,11 +14789,13 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
   }
 
   export type MeetingUncheckedUpdateWithoutUserFromInput = {
     id?: StringFieldUpdateOperationsInput | string
+    acceptedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14445,6 +14806,7 @@ export namespace Prisma {
 
   export type MeetingUncheckedUpdateManyWithoutUserFromInput = {
     id?: StringFieldUpdateOperationsInput | string
+    acceptedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14471,6 +14833,38 @@ export namespace Prisma {
     meetingId?: StringFieldUpdateOperationsInput | string
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MeetingUpdateWithoutAcceptedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
+    offers?: OfferUpdateManyWithoutMeetingNestedInput
+  }
+
+  export type MeetingUncheckedUpdateWithoutAcceptedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userFromId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
+  }
+
+  export type MeetingUncheckedUpdateManyWithoutAcceptedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userFromId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledFor?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
   }
 
   export type OfferCreateManyMeetingInput = {

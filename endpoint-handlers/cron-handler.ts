@@ -1,11 +1,13 @@
-import { getAllSearchingMeetings, simulateProcessMeeting } from "../backend/meeting.ts";
+import { getAllSearchingMeetings} from "../backend/meeting.ts";
+import { processOffersForMeeting } from "../backend/process-meeting.ts";
+
 
 export const handleSimulateCronRound = async (req, res) => {
     const openMeetings = await getAllSearchingMeetings();
 
     for (const meeting of openMeetings) {
         console.log("meeting is - ", meeting)
-        const processedMeeting = await simulateProcessMeeting(meeting)
+        const processedMeeting = await processOffersForMeeting(meeting)
         console.log("-------------------------------- ONE MEETING DONE")
 
     }

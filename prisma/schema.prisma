@@ -25,6 +25,7 @@ model User {
   invitesSent         Invitation[]  @relation("invitesSent")
   meetingsCreated     Meeting[]     @relation("meetingsCreated")
   offersReceived      Offer[]       @relation("offersReceived")
+  meetingsAccepted    Meeting[]     @relation("meetingsAccepted")
   // meetingsAccepted    Meeting[]     @relation("meetingsAccepted")
 
   username        String?
@@ -107,6 +108,8 @@ model Meeting {
   id              String        @id @default(uuid())
   userFrom        User          @relation("meetingsCreated", fields: [userFromId], references: [id])
   userFromId      String
+  acceptedUserId  String?
+  acceptedUser    User?         @relation("meetingsAccepted", fields: [acceptedUserId], references: [id])
   createdAt       DateTime      @default(now())
   scheduledFor    DateTime
   scheduledEnd    DateTime

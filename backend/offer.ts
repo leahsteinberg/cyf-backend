@@ -13,48 +13,6 @@ export const createOffer = async ({meetingId, userOfferedId}) => {
     return offer;
 };
 
-export const getMeetingOffers = async ({meetingId}) => {
-    const offers = await prisma.offer.findMany({
-        where: {
-            meetingId
-        }
-    })
-    return offers;
-}
-
-export const getOfferedFriendsFromOffer = async () => {
-
-}
-
-export const findFriendIdToOffer = async ({offers, meetingId}) => {
-    const userFrom = await getUserFromMeeting(meetingId);
-    if (!userFrom) {
-        throw new Error('User not found for meeting');
-    }
-    const allUserFriendIds = await getFriendIds(userFrom.id);
-    console.log("all user FriendIDs", allUserFriendIds)
-    const offeredFriends = offers.reduce(
-        (friendsOffered, offer) => {
-            const userOfferedId = offer.userOfferedId.toString()
-                return [...friendsOffered, userOfferedId]
-            },
-        []
-    );
-    const friendToOfferId = pickFriendIdToOffer(offeredFriends, allUserFriendIds)
-    return friendToOfferId;
-}
-
-export const findRecentOffer = (offers) => {
-    if (offers.length > 0) {
-        const recentOffer = offers.reduce((recent, curr) => {
-            return  recent.createdAt.getTime() > curr.createdAt.getTime() ? recent : curr
-        }, offers[0])
-        return recentOffer
-    }
-    return null
-    
-}
-
 
 export const setOfferExpired = async ({offerId}) => {
     const expiredOffer = prisma.offer.update({
@@ -85,26 +43,12 @@ export const acceptOffer = async ({ userId, offerId }) => {
 
     })
     console.log("accepted offer --- ", acceptedOffer)
-    const acceptedMeeting = await setMeetingAccepted({meetingId});
+    const acceptedMeeting = await setMeetingAccepted({ meetingId, userId });
     console.log("accepted meeting - ", acceptedMeeting);
     return acceptedOffer;
 
 };
 
-export const getOfferById = async ({offerId}) => {
-    console.log("getOfferById", offerId);
-    const offer = await prisma.offer.findUnique({
-        where:
-        {
-            id: offerId
-        }
-    });
-    return offer;
-}
-
-export const rejectOffer = async () => {};
-
-export const findAcceptedOffer = async () => {};// from a particular meeting
 
 export const getOffersForUser = async ({userId}) => {
     const offers = await prisma.offer.findMany({
@@ -130,5 +74,59 @@ export const getOffersForUser = async ({userId}) => {
             createdAt: 'desc'
         }
     });
+    console.log("Offers for - ", userId);
+    console.log("Offers are -----", offers);
+    console.log("_____________")
+
     return offers;
 };
+
+export const getOfferById = async ({offerId}) => {
+    console.log("getOfferById", offerId);
+    const offer = await prisma.offer.findUnique({
+        where:
+        {
+            id: offerId
+        }
+    });
+    return offer;
+}
+
+
+export const findFriendIdToOffer = async ({offers, meetingId}) => {
+    const userFrom = await getUserFromMeeting(meetingId);
+    if (!userFrom) {
+        throw new Error('User not found for meeting');
+    }
+    const allUserFriendIds = await getFriendIds(userFrom.id);
+    console.log("all user FriendIDs", allUserFriendIds)
+    const offeredFriends = offers.reduce(
+        (friendsOffered, offer) => {
+            const userOfferedId = offer.userOfferedId.toString()
+                return [...friendsOffered, userOfferedId]
+            },
+        []
+    );
+    const friendToOfferId = pickFriendIdToOffer(offeredFriends, allUserFriendIds)
+    return friendToOfferId;
+}
+
+export const findRecentOffer = (offers) => {
+    if (offers.length > 0) {
+        const recentOffer = offers.reduce((recent, curr) => {
+            return  recent.createdAt.getTime() > curr.createdAt.getTime() ? recent : curr
+        }, offers[0])
+        return recentOffer
+    }
+    return null
+    
+}
+
+export const getMeetingOffers = async ({meetingId}) => {
+    const offers = await prisma.offer.findMany({
+        where: {
+            meetingId
+        }
+    })
+    return offers;
+}

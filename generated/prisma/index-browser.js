@@ -188,6 +188,7 @@ exports.Prisma.InvitationScalarFieldEnum = {
 exports.Prisma.MeetingScalarFieldEnum = {
   id: 'id',
   userFromId: 'userFromId',
+  acceptedUserId: 'acceptedUserId',
   createdAt: 'createdAt',
   scheduledFor: 'scheduledFor',
   scheduledEnd: 'scheduledEnd',

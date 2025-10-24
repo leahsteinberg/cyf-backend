@@ -2,6 +2,7 @@ import { getOffersForUser, acceptOffer } from "../backend/offer.ts";
 
 export const handleGetOffers = async (req, res) => {
   const { userId } = req.body;
+  console.log("handle get offers ---", userId);
   
   if (!userId) {
     return res.status(400).json({ error: "userId is required" });
