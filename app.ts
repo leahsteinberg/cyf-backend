@@ -2,7 +2,7 @@ import {auth, prisma} from './backend/auth.ts';
 import express from 'express';
 import { toNodeHandler, fromNodeHeaders } from "better-auth/node"; 
 import cors from 'cors';
-import { handleMe, handleSignIn, handleSignInPhone, handleSignUpPhone } from './endpoint-handlers/auth-handler.ts';
+import { handleMe, handleSignIn, handleSignInPhone, handleSignUpPhone, handleSignOut } from './endpoint-handlers/auth-handler.ts';
 import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites } from './endpoint-handlers/invite-handler.ts';
 import { handleGetUserByPhone } from './endpoint-handlers/user-handler.ts';
 import { handleGetFriends } from './endpoint-handlers/friend-handler.ts';
@@ -19,11 +19,21 @@ app.use(cors({
 app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 
+// SAMPLE ENDPOINTS
+app.get("/api/sample", (req, res) => {
+  console.log("in the sample endpoint!!! ======---")
+
+  res.json("{'hi': 'what my friend'}");
+});
+
+
 // AUTH ENDPOINTS
 app.get("/api/me", handleMe);
 app.post("/api/signup-phone", handleSignUpPhone);
 app.post("/api/signInEmail", handleSignIn);
 app.post("/api/signInPhone", handleSignInPhone);
+app.post('/api/signout', handleSignOut)
+
 
 // USER ENDPOINTS
 app.post('/api/user-by-phone', handleGetUserByPhone);
@@ -51,8 +61,6 @@ app.post('/api/reject-offer', handleRejectOffer);
 
 
 app.get('/api/simulate-cron-round', handleSimulateCronRound)
-
-
 
 
 app.get('/', (req, res) => {

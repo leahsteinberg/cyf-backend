@@ -1,6 +1,6 @@
 import {auth} from '../backend/auth.ts';  
 import { toNodeHandler, fromNodeHeaders } from "better-auth/node"; 
-import { createUser } from '../backend/user.ts';
+import { createUser, signOutUser } from '../backend/user.ts';
 
 export const handleSignIn = async (req, res) => {
     console.log("sign in - ", req.body.email)
@@ -15,6 +15,20 @@ export const handleSignIn = async (req, res) => {
 
     return res.json(session);
 };
+
+export const handleSignOut = async (req, res) => {
+  console.log("sign out!!!", req.body)
+  const {userId} = req.body;
+
+  console.log(req.headers)
+  const user = await auth.api.signOut({
+    headers: fromNodeHeaders(req.headers),
+    
+  })
+  console.log("sign out --- ", user);
+  return user;
+  //return res.json("gottt signout!!")
+}
 
 export const handleMe = async (req, res) => {
     const session = await auth.api.getSession({
