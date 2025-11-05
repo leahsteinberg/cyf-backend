@@ -9,6 +9,7 @@ import { handleGetFriends } from './endpoint-handlers/friend-handler.ts';
 import { handleCreateMeeting, handleGetMeetings } from './endpoint-handlers/meeting-handler.ts';
 import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoint-handlers/offer-handler.ts';
 import { handleSimulateCronRound } from './endpoint-handlers/cron-handler.ts';
+import cron from 'node-cron';
 
 const app = express();
 const port = 3000;
@@ -25,7 +26,15 @@ app.get("/api/sample", (req, res) => {
 
   res.json("{'hi': 'what my friend'}");
 });
+let count = 0;
 
+cron.schedule('* * * * *', () => {
+  console.log('Running a task every minute', count);
+
+  count++;
+  // Place the code for your scheduled task here
+  // This could involve database operations, API calls, file processing, etc.
+});
 
 // AUTH ENDPOINTS
 app.get("/api/me", handleMe);
