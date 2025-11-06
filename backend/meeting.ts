@@ -1,6 +1,4 @@
 import { prisma } from './auth.ts';  
-import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, createOffer, setOfferExpired } from './offer.ts';
-import { processOffersForMeeting } from './process-meeting.ts';
 
 export const createMeeting = async (
     {
@@ -17,23 +15,20 @@ export const createMeeting = async (
                 title,
             }
     });
-    const processedMeeting = await processOffersForMeeting(meeting);
-    console.log("Processed Meeting-----", processedMeeting)
-
-    return processedMeeting;
+    return meeting;
 };
 
-export const setMeetingRejected = async ({meetingId}) => {
+export const setMeetingState = async ({meetingId, meetingState}) => {
     const updatedMeeting = prisma.meeting.update({
         where: {
             id: meetingId,
         },
         data: {
-            meetingState: 'REJECTED'
+            meetingState: meetingState
         }
     })
     return updatedMeeting;
-};
+}; 
 
 export const setMeetingAccepted = async ({meetingId, userId}) => {
     const updatedMeeting = prisma.meeting.update({
@@ -50,6 +45,8 @@ export const setMeetingAccepted = async ({meetingId, userId}) => {
 
 
 export const deleteMeeting = async ({meetingId}) => {};
+
+
 
 export const getCreatedMeetings = async ({userFromId}) => {
     const meetings = await prisma.meeting.findMany({
@@ -68,12 +65,9 @@ export const getCreatedMeetings = async ({userFromId}) => {
             },
         },
     });
-    console.log("get meetings - ", meetings)
+    //console.log("get meetings - ", meetings)
 
     return meetings;
-
-
-
 };
 
 

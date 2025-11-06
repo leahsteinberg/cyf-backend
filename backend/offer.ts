@@ -74,10 +74,6 @@ export const getOffersForUser = async ({userId}) => {
             createdAt: 'desc'
         }
     });
-    console.log("Offers for - ", userId);
-    console.log("Offers are -----", offers);
-    console.log("_____________")
-
     return offers;
 };
 
@@ -94,6 +90,7 @@ export const getOfferById = async ({offerId}) => {
 
 
 export const findFriendIdToOffer = async ({offers, meetingId}) => {
+    // TODO - in the future, do this in a more systematic, yet randomized way.
     const userFrom = await getUserFromMeeting(meetingId);
     if (!userFrom) {
         throw new Error('User not found for meeting');
@@ -129,4 +126,20 @@ export const getMeetingOffers = async ({meetingId}) => {
         }
     })
     return offers;
+}
+
+
+export const isOfferExpired = async ({offerId}) => {
+// to do - figure out the expiration time based on the number of friends.
+//minimum amount of time for a new offer is 1 hour before scheduled for time.
+// last offer goes out 1.5 hours before scheduled for time, at smallest.
+
+
+    // get the meeting
+    const offer = await getOfferById({offerId})
+    const createdAt = offer.createdAt;
+    const now = new Date()
+    const diff = now.getTime() - createdAt.getTime()
+    const diffInMinutes = diff / (1000 * 60)
+    return diffInMinutes > 10
 }
