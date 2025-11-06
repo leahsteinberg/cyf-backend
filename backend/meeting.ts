@@ -94,6 +94,3 @@ export const getUserFromMeeting = async (meeting) => {
     });
     return user;
 }
-
-
-
