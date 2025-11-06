@@ -128,18 +128,10 @@ export const getMeetingOffers = async ({meetingId}) => {
     return offers;
 }
 
-
-export const isOfferExpired = async ({offerId}) => {
-// to do - figure out the expiration time based on the number of friends.
-//minimum amount of time for a new offer is 1 hour before scheduled for time.
-// last offer goes out 1.5 hours before scheduled for time, at smallest.
-
-
-    // get the meeting
-    const offer = await getOfferById({offerId})
-    const createdAt = offer.createdAt;
-    const now = new Date()
-    const diff = now.getTime() - createdAt.getTime()
-    const diffInMinutes = diff / (1000 * 60)
-    return diffInMinutes > 10
-}
+export const determineNeedNewOffer = async ({remainingFriendCount, minutesUntilMeeting}) => {
+    if (minutesUntilMeeting <= 60) {
+        return false;
+    }
+    
+    return false;
+};

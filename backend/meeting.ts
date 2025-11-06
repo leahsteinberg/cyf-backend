@@ -1,5 +1,8 @@
 import { prisma } from './auth.ts';  
 
+
+/// MUTATE
+
 export const createMeeting = async (
     {
         userFromId,
@@ -47,6 +50,7 @@ export const setMeetingAccepted = async ({meetingId, userId}) => {
 export const deleteMeeting = async ({meetingId}) => {};
 
 
+/// LOOKUP
 
 export const getCreatedMeetings = async ({userFromId}) => {
     const meetings = await prisma.meeting.findMany({
@@ -90,5 +94,6 @@ export const getUserFromMeeting = async (meeting) => {
     });
     return user;
 }
+
 
 

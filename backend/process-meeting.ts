@@ -1,6 +1,8 @@
 import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired, createOffer } from './offer.ts';
-import { setMeetingState } from './meeting.ts';
-import { ACCEPTED_OFFER_STATE, EXPIRED_OFFER_STATE, isTimePast, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.ts';
+import { setMeetingState, getUserFromMeeting } from './meeting.ts';
+import { ACCEPTED_OFFER_STATE, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.ts';
+import { findUnofferedFriends, getFriendIds } from './friendship.ts';
+
 
 
 
@@ -18,27 +20,45 @@ const makeOfferForNewMeeting = async ({meeting, userOfferedId}) => {
     return meeting;
 }
 
-// const processMeetingNoMoreFriends = async({meeting}) => {
-//     // if meeting in past -> set expired.
-//     // if meeting in future -> leave as is.
-//     const scheduledFor = meeting.scheduledFor;
-//     const isPast = await isTimePast({eventTime: scheduledFor});
-//     if (isPast) {
-//         const newMeeting = setMeetingState({meeting, meetingState: PAST_MEETING_STATE});
-//         return newMeeting;
-//         // set meeting as past, no new offers
-//     }
-//     return meeting;
-// }
 
 const processPastMeeting = async({meeting}) => {
     const newMeeting = await setMeetingState({meeting, meetingState: PAST_MEETING_STATE});
     return newMeeting;
 }
 
+const getUnofferedFriendsFromMeeting = async ({meeting, offers, friendIds}) => {
+    const userFrom = meeting.userFromId;
+    if (!userFrom) {
+        throw new Error('User not found for meeting');
+    }
+    const offeredFriends = offers.reduce(
+        (friendsOffered, offer) => {
+            const userOfferedId = offer.userOfferedId.toString()
+                return [...friendsOffered, userOfferedId]
+            },
+        []
+    );
+    const unOfferedFriendIds = findUnofferedFriends(offeredFriends, friendIds);
+    return unOfferedFriendIds;
+}
+
+export const triggerNewOffer = async({}) => {
+
+}
+
+
+
+const determineNeedNewOffer = async ({remainingFriendCount, offerCreatedAt, meetingTime}) => {
+    const totalDuration =  minutesBetween({earlierTime: offerCreatedAt, laterTime: meetingTime});
+    const timeElapsed = minutesSince({eventTime: offerCreatedAt});
+    const totalFriends = remainingFriendCount + 1;
+    const timeWindow = totalDuration/totalFriends
+    return timeElapsed > timeWindow;
+}
+
+
 
 export const processOffersForMeeting = async (meeting) => {
-
     const meetingInPast = await isTimePast({eventTime: meeting.scheduledFor});
     if (meetingInPast) {
         return await processPastMeeting({meeting});   
@@ -46,8 +66,8 @@ export const processOffersForMeeting = async (meeting) => {
 
     const meetingId = meeting.id
     const offers = await getMeetingOffers({meetingId})
-    const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId})
-
+    const allUserFriendIds = await getFriendIds(userFrom.id);
+    const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId, allUserFriendIds})
     // no more friends left, nothing to do.
     if (!newFriendToOfferId) {
         return meeting;     
@@ -61,43 +81,33 @@ export const processOffersForMeeting = async (meeting) => {
     }
 
     if (recentOffer.offerState === OPEN_OFFER_STATE) {
-        // see if it's expired and set it to expired.
-        // if not, leave it open.
-        // TODO - change this so it is actually based on when it expires.....?
-        // check to see if we want to 
-        const needNewOffer = await determineNeedNewOffer()
+        const unOfferedFriendIds = await getUnofferedFriendsFromMeeting({offers, meeting, friendIds: allUserFriendIds});
+        
+        const needNewOffer = await determineNeedNewOffer({
+            remainingFriendCount: unOfferedFriendIds.length,
+            offerCreatedAt: recentOffer.createdAt,
+            meetingTime: meeting.scheduledFor
+        });
 
-        console.log("CASE: Most recent offer is OPEN")
-        const updatedPrevOffer = await setOfferExpired({offerId: recentOffer.id});
-        const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
-        console.log("updated expired offer -> ", updatedPrevOffer)
-        console.log("-> new offer ", newOffer)
-        return newOffer
+        if (needNewOffer) {
+            // want to set most recent offer to expired
+            // then create a new offer
+            const expiredOffer = await setOfferExpired({offerId: recentOffer.id});
+            const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
+            return meeting;
+        }
+        return meeting;
 
     } else if (recentOffer.offerState === ACCEPTED_OFFER_STATE) {
-        // put it through the "accept offer" path, (which should have)
-        // already been called, but good to be thorough
-        console.log("CASE: Most recent offer is ACCEPTED")
+        console.log("CASE: Most recent offer is ACCEPTED (error state)", recentOffer.id)
         
 
-
     } else if (recentOffer.offerState === REJECTED_OFFER_STATE) {
-        // make a new offer if possible.
-        console.log("CASE: Most recent offer is REJECTED");
-        const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
-        console.log("-> new offer ", newOffer)
-        return newOffer
-
+        console.log("CASE: Most recent offer is REJECTED (error state)", recentOffer.id)
 
     } else if (recentOffer.offerState === EXPIRED_OFFER_STATE) {
-        /// this is actually an error state, but will accomodate it.
-        // this 
-        // make a new offer if possible. (there should be extra friends here)
-        console.log("CASE: Most recent offer is EXPIRED")
-        const newOffer = await createOffer({meetingId, userOfferedId: newFriendToOfferId})
-        console.log("-> new offer ", newOffer)
-        return newOffer
+        console.log("CASE: Most recent offer is EXPIRED (error state)", recentOffer.id)
+
     }
-    // if no offers, create open offer/
-    // if any offers past due, close them and try to create a new offer.
+    return meeting;
 }

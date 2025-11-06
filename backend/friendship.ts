@@ -63,7 +63,7 @@ const getFriendshipsUser2Side = async (id) => {
     return friendships || [];
 }
 
-const findUnofferedFriends = (offeredFriends, allUserFriendIds) => {
+export const findUnofferedFriends = (offeredFriends, allUserFriendIds) => {
     
     const unOfferedFriendIds = allUserFriendIds.reduce(
         (unOffered, friendId) => {
