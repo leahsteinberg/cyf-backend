@@ -1,8 +1,10 @@
 import { prisma } from './auth.ts';
 import { getUserFromMeeting, setMeetingAccepted } from './meeting.ts'
 import { getFriendIds, pickFriendIdToOffer } from './friendship.ts';
+import { Offer } from '../types.ts';
 
-export const createOffer = async ({meetingId, userOfferedId}) => {
+export const createOffer = async ({meetingId, userOfferedId}
+    : {meetingId: string, userOfferedId: string}): Promise<Offer> => {
     const offer = await prisma.offer.create({
         data: {
             meetingId,
@@ -14,7 +16,7 @@ export const createOffer = async ({meetingId, userOfferedId}) => {
 };
 
 
-export const setOfferExpired = async ({offerId}) => {
+export const setOfferExpired = async ({ offerId }: { offerId: string }): Promise<Offer> => {
     const expiredOffer = prisma.offer.update({
         where: {
             id: offerId,
@@ -28,9 +30,13 @@ export const setOfferExpired = async ({offerId}) => {
 
 };
 
-export const acceptOffer = async ({ userId, offerId }) => {
-    const offer = await getOfferById({offerId})
-    console.log("got offer", offer);
+export const acceptOffer = async ({ userId, offerId }
+    : { userId: string, offerId: string }): Promise<Offer> => {
+    const offer = await getOfferById({offerId});
+    if (!offer) {
+    // TO DO - make sure we address not having the offer (offer === null)
+    // Return ERROR
+    }
     const meetingId = offer?.meetingId;
     
     const acceptedOffer = await prisma.offer.update({
@@ -50,7 +56,7 @@ export const acceptOffer = async ({ userId, offerId }) => {
 };
 
 
-export const getOffersForUser = async ({userId}) => {
+export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offer[]> => {
     const offers = await prisma.offer.findMany({
         where: {
             userOfferedId: userId
@@ -77,7 +83,7 @@ export const getOffersForUser = async ({userId}) => {
     return offers;
 };
 
-export const getOfferById = async ({offerId}) => {
+export const getOfferById = async ({offerId}: {offerId: string}): Promise<Offer | null> => {
     console.log("getOfferById", offerId);
     const offer = await prisma.offer.findUnique({
         where:
@@ -89,14 +95,14 @@ export const getOfferById = async ({offerId}) => {
 }
 
 
-export const findFriendIdToOffer = async ({offers, meetingId}) => {
+export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
+    {offers: Offer[], meetingId: string, allFriendIds: string[]}) => {
     // TODO - in the future, do this in a more systematic, yet randomized way.
     const userFrom = await getUserFromMeeting(meetingId);
     if (!userFrom) {
         throw new Error('User not found for meeting');
     }
-    const allUserFriendIds = await getFriendIds(userFrom.id);
-    console.log("all user FriendIDs", allUserFriendIds)
+    console.log("all user FriendIDs", allFriendIds)
     const offeredFriends = offers.reduce(
         (friendsOffered, offer) => {
             const userOfferedId = offer.userOfferedId.toString()
@@ -104,11 +110,11 @@ export const findFriendIdToOffer = async ({offers, meetingId}) => {
             },
         []
     );
-    const friendToOfferId = pickFriendIdToOffer(offeredFriends, allUserFriendIds)
+    const friendToOfferId = pickFriendIdToOffer(offeredFriends, allFriendIds)
     return friendToOfferId;
 }
 
-export const findRecentOffer = (offers) => {
+export const findRecentOffer = (offers: Offer[]) => {
     if (offers.length > 0) {
         const recentOffer = offers.reduce((recent, curr) => {
             return  recent.createdAt.getTime() > curr.createdAt.getTime() ? recent : curr
@@ -119,7 +125,7 @@ export const findRecentOffer = (offers) => {
     
 }
 
-export const getMeetingOffers = async ({meetingId}) => {
+export const getMeetingOffers = async ({meetingId}: {meetingId: string}): Promise<Offer[]> => {
     const offers = await prisma.offer.findMany({
         where: {
             meetingId
@@ -128,10 +134,11 @@ export const getMeetingOffers = async ({meetingId}) => {
     return offers;
 }
 
-export const determineNeedNewOffer = async ({remainingFriendCount, minutesUntilMeeting}) => {
+export const determineNeedNewOffer = async ({remainingFriendCount, minutesUntilMeeting}
+    : {remainingFriendCount: number, minutesUntilMeeting: number}): Promise<boolean> => {
     if (minutesUntilMeeting <= 60) {
         return false;
     }
-    
+
     return false;
 };

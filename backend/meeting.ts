@@ -1,15 +1,13 @@
+import { Meeting, MeetingState, User } from '../types.ts';
 import { prisma } from './auth.ts';  
 
 
 /// MUTATE
 
 export const createMeeting = async (
-    {
-        userFromId,
-        scheduledFor,
-        scheduledEnd,
-        title
-    }) => {
+    { userFromId, scheduledFor, scheduledEnd, title }
+    : { userFromId: string, scheduledFor: Date, scheduledEnd:Date, title: string }):
+    Promise<Meeting> => {
         const meeting = await prisma.meeting.create({
             data: {
                 userFromId,
@@ -21,7 +19,8 @@ export const createMeeting = async (
     return meeting;
 };
 
-export const setMeetingState = async ({meetingId, meetingState}) => {
+export const setMeetingState = async (
+    {meetingId, meetingState}: {meetingId: string, meetingState: MeetingState}): Promise<Meeting> => {
     const updatedMeeting = prisma.meeting.update({
         where: {
             id: meetingId,
@@ -33,7 +32,7 @@ export const setMeetingState = async ({meetingId, meetingState}) => {
     return updatedMeeting;
 }; 
 
-export const setMeetingAccepted = async ({meetingId, userId}) => {
+export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string, userId: string}): Promise<Meeting> => {
     const updatedMeeting = prisma.meeting.update({
         where: {
             id: meetingId,
@@ -52,7 +51,7 @@ export const deleteMeeting = async ({meetingId}) => {};
 
 /// LOOKUP
 
-export const getCreatedMeetings = async ({userFromId}) => {
+export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Promise<Meeting[]> => {
     const meetings = await prisma.meeting.findMany({
         where: {
             userFromId
@@ -69,14 +68,12 @@ export const getCreatedMeetings = async ({userFromId}) => {
             },
         },
     });
-    //console.log("get meetings - ", meetings)
 
     return meetings;
 };
 
 
-export const getAllSearchingMeetings = async () => {
-    console.log("getAllSearchingMeetings")
+export const getAllSearchingMeetings = async (): Promise<Meeting[]> => {
     const meetings = await prisma.meeting.findMany({
         where: {
             meetingState: 'SEARCHING',
@@ -85,7 +82,7 @@ export const getAllSearchingMeetings = async () => {
     return meetings;
 }
 
-export const getUserFromMeeting = async (meeting) => {
+export const getUserFromMeeting = async (meeting: Meeting): Promise<User | null> => {
     const id = meeting.userFromId;
     const user = await prisma.user.findFirst({
         where: {

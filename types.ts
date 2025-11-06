@@ -1,36 +1,27 @@
-enum MeetingState {
-    Searching = "SEARCHING",
-    Accepted = "ACCEPTED",
-    Rejected = "REJECTED",
-    Past = "PAST"
-}
 
-enum OfferState {
-    Open = "OPEN",
-    Accepted = "ACCEPTED",
-    Rejected = "REJECTED",
-    Expired = "EXPIRED",
-}
+export type OfferState = "OPEN" | "ACCEPTED" | "REJECTED" | "EXPIRED";
+export type MeetingState = "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST";
 
-interface BaseEntity {
+export interface BaseEntity {
     id: string;
 };
 
-interface User extends BaseEntity {
-    name: string;
+export interface User extends BaseEntity {
+    name: string | null;
     email: string;
+
 }
 
-interface Meeting extends BaseEntity {
+export interface Meeting extends BaseEntity {
     userFromId: string;
-    scheduledFor: string;
-    acceptedUserId?: string;
-    meetingState: MeetingState
+    scheduledFor: Date;
+    acceptedUserId: string | null;
+    meetingState: MeetingState;
 }
 
-interface Offer extends BaseEntity {
+export interface Offer extends BaseEntity {
     meetingId: string;
     userOfferedId: string;
-    createdAt: string;
+    createdAt: Date;
     offerState: OfferState;
 }

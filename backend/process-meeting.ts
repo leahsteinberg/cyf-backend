@@ -2,9 +2,11 @@ import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired
 import { setMeetingState, getUserFromMeeting } from './meeting.ts';
 import { ACCEPTED_OFFER_STATE, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.ts';
 import { findUnofferedFriends, getFriendIds } from './friendship.ts';
+import { Meeting, Offer } from '../types.ts';
 
 
-const getUnofferedFriendsFromMeeting = async ({meeting, offers, friendIds}) => {
+const getUnofferedFriendsFromMeeting = async ({meeting, offers, friendIds}:
+    {meeting: Meeting; offers: Offer[]; friendIds: string[]}): Promise<string[]> => {
     const userFrom = meeting.userFromId;
     if (!userFrom) {
         throw new Error('User not found for meeting');
@@ -21,30 +23,31 @@ const getUnofferedFriendsFromMeeting = async ({meeting, offers, friendIds}) => {
 }
 
 
-
-
-export const processOfferForNewMeeting = async (meeting) => {
+export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeting> => {
     const meetingId = meeting.id;
-    const offers = await getMeetingOffers({meetingId});
-    const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId});
+    //const offers = await getMeetingOffers({meetingId});
+    const allFriendIds = await getFriendIds(meeting.userFromId);
+    const newFriendToOfferId = await findFriendIdToOffer({offers: [], meetingId, allFriendIds});
     return await makeOfferForNewMeeting({meeting, userOfferedId: newFriendToOfferId});
 }
 
 
-const makeOfferForNewMeeting = async ({meeting, userOfferedId}) => {
+export const makeOfferForNewMeeting = async ({meeting, userOfferedId}:
+    {meeting: Meeting; userOfferedId: string}): Promise<Meeting> => {
     const meetingId = meeting.id;
     const newOffer = await createOffer({meetingId, userOfferedId});
     return meeting;
 }
 
 
-const processPastMeeting = async({meeting}) => {
-    const newMeeting = await setMeetingState({meeting, meetingState: PAST_MEETING_STATE});
+const processPastMeeting = async({meeting}: {meeting: Meeting}): Promise<Meeting> => {
+    const newMeeting = await setMeetingState({meetingId: meeting.id, meetingState: PAST_MEETING_STATE});
     return newMeeting;
 }
 
 
-export const triggerNewOffer = async({meetingId, recentOfferId, newUserOfferId}) => {
+const triggerNewOffer = async ({meetingId, recentOfferId, newUserOfferId}:
+    {meetingId: string; recentOfferId: string; newUserOfferId: string;}) => {
     const expiredOffer = await setOfferExpired({offerId: recentOfferId});
     const newOffer = await createOffer({meetingId, userOfferedId: newUserOfferId})
     return [expiredOffer, newOffer];
@@ -52,20 +55,20 @@ export const triggerNewOffer = async({meetingId, recentOfferId, newUserOfferId})
 
 
 
-const determineNeedNewOffer = async ({remainingFriendCount, offerCreatedAt, meetingTime}) => {
-    
-    const totalDuration =  minutesBetween({earlierTime: offerCreatedAt, laterTime: meetingTime});
+const determineNeedNewOffer = async ({remainingFriendCount, offerCreatedAt, meetingTime}:
+     {remainingFriendCount: number; offerCreatedAt: Date; meetingTime: Date}) => {
+    const totalDuration =  await minutesBetween({earlierTime: offerCreatedAt, laterTime: meetingTime});
     const totalFriends = remainingFriendCount + 1;
     const timeWindow = totalDuration/totalFriends;
 
-    const timeElapsed = minutesSince({eventTime: offerCreatedAt});
+    const timeElapsed = await minutesSince({eventTime: offerCreatedAt});
 
     return timeElapsed > timeWindow;
 };
 
 
 
-export const processOffersForMeeting = async (meeting) => {
+export const processOffersForMeeting = async (meeting: Meeting) => {
     const meetingInPast = await isTimePast({eventTime: meeting.scheduledFor});
     if (meetingInPast) {
         return await processPastMeeting({meeting});   
@@ -74,22 +77,24 @@ export const processOffersForMeeting = async (meeting) => {
     const meetingId = meeting.id;
     const userFrom = meeting.userFromId;
     const offers = await getMeetingOffers({meetingId})
-    const allUserFriendIds = await getFriendIds(userFrom.id);
-    const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId, allUserFriendIds})
+    const allFriendIds = await getFriendIds(userFrom);
+    const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId, allFriendIds})
     // no more friends left, nothing to do.
     if (!newFriendToOfferId) {
         return meeting;     
     }
 
     const recentOffer = await findRecentOffer(offers);
-    // no past offers, treat as new Meeting.
     if (!recentOffer) {
+            // no past offers, treat as new Meeting.
         const newMeeting = await makeOfferForNewMeeting({meeting, userOfferedId: newFriendToOfferId})
         return newMeeting;
     }
 
     if (recentOffer.offerState === OPEN_OFFER_STATE) {
-        const unOfferedFriendIds = await getUnofferedFriendsFromMeeting({offers, meeting, friendIds: allUserFriendIds});
+        const unOfferedFriendIds = await getUnofferedFriendsFromMeeting(
+            {meeting, offers, friendIds: allFriendIds}
+        );
         
         const needNewOffer = await determineNeedNewOffer({
             remainingFriendCount: unOfferedFriendIds.length,
@@ -103,8 +108,9 @@ export const processOffersForMeeting = async (meeting) => {
                 recentOfferId: recentOffer.id,
                 newUserOfferId: newFriendToOfferId
             });
-
             return meeting;
+        } else {
+            // leave as is!!!
         }
 
     } else if (recentOffer.offerState === ACCEPTED_OFFER_STATE) {
