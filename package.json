@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "queries": "node ./queries.ts",
     "caching": "ts-node ./caching.ts",
-    "build": "tsc"
+    "build": "npm install && tsc",
+    "start": "node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -23,9 +24,11 @@
     "express": "^5.1.0",
     "mkcert": "^3.2.0",
     "node-cron": "^4.2.1",
+    "ts-node": "^10.9.2",
     "twilio": "^5.10.1"
   },
   "devDependencies": {
-    "prisma": "^6.16.3"
+    "prisma": "^6.16.3",
+    "typescript": "^5.9.3"
   }
 }
