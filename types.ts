@@ -9,7 +9,6 @@ export interface BaseEntity {
 export interface User extends BaseEntity {
     name: string | null;
     email: string;
-
 }
 
 export interface Meeting extends BaseEntity {

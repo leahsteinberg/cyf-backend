@@ -1,7 +1,7 @@
 import { prisma } from './auth.ts';
 import { getUserFromMeeting, setMeetingAccepted } from './meeting.ts'
 import { getFriendIds, pickFriendIdToOffer } from './friendship.ts';
-import { Offer } from '../types.ts';
+import type { Offer } from '../types.ts';
 
 export const createOffer = async ({meetingId, userOfferedId}
     : {meetingId: string, userOfferedId: string}): Promise<Offer> => {
@@ -12,6 +12,7 @@ export const createOffer = async ({meetingId, userOfferedId}
             offerState: 'OPEN'
         }
     })
+    console.log("Meeting ID:" , meetingId, "Made a new offer: ", offer);
     return offer;
 };
 

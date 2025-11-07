@@ -1,4 +1,5 @@
-import { Meeting, MeetingState, User } from '../types.ts';
+
+import type {MeetingState,  Meeting, } from '../types.ts';
 import { prisma } from './auth.ts';  
 
 
@@ -50,11 +51,32 @@ export const deleteMeeting = async ({meetingId}) => {};
 
 
 /// LOOKUP
-
 export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Promise<Meeting[]> => {
     const meetings = await prisma.meeting.findMany({
         where: {
             userFromId
+        },
+        include: {
+            acceptedUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                },
+            },
+        },
+    });
+
+    return meetings;
+};
+
+
+export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: string}): Promise<Meeting[]> => {
+    const meetings = await prisma.meeting.findMany({
+        where: {
+            acceptedUserId,
         },
         include: {
             acceptedUser: {
