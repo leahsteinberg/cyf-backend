@@ -79,7 +79,7 @@ export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: str
             acceptedUserId,
         },
         include: {
-            acceptedUser: {
+            userFrom: {
                 select: {
                     id: true,
                     name: true,
