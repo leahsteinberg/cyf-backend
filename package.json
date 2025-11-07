@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "queries": "node ./queries.ts",
-    "caching": "ts-node ./caching.ts"
+    "caching": "ts-node ./caching.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
