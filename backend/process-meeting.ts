@@ -1,7 +1,7 @@
-import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired, createOffer } from './offer.ts';
-import { setMeetingState, getUserFromMeeting } from './meeting.ts';
-import { ACCEPTED_OFFER_STATE, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.ts';
-import { findUnofferedFriends, getFriendIds } from './friendship.ts';
+import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired, createOffer } from './offer.js';
+import { setMeetingState, getUserFromMeeting } from './meeting.js';
+import { ACCEPTED_OFFER_STATE, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.js';
+import { findUnofferedFriends, getFriendIds } from './friendship.js';
 import type { Meeting, Offer } from '../types.ts';
 
 
