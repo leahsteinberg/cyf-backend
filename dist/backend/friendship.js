@@ -1,4 +1,4 @@
-import { prisma } from './auth.ts';
+import { prisma } from './auth.js';
 //// MUTATE
 export const createFriendship = async ({ userId1, userId2 }) => {
     const friendship = await prisma.friendship.create({

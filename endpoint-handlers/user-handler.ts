@@ -1,4 +1,4 @@
-import { findUserByPhone } from "../backend/user.ts";
+import { findUserByPhone } from "../backend/user.js";
 
 export const handleGetUserByPhone = async (req, res) => {
   const {userPhoneNumber} = req.body;

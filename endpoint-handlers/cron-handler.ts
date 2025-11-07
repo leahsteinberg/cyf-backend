@@ -1,5 +1,5 @@
-import { getAllSearchingMeetings } from "../backend/meeting.ts";
-import { processOffersForMeeting } from "../backend/process-meeting.ts";
+import { getAllSearchingMeetings } from "../backend/meeting.js";
+import { processOffersForMeeting } from "../backend/process-meeting.js";
 
 let count = 0;
 

@@ -1,6 +1,6 @@
-import { createInvite, findInvite, getSentInvites } from "../backend/invite.ts";
-import { findUserByPhone, createUser } from "../backend/user.ts";
-import { createFriendship } from "../backend/friendship.ts";
+import { createInvite, findInvite, getSentInvites } from "../backend/invite.js";
+import { findUserByPhone, createUser } from "../backend/user.js";
+import { createFriendship } from "../backend/friendship.js";
 
 
 export const handleCreateInvite = async (req, res) => {

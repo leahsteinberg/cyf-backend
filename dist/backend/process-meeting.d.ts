@@ -1,4 +1,4 @@
-import type { Meeting } from '../types.ts';
+import type { Meeting } from '../types.js';
 export declare const processOfferForNewMeeting: (meeting: Meeting) => Promise<Meeting>;
 export declare const makeOfferForNewMeeting: ({ meeting, userOfferedId }: {
     meeting: Meeting;

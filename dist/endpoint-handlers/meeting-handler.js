@@ -1,6 +1,6 @@
-import { createMeeting, getAcceptedMeetings } from "../backend/meeting.ts";
-import { getCreatedMeetings } from "../backend/meeting.ts";
-import { processOfferForNewMeeting } from "../backend/process-meeting.ts";
+import { createMeeting, getAcceptedMeetings } from "../backend/meeting.js";
+import { getCreatedMeetings } from "../backend/meeting.js";
+import { processOfferForNewMeeting } from "../backend/process-meeting.js";
 export const handleCreateMeeting = async (req, res) => {
     const { userFromId, scheduledEnd, scheduledFor, title } = req.body;
     const meeting = await createMeeting({ userFromId, scheduledEnd, scheduledFor, title });

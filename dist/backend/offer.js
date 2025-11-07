@@ -1,6 +1,6 @@
-import { prisma } from './auth.ts';
-import { getUserFromMeeting, setMeetingAccepted } from './meeting.ts';
-import { getFriendIds, pickFriendIdToOffer } from './friendship.ts';
+import { prisma } from './auth.js';
+import { getUserFromMeeting, setMeetingAccepted } from './meeting.js';
+import { getFriendIds, pickFriendIdToOffer } from './friendship.js';
 export const createOffer = async ({ meetingId, userOfferedId }) => {
     const offer = await prisma.offer.create({
         data: {

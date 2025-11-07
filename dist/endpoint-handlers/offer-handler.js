@@ -1,4 +1,4 @@
-import { getOffersForUser, acceptOffer } from "../backend/offer.ts";
+import { getOffersForUser, acceptOffer } from "../backend/offer.js";
 export const handleGetOffers = async (req, res) => {
     const { userId } = req.body;
     console.log("handle get offers ---", userId);

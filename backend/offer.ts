@@ -1,7 +1,7 @@
-import { prisma } from './auth.ts';
-import { getUserFromMeeting, setMeetingAccepted } from './meeting.ts'
-import { getFriendIds, pickFriendIdToOffer } from './friendship.ts';
-import type { Offer } from '../types.ts';
+import { prisma } from './auth.js';
+import { getUserFromMeeting, setMeetingAccepted } from './meeting.js'
+import { getFriendIds, pickFriendIdToOffer } from './friendship.js';
+import type { Offer } from '../types.js';
 
 export const createOffer = async ({meetingId, userOfferedId}
     : {meetingId: string, userOfferedId: string}): Promise<Offer> => {

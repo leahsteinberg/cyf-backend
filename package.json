@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "queries": "node ./queries.ts",
     "caching": "ts-node ./caching.ts",
-    "build": "npm install && tsc",
+    "build": "npm install && tsc || true && cp -r ./generated ./dist",
     "start": "node ./dist/app.js"
   },
   "keywords": [],

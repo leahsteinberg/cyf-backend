@@ -1,6 +1,6 @@
 
-import type {MeetingState,  Meeting, } from '../types.ts';
-import { prisma } from './auth.ts';  
+import type {MeetingState,  Meeting, } from '../types.js';
+import { prisma } from './auth.js';  
 
 
 /// MUTATE

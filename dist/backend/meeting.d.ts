@@ -1,4 +1,4 @@
-import type { MeetingState, Meeting } from '../types.ts';
+import type { MeetingState, Meeting } from '../types.js';
 export declare const createMeeting: ({ userFromId, scheduledFor, scheduledEnd, title }: {
     userFromId: string;
     scheduledFor: Date;

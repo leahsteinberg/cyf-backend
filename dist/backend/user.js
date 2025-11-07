@@ -1,4 +1,4 @@
-import { auth, prisma } from './auth.ts';
+import { auth, prisma } from './auth.js';
 import { fromNodeHeaders } from 'better-auth/node';
 export const createUser = async ({ email, phoneNumber, name, password }) => {
     const user = await auth.api.signUpEmail({

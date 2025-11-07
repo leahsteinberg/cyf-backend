@@ -1,4 +1,4 @@
-import type { Offer } from '../types.ts';
+import type { Offer } from '../types.js';
 export declare const createOffer: ({ meetingId, userOfferedId }: {
     meetingId: string;
     userOfferedId: string;

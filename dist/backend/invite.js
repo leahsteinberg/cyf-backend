@@ -1,4 +1,4 @@
-import { prisma } from './auth.ts';
+import { prisma } from './auth.js';
 //// MUTATE
 export const createInvite = async ({ userFromId, userToPhoneNumber }) => {
     const invite = await prisma.invitation.create({
