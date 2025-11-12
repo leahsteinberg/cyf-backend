@@ -15,7 +15,7 @@ const app = express();
 const port = 3000;
 const hostname = '192.168.0.30';
 app.use(cors({
-  origin: 'https://call-your-friends.expo.app/',
+  origin: 'https://call-your-friends.expo.app',
 
   // origin: 'http://localhost:8081'
 }));
