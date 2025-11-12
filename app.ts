@@ -15,7 +15,9 @@ const app = express();
 const port = 3000;
 const hostname = '192.168.0.30';
 app.use(cors({
-  origin: 'http://localhost:8081'
+  origin: 'https://call-your-friends.expo.app/',
+
+  // origin: 'http://localhost:8081'
 }));
 app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
