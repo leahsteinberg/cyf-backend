@@ -60,7 +60,8 @@ export const acceptOffer = async ({ userId, offerId }
 export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offer[]> => {
     const offers = await prisma.offer.findMany({
         where: {
-            userOfferedId: userId
+            userOfferedId: userId,
+            offerState: 'OPEN'
         },
         include: {
             meeting: {
