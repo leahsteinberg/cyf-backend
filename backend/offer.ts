@@ -1,7 +1,8 @@
 import { prisma } from './auth.js';
-import { getUserFromMeeting, setMeetingAccepted } from './meeting.js'
+import { getUserFromMeeting, setMeetingAccepted, setMeetingState } from './meeting.js'
 import { getFriendIds, pickFriendIdToOffer } from './friendship.js';
-import type { Offer } from '../types.js';
+import { REJECTED_MEETING_STATE } from './utils.js';
+import type { Offer, Meeting } from '../types.js';
 
 export const createOffer = async ({meetingId, userOfferedId}
     : {meetingId: string, userOfferedId: string}): Promise<Offer> => {
@@ -54,6 +55,73 @@ export const acceptOffer = async ({ userId, offerId }
     console.log("accepted meeting - ", acceptedMeeting);
     return acceptedOffer;
 
+};
+
+export const rejectOffer = async ({ offerId }
+    : { offerId: string }): Promise<Offer> => {
+    const offer = await getOfferById({offerId});
+    if (!offer) {
+        throw new Error('Offer not found');
+    }
+
+    const rejectedOffer = await prisma.offer.update({
+        where: {
+            id: offerId,
+        },
+        data: {
+            offerState: 'REJECTED',
+        }
+    })
+    console.log("rejected offer --- ", rejectedOffer)
+    return rejectedOffer;
+};
+
+export const processRejectedOffer = async ({ offerId }
+    : { offerId: string }): Promise<void> => {
+    const rejectedOffer = await getOfferById({offerId});
+    if (!rejectedOffer) {
+        throw new Error('Rejected offer not found');
+    }
+
+    const meetingId = rejectedOffer.meetingId;
+
+    // Get the meeting
+    const meeting = await prisma.meeting.findUnique({
+        where: { id: meetingId }
+    });
+
+    if (!meeting) {
+        throw new Error('Meeting not found');
+    }
+
+    // Get all offers for this meeting to find friends already offered to
+    const allOffers = await getMeetingOffers({meetingId});
+
+    // Get all friend IDs of the meeting creator
+    const allFriendIds = await getFriendIds(meeting.userFromId);
+
+    // Find the next friend to offer to
+    const newFriendToOfferId = await findFriendIdToOffer({
+        offers: allOffers,
+        meetingId,
+        allFriendIds
+    });
+
+    if (!newFriendToOfferId) {
+        // No more friends to offer to, set meeting state to REJECTED
+        console.log("No more friends to offer to, setting meeting to REJECTED");
+        await setMeetingState({
+            meetingId,
+            meetingState: REJECTED_MEETING_STATE
+        });
+    } else {
+        // Create a new offer for the next friend
+        console.log("Creating new offer for friend:", newFriendToOfferId);
+        await createOffer({
+            meetingId,
+            userOfferedId: newFriendToOfferId
+        });
+    }
 };
 
 
