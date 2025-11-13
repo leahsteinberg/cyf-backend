@@ -1,3 +1,4 @@
+import type { RequestHandler } from 'express';
 import { auth, prisma } from './auth.js'; 
 import { fromNodeHeaders } from 'better-auth/node'; 
 
@@ -14,7 +15,7 @@ export const createUser = async ({ email, phoneNumber, name, password }) => {
 };
 
 
-export const signOutUser = async(req) => {
+export const signOutUser: RequestHandler = async (req) => {
     // console.log("user id d---- ", userId);
     // const user = await auth.api.signOut({
     //     headers: fromNodeHeaders(req.headers),

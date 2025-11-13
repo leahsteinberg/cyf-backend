@@ -1,8 +1,9 @@
 import {auth} from '../backend/auth.js';  
 import { toNodeHandler, fromNodeHeaders } from "better-auth/node"; 
 import { createUser, signOutUser } from '../backend/user.js';
+import type { Request, Response } from 'express';
 
-export const handleSignIn = async (req, res) => {
+export const handleSignIn = async (req: Request, res: Response) => {
     console.log("sign in - ", req.body.email)
     const session = await auth.api.signInEmail({
         body: {

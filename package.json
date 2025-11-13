@@ -28,6 +28,8 @@
     "twilio": "^5.10.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
     "@types/node": "^24.10.0",
     "prisma": "^6.16.3",
     "typescript": "^5.9.3"

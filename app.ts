@@ -1,6 +1,6 @@
 import {auth, prisma} from './backend/auth.js';  
 import express from 'express';
-import { toNodeHandler, fromNodeHeaders } from "better-auth/node"; 
+import { toNodeHandler } from "better-auth/node"; 
 import cors from 'cors';
 import { handleMe, handleSignIn, handleSignInPhone, handleSignUpPhone, handleSignOut } from './endpoint-handlers/auth-handler.js';
 import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites } from './endpoint-handlers/invite-handler.js';
@@ -15,9 +15,7 @@ const app = express();
 const port = 3000;
 const hostname = '192.168.0.30';
 app.use(cors({
-  origin: 'https://call-your-friends.expo.app',
-
-  // origin: 'http://localhost:8081'
+  origin: ['https://call-your-friends.expo.app', 'http://localhost:8081']
 }));
 app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
@@ -25,7 +23,6 @@ app.use(express.json());
 // SAMPLE ENDPOINTS
 app.get("/api/sample", (req, res) => {
   console.log("in the sample endpoint!!! ======---")
-
   res.json("{'hi': 'what my friend'}");
 });
 
