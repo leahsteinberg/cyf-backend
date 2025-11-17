@@ -5,6 +5,14 @@ import { findUnofferedFriends, getFriendIds } from './friendship.js';
 import type { Meeting, Offer } from '../types.js';
 
 
+const meetingWithinDay = async ({scheduledFor}: {scheduledFor: Date}): Boolean => {
+    const now = new Date();
+    const oneDayFromNow = new Date(now.getTime() + (24 * 60 * 60 * 1000));
+    return ( scheduledFor > now && scheduledFor <= oneDayFromNow);
+
+}
+
+
 const getUnofferedFriendsFromMeeting = async ({meeting, offers, friendIds}:
     {meeting: Meeting; offers: Offer[]; friendIds: string[]}): Promise<string[]> => {
     const userFrom = meeting.userFromId;
@@ -25,10 +33,13 @@ const getUnofferedFriendsFromMeeting = async ({meeting, offers, friendIds}:
 
 export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeting> => {
     const meetingId = meeting.id;
-    //const offers = await getMeetingOffers({meetingId});
-    const allFriendIds = await getFriendIds(meeting.userFromId);
-    const newFriendToOfferId = await findFriendIdToOffer({offers: [], meetingId, allFriendIds});
-    return await makeOfferForNewMeeting({meeting, userOfferedId: newFriendToOfferId});
+    const scheduledFor = meeting.scheduledFor;
+    if (meetingWithinDay({ scheduledFor })) {
+        const allFriendIds = await getFriendIds(meeting.userFromId);
+        const newFriendToOfferId = await findFriendIdToOffer({offers: [], meetingId, allFriendIds});
+        return await makeOfferForNewMeeting({meeting, userOfferedId: newFriendToOfferId});
+    }
+    return meeting;
 }
 
 
