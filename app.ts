@@ -22,7 +22,7 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 
 // SAMPLE ENDPOINTS
-app.get("/api/register-push", handlePush);
+app.post("/api/register-push", handlePush);
 
 //cron.schedule('* * * * *', handleCronRound);
 
