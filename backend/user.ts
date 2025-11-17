@@ -50,3 +50,16 @@ export const updateUserPushToken = async ({ userId, pushToken }: { userId: strin
     console.log("Updated user push token:", updatedUser);
     return updatedUser;
 };
+
+export const getUserPushToken = async ({ userId }: { userId: string }): Promise<string | null> => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId
+        },
+        select: {
+            pushToken: true
+        }
+    });
+
+    return user?.pushToken ?? null;
+};
