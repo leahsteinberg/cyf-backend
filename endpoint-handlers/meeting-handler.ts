@@ -1,4 +1,4 @@
-import { createMeeting, getAcceptedMeetings } from "../backend/meeting.js";
+import { createMeeting, getAcceptedMeetings, deleteMeeting } from "../backend/meeting.js";
 import { getCreatedMeetings } from "../backend/meeting.js";
 import { processOfferForNewMeeting } from "../backend/process-meeting.js";
 
@@ -19,4 +19,21 @@ export const handleGetMeetings = async (req, res) => {
   const meetings = await getCreatedMeetings({userFromId});
   const acceptedMeetings = await getAcceptedMeetings({acceptedUserId: userFromId});
   res.json([...meetings, ...acceptedMeetings])
+}
+
+export const handleDeleteMeeting = async (req, res) => {
+  const { meetingId } = req.body;
+  console.log("handle delete meeting ---", meetingId);
+
+  if (!meetingId) {
+    return res.status(400).json({ error: "meetingId is required" });
+  }
+
+  try {
+    const deletedMeeting = await deleteMeeting({ meetingId });
+    res.json(deletedMeeting);
+  } catch (error) {
+    console.error("Error deleting meeting:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 }

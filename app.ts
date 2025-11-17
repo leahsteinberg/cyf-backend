@@ -6,7 +6,7 @@ import { handleMe, handleSignIn, handleSignInPhone, handleSignUpPhone, handleSig
 import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites } from './endpoint-handlers/invite-handler.js';
 import { handleGetUserByPhone } from './endpoint-handlers/user-handler.js';
 import { handleGetFriends } from './endpoint-handlers/friend-handler.js';
-import { handleCreateMeeting, handleGetMeetings } from './endpoint-handlers/meeting-handler.js';
+import { handleCreateMeeting, handleGetMeetings, handleDeleteMeeting } from './endpoint-handlers/meeting-handler.js';
 import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoint-handlers/offer-handler.js';
 import { handleCronRound } from './endpoint-handlers/cron-handler.js';
 import cron from 'node-cron';
@@ -54,6 +54,7 @@ app.post('/api/get-friends', handleGetFriends);
 //MEETING ENDPOINTS
 app.post('/api/create-meeting', handleCreateMeeting);
 app.post('/api/get-meetings', handleGetMeetings);
+app.post('/api/delete-meeting', handleDeleteMeeting);
 
 //OFFER ENDPOINTS
 app.post('/api/get-offers', handleGetOffers);

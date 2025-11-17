@@ -47,7 +47,24 @@ export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string
 };
 
 
-export const deleteMeeting = async ({meetingId}) => {};
+export const deleteMeeting = async ({meetingId}: {meetingId: string}): Promise<Meeting> => {
+    // First delete all related offers
+    await prisma.offer.deleteMany({
+        where: {
+            meetingId: meetingId
+        }
+    });
+
+    // Then delete the meeting
+    const deletedMeeting = await prisma.meeting.delete({
+        where: {
+            id: meetingId
+        }
+    });
+
+    console.log("Deleted meeting:", deletedMeeting);
+    return deletedMeeting;
+};
 
 
 /// LOOKUP
