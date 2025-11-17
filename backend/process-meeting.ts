@@ -3,6 +3,7 @@ import { setMeetingState, getUserFromMeeting } from './meeting.js';
 import { ACCEPTED_OFFER_STATE, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.js';
 import { findUnofferedFriends, getFriendIds } from './friendship.js';
 import type { Meeting, Offer } from '../types.js';
+import { createAndSendOfferPush } from './create-push.js';
 
 
 const meetingWithinDay = async ({scheduledFor}: {scheduledFor: Date}): Promise<Boolean> => {
@@ -37,10 +38,11 @@ export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeti
     const isWithinDay = await meetingWithinDay({ scheduledFor });
     const allFriendIds = await getFriendIds(meeting.userFromId);
     const newFriendToOfferId = await findFriendIdToOffer({offers: [], meetingId, allFriendIds});
-    return await makeOfferForNewMeeting({meeting, userOfferedId: newFriendToOfferId});
+    const [newMeeting, offer] = await makeOfferForNewMeeting({meeting, userOfferedId: newFriendToOfferId});
 
+    createAndSendOfferPush({offer, meeting: newMeeting});
 
-    return meeting;
+    return newMeeting;
 }
 
 
