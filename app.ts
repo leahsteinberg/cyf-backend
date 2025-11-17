@@ -10,6 +10,7 @@ import { handleCreateMeeting, handleGetMeetings, handleDeleteMeeting } from './e
 import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoint-handlers/offer-handler.js';
 import { handleCronRound } from './endpoint-handlers/cron-handler.js';
 import cron from 'node-cron';
+import { handlePush } from './endpoint-handlers/push-handler.js';
 
 const app = express();
 const port = 3000;
@@ -21,10 +22,7 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 
 // SAMPLE ENDPOINTS
-app.get("/api/sample", (req, res) => {
-  console.log("in the sample endpoint!!! ======---")
-  res.json("{'hi': 'what my friend'}");
-});
+app.get("/api/push", handlePush);
 
 //cron.schedule('* * * * *', handleCronRound);
 
