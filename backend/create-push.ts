@@ -1,4 +1,4 @@
-import type { Offer } from "../types.js";
+import type { Offer, Meeting } from "../types.js";
 import { sendPushNotification } from "./push-notifications.js";
 import { getUserPushToken } from "./user.js";
 import { prisma } from "./auth.js";
@@ -9,12 +9,26 @@ import { prisma } from "./auth.js";
  * @param offer - The offer object (must include meeting with userFrom data)
  * @returns Push notification configuration object
  */
-const generateOfferPush = async ({pushToken, offer, meeting}: {pushToken: string, offer: Offer, meeting: Meeting}) => {
+const generateOfferPush = async ({ pushToken, offer }: { pushToken: string, offer: Offer }) => {
+
+    const meeting = await prisma.meeting.findUnique({
+        where: { id: offer.meetingId },
+        include: {
+            userFrom: {
+                select: {
+                    id: true,
+                    name: true,
+                    displayUsername: true,
+                    username: true
+                }
+            }
+        }
+    });
 
     if (!meeting) {
         throw new Error('Meeting not found for offer');
     }
-
+    
     // Get the user's display name (prefer displayUsername, then username, then name)
     const userName = meeting.userFrom.displayUsername
         || meeting.userFrom.username
@@ -50,7 +64,7 @@ const generateOfferPush = async ({pushToken, offer, meeting}: {pushToken: string
  * Creates and sends a push notification for a new offer
  * @param offer - The offer object
  */
-export const createAndSendOfferPush = async ({offer, meeting}: {offer: Offer, meeting: Meeting}) => {
+export const createAndSendOfferPush = async ({ offer }: { offer: Offer }) => {
     const userId = offer.userOfferedId;
     const pushToken = await getUserPushToken({userId});
 
@@ -60,7 +74,7 @@ export const createAndSendOfferPush = async ({offer, meeting}: {offer: Offer, me
     }
 
     try {
-        const notificationConfig = await generateOfferPush({pushToken, offer, meeting});
+        const notificationConfig = await generateOfferPush({ pushToken, offer });
 
         const notification = await sendPushNotification(notificationConfig);
 

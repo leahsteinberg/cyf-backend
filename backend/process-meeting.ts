@@ -40,7 +40,7 @@ export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeti
     const newFriendToOfferId = await findFriendIdToOffer({offers: [], meetingId, allFriendIds});
     const [newMeeting, offer] = await makeOfferForNewMeeting({meeting, userOfferedId: newFriendToOfferId});
 
-    createAndSendOfferPush({offer, meeting: newMeeting});
+    createAndSendOfferPush({ offer });
 
     return newMeeting;
 }
