@@ -37,3 +37,16 @@ export const findUserByPhone = async (phoneNumber) => {
             return null;
         }
 };
+
+export const updateUserPushToken = async ({ userId, pushToken }: { userId: string, pushToken: string }) => {
+    const updatedUser = await prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: {
+            pushToken: pushToken
+        }
+    });
+    console.log("Updated user push token:", updatedUser);
+    return updatedUser;
+};
