@@ -130,6 +130,7 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt',
   phoneNumber: 'phoneNumber',
   phoneNumberVerified: 'phoneNumberVerified',
+  pushToken: 'pushToken',
   username: 'username',
   displayUsername: 'displayUsername'
 };
@@ -142,7 +143,6 @@ exports.Prisma.SessionScalarFieldEnum = {
   updatedAt: 'updatedAt',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
-  pushToken: 'pushToken',
   userId: 'userId'
 };
 

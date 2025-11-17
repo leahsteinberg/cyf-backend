@@ -20,6 +20,7 @@ model User {
   accounts            Account[]
   phoneNumber         String?
   phoneNumberVerified Boolean?
+  pushToken           String?
   friendsWith         Friendship[] @relation("friendsWith")
   friendsOf           Friendship[] @relation("friendsOf")
   invitesSent         Invitation[] @relation("invitesSent")
@@ -44,7 +45,6 @@ model Session {
   updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
-  pushToken String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
