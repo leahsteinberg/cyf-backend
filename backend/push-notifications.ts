@@ -1,4 +1,4 @@
-import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk';
+import { Expo } from 'expo-server-sdk';
 
 // Create a new Expo SDK client
 const expo = new Expo();
@@ -23,14 +23,14 @@ export const sendPushNotification = async ({
     title: string;
     body: string;
     data?: Record<string, any>;
-}): Promise<ExpoPushTicket> => {
+}) => {
     // Check that the push token is valid
     if (!isValidExpoPushToken(pushToken)) {
         throw new Error(`Push token ${pushToken} is not a valid Expo push token`);
     }
 
     // Construct the message
-    const message: ExpoPushMessage = {
+    const message = {
         to: pushToken,
         sound: 'default',
         title: title,
@@ -62,7 +62,7 @@ export const sendPushNotifications = async ({
     title: string;
     body: string;
     data?: Record<string, any>;
-}): Promise<ExpoPushTicket[]> => {
+}) => {
     // Filter out invalid tokens
     const validTokens = pushTokens.filter(token => isValidExpoPushToken(token));
 
@@ -71,7 +71,7 @@ export const sendPushNotifications = async ({
     }
 
     // Construct messages for all tokens
-    const messages: ExpoPushMessage[] = validTokens.map(token => ({
+    const messages = validTokens.map(token => ({
         to: token,
         sound: 'default',
         title: title,
@@ -83,7 +83,7 @@ export const sendPushNotifications = async ({
         // The Expo push notification service accepts batches of notifications
         // so we chunk them to avoid hitting rate limits
         const chunks = expo.chunkPushNotifications(messages);
-        const tickets: ExpoPushTicket[] = [];
+        const tickets = [];
 
         for (const chunk of chunks) {
             try {
