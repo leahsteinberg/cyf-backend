@@ -44,6 +44,7 @@ model Session {
   updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
+  pushToken String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

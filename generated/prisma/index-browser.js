@@ -142,6 +142,7 @@ exports.Prisma.SessionScalarFieldEnum = {
   updatedAt: 'updatedAt',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
+  pushToken: 'pushToken',
   userId: 'userId'
 };
 
