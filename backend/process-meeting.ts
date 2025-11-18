@@ -51,6 +51,7 @@ export const makeOfferForNewMeeting = async ({meeting, userOfferedId}:
     {meeting: Meeting; userOfferedId: string}): Promise<[Meeting, Offer]> => {
     const meetingId = meeting.id;
     const newOffer = await createOffer({meetingId, userOfferedId});
+    console.log("New Offer", newOffer)
     return [meeting, newOffer];
 }
 
@@ -96,17 +97,20 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
     const newFriendToOfferId = await findFriendIdToOffer({offers, meetingId, allFriendIds})
     // no more friends left, nothing to do.
     if (!newFriendToOfferId) {
+        console.log("no more friends to offer meeting to.")
         return meeting;     
     }
 
     const recentOffer = await findRecentOffer(offers);
     if (!recentOffer) {
             // no past offers, treat as new Meeting.
+            console.log("no past offers for meeting")
         const newMeeting = await makeOfferForNewMeeting({meeting, userOfferedId: newFriendToOfferId})
         return newMeeting;
     }
 
     if (recentOffer.offerState === OPEN_OFFER_STATE) {
+        console.log("Current offer is open.")
         const unOfferedFriendIds = await getUnofferedFriendsFromMeeting(
             {meeting, offers, friendIds: allFriendIds}
         );
@@ -118,13 +122,16 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
         });
 
         if (needNewOffer) {
+            console.log("needs a new offer based on time.")
             const [expiredOffer, newOffer] = await triggerNewOffer({
                 meetingId,
                 recentOfferId: recentOffer.id,
                 newUserOfferId: newFriendToOfferId
             });
+            
             return meeting;
         } else {
+            console.log("not enough time has past to justify a new offer.", meeting.scheduledFor);
             // leave as is!!!
         }
 
