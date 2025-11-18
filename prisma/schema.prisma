@@ -21,6 +21,7 @@ model User {
   phoneNumber         String?
   phoneNumberVerified Boolean?
   pushToken           String?
+  timezone            String?
   friendsWith         Friendship[]  @relation("friendsWith")
   friendsOf           Friendship[]  @relation("friendsOf")
   invitesSent         Invitation[]  @relation("invitesSent")

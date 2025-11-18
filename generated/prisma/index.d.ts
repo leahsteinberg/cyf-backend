@@ -1675,6 +1675,7 @@ export namespace Prisma {
     phoneNumber: string | null
     phoneNumberVerified: boolean | null
     pushToken: string | null
+    timezone: string | null
     username: string | null
     displayUsername: string | null
   }
@@ -1690,6 +1691,7 @@ export namespace Prisma {
     phoneNumber: string | null
     phoneNumberVerified: boolean | null
     pushToken: string | null
+    timezone: string | null
     username: string | null
     displayUsername: string | null
   }
@@ -1705,6 +1707,7 @@ export namespace Prisma {
     phoneNumber: number
     phoneNumberVerified: number
     pushToken: number
+    timezone: number
     username: number
     displayUsername: number
     _all: number
@@ -1722,6 +1725,7 @@ export namespace Prisma {
     phoneNumber?: true
     phoneNumberVerified?: true
     pushToken?: true
+    timezone?: true
     username?: true
     displayUsername?: true
   }
@@ -1737,6 +1741,7 @@ export namespace Prisma {
     phoneNumber?: true
     phoneNumberVerified?: true
     pushToken?: true
+    timezone?: true
     username?: true
     displayUsername?: true
   }
@@ -1752,6 +1757,7 @@ export namespace Prisma {
     phoneNumber?: true
     phoneNumberVerified?: true
     pushToken?: true
+    timezone?: true
     username?: true
     displayUsername?: true
     _all?: true
@@ -1840,6 +1846,7 @@ export namespace Prisma {
     phoneNumber: string | null
     phoneNumberVerified: boolean | null
     pushToken: string | null
+    timezone: string | null
     username: string | null
     displayUsername: string | null
     _count: UserCountAggregateOutputType | null
@@ -1872,6 +1879,7 @@ export namespace Prisma {
     phoneNumber?: boolean
     phoneNumberVerified?: boolean
     pushToken?: boolean
+    timezone?: boolean
     username?: boolean
     displayUsername?: boolean
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -1896,6 +1904,7 @@ export namespace Prisma {
     phoneNumber?: boolean
     phoneNumberVerified?: boolean
     pushToken?: boolean
+    timezone?: boolean
     username?: boolean
     displayUsername?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1911,6 +1920,7 @@ export namespace Prisma {
     phoneNumber?: boolean
     phoneNumberVerified?: boolean
     pushToken?: boolean
+    timezone?: boolean
     username?: boolean
     displayUsername?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1926,11 +1936,12 @@ export namespace Prisma {
     phoneNumber?: boolean
     phoneNumberVerified?: boolean
     pushToken?: boolean
+    timezone?: boolean
     username?: boolean
     displayUsername?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "phoneNumber" | "phoneNumberVerified" | "pushToken" | "username" | "displayUsername", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "phoneNumber" | "phoneNumberVerified" | "pushToken" | "timezone" | "username" | "displayUsername", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
@@ -1968,6 +1979,7 @@ export namespace Prisma {
       phoneNumber: string | null
       phoneNumberVerified: boolean | null
       pushToken: string | null
+      timezone: string | null
       username: string | null
       displayUsername: string | null
     }, ExtArgs["result"]["user"]>
@@ -2411,6 +2423,7 @@ export namespace Prisma {
     readonly phoneNumber: FieldRef<"User", 'String'>
     readonly phoneNumberVerified: FieldRef<"User", 'Boolean'>
     readonly pushToken: FieldRef<"User", 'String'>
+    readonly timezone: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
     readonly displayUsername: FieldRef<"User", 'String'>
   }
@@ -10634,6 +10647,7 @@ export namespace Prisma {
     phoneNumber: 'phoneNumber',
     phoneNumberVerified: 'phoneNumberVerified',
     pushToken: 'pushToken',
+    timezone: 'timezone',
     username: 'username',
     displayUsername: 'displayUsername'
   };
@@ -10855,6 +10869,7 @@ export namespace Prisma {
     phoneNumber?: StringNullableFilter<"User"> | string | null
     phoneNumberVerified?: BoolNullableFilter<"User"> | boolean | null
     pushToken?: StringNullableFilter<"User"> | string | null
+    timezone?: StringNullableFilter<"User"> | string | null
     username?: StringNullableFilter<"User"> | string | null
     displayUsername?: StringNullableFilter<"User"> | string | null
     sessions?: SessionListRelationFilter
@@ -10878,6 +10893,7 @@ export namespace Prisma {
     phoneNumber?: SortOrderInput | SortOrder
     phoneNumberVerified?: SortOrderInput | SortOrder
     pushToken?: SortOrderInput | SortOrder
+    timezone?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     displayUsername?: SortOrderInput | SortOrder
     sessions?: SessionOrderByRelationAggregateInput
@@ -10905,6 +10921,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     phoneNumberVerified?: BoolNullableFilter<"User"> | boolean | null
     pushToken?: StringNullableFilter<"User"> | string | null
+    timezone?: StringNullableFilter<"User"> | string | null
     displayUsername?: StringNullableFilter<"User"> | string | null
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
@@ -10927,6 +10944,7 @@ export namespace Prisma {
     phoneNumber?: SortOrderInput | SortOrder
     phoneNumberVerified?: SortOrderInput | SortOrder
     pushToken?: SortOrderInput | SortOrder
+    timezone?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     displayUsername?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -10948,6 +10966,7 @@ export namespace Prisma {
     phoneNumber?: StringNullableWithAggregatesFilter<"User"> | string | null
     phoneNumberVerified?: BoolNullableWithAggregatesFilter<"User"> | boolean | null
     pushToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    timezone?: StringNullableWithAggregatesFilter<"User"> | string | null
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     displayUsername?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
@@ -11427,6 +11446,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -11450,6 +11470,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -11473,6 +11494,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -11496,6 +11518,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -11519,6 +11542,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
   }
@@ -11534,6 +11558,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -11549,6 +11574,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -12165,6 +12191,7 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     phoneNumberVerified?: SortOrder
     pushToken?: SortOrder
+    timezone?: SortOrder
     username?: SortOrder
     displayUsername?: SortOrder
   }
@@ -12180,6 +12207,7 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     phoneNumberVerified?: SortOrder
     pushToken?: SortOrder
+    timezone?: SortOrder
     username?: SortOrder
     displayUsername?: SortOrder
   }
@@ -12195,6 +12223,7 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     phoneNumberVerified?: SortOrder
     pushToken?: SortOrder
+    timezone?: SortOrder
     username?: SortOrder
     displayUsername?: SortOrder
   }
@@ -13723,6 +13752,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
@@ -13745,6 +13775,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
@@ -13783,6 +13814,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
@@ -13805,6 +13837,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -13827,6 +13860,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -13849,6 +13883,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -13887,6 +13922,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -13909,6 +13945,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -13931,6 +13968,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -13953,6 +13991,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -13980,6 +14019,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -14002,6 +14042,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -14040,6 +14081,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -14062,6 +14104,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -14095,6 +14138,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -14117,6 +14161,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -14139,6 +14184,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -14161,6 +14207,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -14199,6 +14246,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -14221,6 +14269,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -14243,6 +14292,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -14265,6 +14315,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -14292,6 +14343,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -14314,6 +14366,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -14376,6 +14429,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -14398,6 +14452,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -14431,6 +14486,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -14453,6 +14509,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -14518,6 +14575,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -14540,6 +14598,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     phoneNumberVerified?: boolean | null
     pushToken?: string | null
+    timezone?: string | null
     username?: string | null
     displayUsername?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -14611,6 +14670,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -14633,6 +14693,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput

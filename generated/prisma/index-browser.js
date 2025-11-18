@@ -131,6 +131,7 @@ exports.Prisma.UserScalarFieldEnum = {
   phoneNumber: 'phoneNumber',
   phoneNumberVerified: 'phoneNumberVerified',
   pushToken: 'pushToken',
+  timezone: 'timezone',
   username: 'username',
   displayUsername: 'displayUsername'
 };

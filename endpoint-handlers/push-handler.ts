@@ -3,8 +3,8 @@ import { sendPushNotification, isValidExpoPushToken } from "../backend/push-noti
 import type { Request, Response } from 'express';
 
 export const handlePush = async (req: Request, res: Response) => {
-    const { pushToken, userId } = req.body;
-    console.log("register push --", { pushToken, userId });
+    const { pushToken, userId, timezone } = req.body;
+    console.log("register push --", { pushToken, userId, timezone });
 
     if (!pushToken || !userId) {
         return res.status(400).json({ error: "pushToken and userId are required" });
@@ -16,8 +16,8 @@ export const handlePush = async (req: Request, res: Response) => {
     }
 
     try {
-        // Save the push token to the database
-        const updatedUser = await updateUserPushToken({ userId, pushToken });
+        // Save the push token and timezone to the database
+        const updatedUser = await updateUserPushToken({ userId, pushToken, timezone });
 
         // Send a test "Hello World" notification
         const notification = await sendPushNotification({

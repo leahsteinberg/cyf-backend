@@ -1,7 +1,42 @@
 import type { Offer, Meeting } from "../types.js";
 import { sendPushNotification } from "./push-notifications.js";
-import { getUserPushToken } from "./user.js";
+import { getUserPushToken, getUserTimezone } from "./user.js";
 import { prisma } from "./auth.js";
+
+/**
+ * Generates a relative date string for push notifications
+ * Uses user's timezone for accurate day comparisons
+ */
+const getRelativeDateString = (meetingTime: Date, timezone: string | null): string => {
+    const now = new Date();
+
+    // Use timezone if available, otherwise fall back to UTC
+    const tz = timezone || 'UTC';
+
+    // Get date parts in user's timezone
+    const nowInTz = new Date(now.toLocaleString('en-US', { timeZone: tz }));
+    const meetingInTz = new Date(meetingTime.toLocaleString('en-US', { timeZone: tz }));
+
+    // Compare dates (ignoring time)
+    const today = new Date(nowInTz.getFullYear(), nowInTz.getMonth(), nowInTz.getDate());
+    const meetingDay = new Date(meetingInTz.getFullYear(), meetingInTz.getMonth(), meetingInTz.getDate());
+
+    const diffDays = Math.round((meetingDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Tomorrow";
+    if (diffDays >= 2 && diffDays <= 6) {
+        // Return day name (e.g., "Monday")
+        return meetingTime.toLocaleDateString('en-US', { weekday: 'long', timeZone: tz });
+    }
+    // For dates further out, use "Mon, Nov 17" format
+    return meetingTime.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        timeZone: tz
+    });
+};
 
 /**
  * Generates push notification content for an offer
@@ -9,7 +44,7 @@ import { prisma } from "./auth.js";
  * @param offer - The offer object (must include meeting with userFrom data)
  * @returns Push notification configuration object
  */
-const generateOfferPush = async ({ pushToken, offer }: { pushToken: string, offer: Offer }) => {
+const generateOfferPush = async ({ pushToken, offer, timezone }: { pushToken: string, offer: Offer, timezone: string | null }) => {
 
     const meeting = await prisma.meeting.findUnique({
         where: { id: offer.meetingId },
@@ -28,31 +63,21 @@ const generateOfferPush = async ({ pushToken, offer }: { pushToken: string, offe
     if (!meeting) {
         throw new Error('Meeting not found for offer');
     }
-    
+
     // Get the user's display name (prefer displayUsername, then username, then name)
     const userName = meeting.userFrom.displayUsername
         || meeting.userFrom.username
         || meeting.userFrom.name
         || 'A friend';
 
-    // Format the meeting time
-    console.log("meeitng time before - ", meeting.scheduledFor)
+    // Format the meeting time using relative date in user's timezone
     const meetingTime = new Date(meeting.scheduledFor);
-    console.log("meeting time after,", meetingTime)
-    const timeString = meetingTime.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-    });
-    const dateString = meetingTime.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric'
-    });
+    const relativeDateString = getRelativeDateString(meetingTime, timezone);
 
     return {
         pushToken,
         title: `${userName} wants to talk!`,
-        body: `${dateString} at ${timeString}${meeting.title ? ` - ${meeting.title}` : ''}`,
+        body: `${relativeDateString}${meeting.title ? ` - ${meeting.title}` : ''}`,
         data: {
             type: 'offer',
             offerId: offer.id,
@@ -75,8 +100,11 @@ export const createAndSendOfferPush = async ({ offer }: { offer: Offer }) => {
         return;
     }
 
+    // Get user's timezone for accurate date formatting
+    const timezone = await getUserTimezone({userId});
+
     try {
-        const notificationConfig = await generateOfferPush({ pushToken, offer });
+        const notificationConfig = await generateOfferPush({ pushToken, offer, timezone });
 
         const notification = await sendPushNotification(notificationConfig);
 

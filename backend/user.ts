@@ -38,13 +38,14 @@ export const findUserByPhone = async (phoneNumber: string) => {
         }
 };
 
-export const updateUserPushToken = async ({ userId, pushToken }: { userId: string, pushToken: string }) => {
+export const updateUserPushToken = async ({ userId, pushToken, timezone }: { userId: string, pushToken: string, timezone?: string }) => {
     const updatedUser = await prisma.user.update({
         where: {
             id: userId
         },
         data: {
-            pushToken: pushToken
+            pushToken: pushToken,
+            ...(timezone && { timezone })
         }
     });
     console.log("Updated user push token:", updatedUser);
@@ -62,4 +63,17 @@ export const getUserPushToken = async ({ userId }: { userId: string }): Promise<
     });
 
     return user?.pushToken ?? null;
+};
+
+export const getUserTimezone = async ({ userId }: { userId: string }): Promise<string | null> => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId
+        },
+        select: {
+            timezone: true
+        }
+    });
+
+    return user?.timezone ?? null;
 };
