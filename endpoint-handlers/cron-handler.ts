@@ -11,7 +11,9 @@ export const handleCronRound = async (req: Request, res: Response) => {
 
     for (const meeting of openMeetings) {
         console.log("meeting is - ", meeting)
-        //const processedMeeting = await processOffersForMeeting(meeting)
+        const processedMeeting = await processOffersForMeeting(meeting)
         console.log("-------------------------------- ONE MEETING DONE")
     }
+
+    res.json({ success: true, processedCount: openMeetings.length, round: count - 1 });
 }
