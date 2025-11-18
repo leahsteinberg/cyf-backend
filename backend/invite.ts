@@ -2,7 +2,7 @@ import { prisma } from './auth.js';
 
 //// MUTATE
 
-export const createInvite = async ({userFromId, userToPhoneNumber}) => {
+export const createInvite = async ({userFromId, userToPhoneNumber}: {userFromId: string, userToPhoneNumber: string}) => {
     const invite = await prisma.invitation.create({
       data: {
         userFromId,
@@ -17,7 +17,7 @@ export const removeCompletedInvite = async () => {};
 
 //// LOOK UP
 
-export const findInvite = async (token, userToPhoneNumber) => {
+export const findInvite = async (token: string, userToPhoneNumber: string) => {
     const invite = await prisma.invitation.findFirst({
         where: { token, userToPhoneNumber }
     });
@@ -25,7 +25,7 @@ export const findInvite = async (token, userToPhoneNumber) => {
 };
 
 
-export const getSentInvites = async ({userFromId}) => {
+export const getSentInvites = async ({userFromId}: {userFromId: string}) => {
     const sentInvites = await prisma.invitation.findMany({
         where: {
             userFromId

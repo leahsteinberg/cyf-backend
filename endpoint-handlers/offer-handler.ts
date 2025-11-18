@@ -1,6 +1,9 @@
 import { getOffersForUser, acceptOffer, rejectOffer, processRejectedOffer } from "../backend/offer.js";
+import type { Request, Response } from 'express';
 
-export const handleGetOffers = async (req, res) => {
+
+
+export const handleGetOffers = async (req: Request, res: Response) => {
   const { userId } = req.body;
   console.log("handle get offers ---", userId);
   
@@ -17,7 +20,7 @@ export const handleGetOffers = async (req, res) => {
   }
 };
 
-export const handleAcceptOffer = async (req, res) => {
+export const handleAcceptOffer = async (req: Request, res: Response) => {
   const { userId, offerId } = req.body;
   console.log("in accept offer", { userId, offerId })
 
@@ -35,7 +38,7 @@ export const handleAcceptOffer = async (req, res) => {
 
 }
 
-export const handleRejectOffer = async (req, res) => {
+export const handleRejectOffer = async (req: Request, res: Response) => {
   const { userId, offerId } = req.body;
   console.log("in reject offer", { userId, offerId })
   if (!userId || !offerId) {

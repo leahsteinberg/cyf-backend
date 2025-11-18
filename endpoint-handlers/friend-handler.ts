@@ -1,7 +1,8 @@
 import { getFriends } from "../backend/friendship.js";
 import { getSentInvites } from "../backend/invite.js";
+import type { Request, Response } from 'express';
 
-export const handleGetFriends = async (req, res) => {
+export const handleGetFriends = async (req: Request, res: Response) => {
   const {id} = req.body;
   const friends = await getFriends(id);
   const sentInvites = await getSentInvites(id)

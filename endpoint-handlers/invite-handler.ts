@@ -1,9 +1,10 @@
 import { createInvite, findInvite, getSentInvites } from "../backend/invite.js";
 import { findUserByPhone, createUser } from "../backend/user.js";
 import { createFriendship } from "../backend/friendship.js";
+import type { Request, Response } from 'express';
 
 
-export const handleCreateInvite = async (req, res) => {
+export const handleCreateInvite = async (req: Request, res: Response) => {
     const {userFromId, userToPhoneNumber} = req.body;
     console.log("create invite - got - ", {userFromId, userToPhoneNumber});
     const invitation = await createInvite({userFromId, userToPhoneNumber});
@@ -11,7 +12,7 @@ export const handleCreateInvite = async (req, res) => {
 };
 
 
-export const handleInviteSignUp = async (req, res) => {
+export const handleInviteSignUp = async (req: Request, res: Response) => {
     const {token, email, phoneNumber, name, password} = req.body;
     console.log("/api/sign-up-accept-invite", {token, email, phoneNumber, name, password})
     const userTo = await findUserByPhone(phoneNumber);
@@ -26,7 +27,7 @@ export const handleInviteSignUp = async (req, res) => {
     }
   }
 
-export const handleGetSentInvites = async(req, res) => {
+export const handleGetSentInvites = async(req: Request, res: Response) => {
     const {id} = req.body;
     const sentInvites = await getSentInvites({userFromId: id})
     res.json(sentInvites);// TODO - switch to res.json()?
