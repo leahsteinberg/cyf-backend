@@ -11,6 +11,7 @@ import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoin
 import { handleCronRound } from './endpoint-handlers/cron-handler.js';
 import cron from 'node-cron';
 import { handlePush } from './endpoint-handlers/push-handler.js';
+import { handleBroadcastNow, handleBroadcastEnd } from './endpoint-handlers/broadcast-handler.js';
 
 const app = express();
 const port = 3000;
@@ -59,6 +60,9 @@ app.post('/api/get-offers', handleGetOffers);
 app.post('/api/accept-offer', handleAcceptOffer);
 app.post('/api/reject-offer', handleRejectOffer);
 
+//BROADCAST ENDPOINTS
+app.post('/api/broadcast-now', handleBroadcastNow);
+app.post('/api/broadcast-end', handleBroadcastEnd);
 
 app.get('/api/simulate-cron-round', handleCronRound)
 
