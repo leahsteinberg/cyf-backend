@@ -20,13 +20,14 @@ const getUnofferedFriendsFromMeeting = async ({meeting, offers, friendIds}:
     if (!userFrom) {
         throw new Error('User not found for meeting');
     }
-    const offeredFriends = offers.reduce(
-        (friendsOffered: User[], offer: Offer) => {
-            const userOfferedId = offer.userOfferedId.toString()
-                return [...friendsOffered, userOfferedId]
-            },
-        []
-    );
+    // const offeredFriends = offers.reduce(
+    //     (friendsOffered: User[], offer: Offer) => {
+    //         const userOfferedId = offer.userOfferedId.toString()
+    //             return [...friendsOffered, userOfferedId]
+    //         },
+    //     []
+    // );
+    const offeredFriends = offers.map((offer: Offer): string => offer.userOfferedId.toString());
     const unOfferedFriendIds = findUnofferedFriends(offeredFriends, friendIds);
     return unOfferedFriendIds;
 }
