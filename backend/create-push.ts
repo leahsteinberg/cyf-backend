@@ -36,7 +36,9 @@ const generateOfferPush = async ({ pushToken, offer }: { pushToken: string, offe
         || 'A friend';
 
     // Format the meeting time
+    console.log("meeitng time before - ", meeting.scheduledFor)
     const meetingTime = new Date(meeting.scheduledFor);
+    console.log("meeting time after,", meetingTime)
     const timeString = meetingTime.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
