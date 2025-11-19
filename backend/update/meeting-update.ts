@@ -1,9 +1,5 @@
-
-import type { MeetingState,  Meeting, User } from '../types.js';
-import { prisma } from './auth.js';  
-
-
-/// MUTATE
+import type { Meeting, MeetingState } from "../../types.js";
+import { prisma } from "../auth.js";
 
 export const createMeeting = async (
     { userFromId, scheduledFor, scheduledEnd, title }
@@ -65,6 +61,3 @@ export const deleteMeeting = async ({meetingId}: {meetingId: string}): Promise<M
     console.log("Deleted meeting:", deletedMeeting);
     return deletedMeeting;
 };
-
-
-

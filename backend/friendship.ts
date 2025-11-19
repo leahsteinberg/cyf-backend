@@ -1,25 +1,12 @@
 import {prisma } from './auth.js';  
+import { getFriendshipsUser1Side, getFriendshipsUser2Side } from './query/friendship-lookup.js';
+import { getUsersFromIds } from './query/user-lookup.js';
 
 
-//// MUTATE
-
-
-export const createFriendship = async ({userId1, userId2}) => {
-    const friendship = await prisma.friendship.create({
-        data: {
-            userId1,
-            userId2,
-        }
-        });
-    return friendship;
-};
-
-
-//// LOOK UP
 
 export const getFriends = async (id) => {
     const friendIds = await getFriendIds(id);
-    const friends = await getFriendUsersFromIds(friendIds);
+    const friends = await getUsersFromIds(friendIds);
     return friends;
 }
 
@@ -31,40 +18,14 @@ export const getFriendIds = async (id) => {
     return friendIds;
 }
 
-export const getFriendUsersFromIds = async (friendIds) => {
-    const friendsUsers = await prisma.user.findMany({
-        where: {
-            id: {
-                in: friendIds,
-            },
-        },
-    });
-    return friendsUsers;
-}
-
 const getFriendIdsFromFriendships = (selfId, friendships) =>  {
     return friendships.map((friend) => {
         return selfId === friend.userId1 ? friend.userId2 : friend.userId1
     })
 }
 
-const getFriendshipsUser1Side = async (id) => {
-    const friendships = await prisma.friendship.findMany({
-        where: { userId1: id }
-    });
-    return friendships || [];
-}
+export const findUnofferedFriends = (offeredFriends: string[], allUserFriendIds:string[]):string[] => {
 
-const getFriendshipsUser2Side = async (id) => {
-
-    const friendships = await prisma.friendship.findMany({
-        where: { userId2: id }
-    });
-    return friendships || [];
-}
-
-export const findUnofferedFriends = (offeredFriends, allUserFriendIds) => {
-    
     const unOfferedFriendIds = allUserFriendIds.reduce(
         (unOffered, friendId) => {
             return offeredFriends.includes(friendId) ? [...unOffered] : [...unOffered, friendId];

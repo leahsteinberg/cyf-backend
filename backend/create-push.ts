@@ -1,7 +1,6 @@
-import type { Offer, Meeting } from "../types.js";
+import type { Offer } from "../types.js";
 import { sendPushNotification } from "./push-notifications.js";
 import { getUserPushToken, getUserTimezone } from "./user.js";
-import { prisma } from "./auth.js";
 import { getRelativeDateString } from "./utils.js";
 import { findMeetingWithUserFromOffer } from "./query/meeting-lookup.js";
 
