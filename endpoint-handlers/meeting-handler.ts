@@ -5,7 +5,6 @@ import type { Request, Response } from 'express';
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
-  
   const {userFromId, scheduledEnd, scheduledFor, title} = req.body;
   const meeting = await createMeeting({userFromId, scheduledEnd, scheduledFor, title});
   await processOfferForNewMeeting(meeting);
@@ -28,6 +27,7 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
   }
 
   try {
+    // first need to delete offers
     const deletedMeeting = await deleteMeeting({ meetingId });
     res.json(deletedMeeting);
   } catch (error) {

@@ -129,6 +129,6 @@ export const determineNeedNewOffer = async ({remainingFriendCount, minutesUntilM
 };
 
 
-export const getOfferExpired = async({offer}: {offer: Offer}): Promise<Boolean> {
+export const getIsOfferExpired = async({offer}: {offer: Offer}): Promise<Boolean> => {
     return isTimePast({eventTime: offer.expiresAt});
 }
