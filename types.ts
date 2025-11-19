@@ -16,6 +16,7 @@ export interface Meeting extends BaseEntity {
     scheduledFor: Date;
     acceptedUserId: string | null;
     meetingState: MeetingState;
+    userFrom: User;
 }
 
 export interface Offer extends BaseEntity {
