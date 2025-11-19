@@ -130,7 +130,7 @@ model Offer {
   userOfferedId   String
   offerState      OfferState    @default(OPEN)
   createdAt       DateTime      @default(now())
-  expiresAt       DateTime
+  expiresAt       DateTime?
 
   @@map("offer")
 }
