@@ -3,7 +3,7 @@ import { sendPushNotification } from "./push-notifications.js";
 import { getUserPushToken, getUserTimezone } from "./user.js";
 import { prisma } from "./auth.js";
 import { getRelativeDateString } from "./utils.js";
-import { findMeetingFromOffer, findMeetingUnique } from "./query/meeting-lookup.js";
+import { findMeetingWithUserFromOffer } from "./query/meeting-lookup.js";
 
 
 
@@ -15,7 +15,7 @@ import { findMeetingFromOffer, findMeetingUnique } from "./query/meeting-lookup.
  */
 const generateOfferPush = async ({ pushToken, offer, timezone }: { pushToken: string, offer: Offer, timezone: string | null }) => {
 
-    const meeting = await findMeetingFromOffer({offer});
+    const meeting = await findMeetingWithUserFromOffer({offer});
 
     if (!meeting) {
         throw new Error('Meeting not found for offer');
