@@ -2,7 +2,7 @@ import {auth, prisma} from './backend/auth.js';
 import express from 'express';
 import { toNodeHandler } from "better-auth/node"; 
 import cors from 'cors';
-import { handleMe, handleSignIn, handleSignInPhone, handleSignUpPhone, handleSignOut } from './endpoint-handlers/auth-handler.js';
+import { handleMe, handleSignIn, handleSignUpPhone, handleSignOut } from './endpoint-handlers/auth-handler.js';
 import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites } from './endpoint-handlers/invite-handler.js';
 import { handleGetUserByPhone } from './endpoint-handlers/user-handler.js';
 import { handleGetFriends } from './endpoint-handlers/friend-handler.js';
@@ -31,7 +31,7 @@ app.post("/api/register-push", handlePush);
 app.get("/api/me", handleMe);
 app.post("/api/signup-phone", handleSignUpPhone);
 app.post("/api/signInEmail", handleSignIn);
-app.post("/api/signInPhone", handleSignInPhone);
+// app.post("/api/signInPhone", handleSignInPhone);
 app.post('/api/signout', handleSignOut)
 
 

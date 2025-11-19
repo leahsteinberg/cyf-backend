@@ -30,4 +30,5 @@ export interface Offer extends BaseEntity {
     userOfferedId: string;
     createdAt: Date;
     offerState: OfferState;
+    expiresAt: Date | null;
 }
