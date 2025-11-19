@@ -1,10 +1,11 @@
+import type { User } from '../types.js';
 import {prisma } from './auth.js';  
 import { getFriendshipsUser1Side, getFriendshipsUser2Side } from './query/friendship-lookup.js';
 import { getUsersFromIds } from './query/user-lookup.js';
 
 
 
-export const getFriends = async (id) => {
+export const getFriends = async (id: string): Promise<User[]> => {
     const friendIds = await getFriendIds(id);
     const friends = await getUsersFromIds(friendIds);
     return friends;
@@ -18,7 +19,7 @@ export const getFriendIds = async (id) => {
     return friendIds;
 }
 
-const getFriendIdsFromFriendships = (selfId, friendships) =>  {
+const getFriendIdsFromFriendships = (selfId: string, friendships) =>  {
     return friendships.map((friend) => {
         return selfId === friend.userId1 ? friend.userId2 : friend.userId1
     })

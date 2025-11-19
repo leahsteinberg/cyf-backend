@@ -1,8 +1,9 @@
-import { createInvite, findInvite, getSentInvites } from "../backend/invite.js";
 import { createFriendship } from "../backend/update/friendship-update.js";
 import { findUserByPhone } from "../backend/query/user-lookup.js";
 import { createUser } from "../backend/user.js";
 import type { Request, Response } from 'express';
+import { createInvite } from "../backend/update/invite-update.js";
+import { findInvite, getSentInvites } from "../backend/query/invite-lookup.js";
 
 
 export const handleCreateInvite = async (req: Request, res: Response) => {

@@ -1,5 +1,5 @@
 import {auth} from '../backend/auth.js';  
-import { toNodeHandler, fromNodeHeaders } from "better-auth/node"; 
+import { fromNodeHeaders } from "better-auth/node"; 
 import { createUser } from '../backend/user.js';
 import type { Request, Response } from 'express';
 
