@@ -1,5 +1,5 @@
 import { getFriendIds, pickFriendIdToOffer } from './friendship.js';
-import { REJECTED_MEETING_STATE } from './utils.js';
+import { addHour, REJECTED_MEETING_STATE } from './utils.js';
 import type { Offer } from '../types.js';
 import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
 import { createOffer, setOfferAccepted, setOfferRejected } from './update/offer-update.js';
@@ -79,10 +79,13 @@ export const processRejectedOffer = async ({ offerId }
         });
     } else {
         // Create a new offer for the next friend
+        const expiresAt = addHour(new Date());
+
         console.log("Creating new offer for friend:", newFriendToOfferId);
         await createOffer({
             meetingId,
-            userOfferedId: newFriendToOfferId
+            userOfferedId: newFriendToOfferId,
+            expiresAt
         });
     }
 };

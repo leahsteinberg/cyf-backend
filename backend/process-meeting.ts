@@ -1,6 +1,6 @@
 import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired, createOffer } from './offer.js';
 import { setMeetingState } from './update/meeting-update.js';
-import { ACCEPTED_OFFER_STATE, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.js';
+import { ACCEPTED_OFFER_STATE, addHour, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.js';
 import { findUnofferedFriends, getFriendIds } from './friendship.js';
 import type { Meeting, Offer } from '../types.js';
 import { createAndSendOfferPush } from './create-push.js';
@@ -50,7 +50,8 @@ export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeti
 export const makeOfferForNewMeeting = async ({meeting, userOfferedId}:
     {meeting: Meeting; userOfferedId: string}): Promise<[Meeting, Offer]> => {
     const meetingId = meeting.id;
-    const newOffer = await createOffer({meetingId, userOfferedId});
+    const expiresAt = addHour(new Date());
+    const newOffer = await createOffer({meetingId, userOfferedId, expiresAt});
     console.log("New Offer", newOffer)
     return [meeting, newOffer];
 }
@@ -65,7 +66,8 @@ const processPastMeeting = async({meeting}: {meeting: Meeting}): Promise<Meeting
 const triggerNewOffer = async ({meetingId, recentOfferId, newUserOfferId}:
     {meetingId: string; recentOfferId: string; newUserOfferId: string;}) => {
     const expiredOffer = await setOfferExpired({offerId: recentOfferId});
-    const newOffer = await createOffer({meetingId, userOfferedId: newUserOfferId})
+    const expiresAt = addHour(new Date());
+    const newOffer = await createOffer({meetingId, userOfferedId: newUserOfferId, expiresAt})
     return [expiredOffer, newOffer];
 };
 

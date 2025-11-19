@@ -1,14 +1,16 @@
 
 import { prisma } from "../auth.js";
 import type { Offer } from '../../types.js';
+import { OPEN_OFFER_STATE } from "../utils.js";
 
-export const createOffer = async ({meetingId, userOfferedId}
-    : {meetingId: string, userOfferedId: string}): Promise<Offer> => {
+export const createOffer = async ({meetingId, userOfferedId, expiresAt}
+    : {meetingId: string, userOfferedId: string, expiresAt: Date}): Promise<Offer> => {
     const offer = await prisma.offer.create({
         data: {
             meetingId,
             userOfferedId,
-            offerState: 'OPEN'
+            offerState: OPEN_OFFER_STATE,
+            expiresAt
         }
     })
     console.log("Meeting ID:" , meetingId, "Made a new offer: ", offer);
