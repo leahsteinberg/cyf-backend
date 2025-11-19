@@ -203,7 +203,8 @@ exports.Prisma.OfferScalarFieldEnum = {
   meetingId: 'meetingId',
   userOfferedId: 'userOfferedId',
   offerState: 'offerState',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
 };
 
 exports.Prisma.SortOrder = {
