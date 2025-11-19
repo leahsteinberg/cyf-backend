@@ -1,4 +1,7 @@
 import type { Request, Response } from 'express';
+import { getFriendIds } from '../backend/friendship.js';
+import { createMeeting } from '../backend/meeting.js';
+import { addHour } from '../backend/utils.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -10,6 +13,25 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
 
     try {
         // TODO: Implement broadcast now logic
+        const allFriends = await getFriendIds({id: userId});
+        const scheduledFor = new Date();
+        const scheduledEnd = addHour(scheduledFor);
+
+        const meeting = await createMeeting({ 
+            userFromId: userId,
+            scheduledFor,
+            scheduledEnd,
+            title: '' }
+        );
+        
+
+        // create a meeting that starts now and ends in 1 hour.
+        // special type of meeting which is a broadcast meeting
+        // send a special type of offer
+
+
+
+
 
         res.json({ success: true, userId });
     } catch (error) {

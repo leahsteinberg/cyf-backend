@@ -35,3 +35,7 @@ export const minutesBetween = async({earlierTime, laterTime}: {earlierTime: Date
     const minutes = (timeBetween/1000)/60;
     return minutes;
 };
+
+export const addHour = (date: Date): Date => {
+    return new Date(date.getTime() + 60 * 60 * 1000);
+};
