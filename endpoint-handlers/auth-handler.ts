@@ -1,7 +1,8 @@
 import {auth} from '../backend/auth.js';  
+import type { Request, Response } from 'express';
+
 import { fromNodeHeaders } from "better-auth/node"; 
 import { createUser } from '../backend/user.js';
-import type { Request, Response } from 'express';
 
 export const handleSignIn = async (req: Request, res: Response) => {
     console.log("sign in - ", req.body.email)
@@ -23,7 +24,7 @@ export const handleSignIn = async (req: Request, res: Response) => {
     }
 };
 
-export const handleSignOut = async (req, res) => {
+export const handleSignOut = async (req: Request, res: Response) => {
   console.log("sign out!!!", req.body)
   const {userId} = req.body;
 
@@ -37,7 +38,7 @@ export const handleSignOut = async (req, res) => {
   //return res.json("gottt signout!!")
 }
 
-export const handleMe = async (req, res) => {
+export const handleMe = async (req: Request, res: Response) => {
     try {
         const session = await auth.api.getSession({
             headers: fromNodeHeaders(req.headers),
@@ -50,7 +51,7 @@ export const handleMe = async (req, res) => {
     }
 };
 
-export const handleSignUpPhone = async (req, res) => {
+export const handleSignUpPhone = async (req: Request, res: Response) => {
     console.log("Sign Up Phone Endpoint", req.body);
     try {
         const { email, phoneNumber, name, password } = req.body;
@@ -64,15 +65,15 @@ export const handleSignUpPhone = async (req, res) => {
     }
 };
 
-export const handleSignInPhone = async (req, res) => {
-      // TODO - can I use this instead of the email one???
-    const session = await auth.api.signInPhoneNumber({
-        body: {
-          phoneNumber: req.body.phoneNumber,
-          password: req.body.password,
-          rememberMe: true,
-        },
-        headers: fromNodeHeaders(req.headers),
-      });
-    return res.json(session);
-};
+// export const handleSignInPhone = async (req: Request, res: Response) => {
+//       // TODO - can I use this instead of the email one???
+//     const session = await auth.api.signInPhoneNumber({
+//         body: {
+//           phoneNumber: req.body.phoneNumber,
+//           password: req.body.password,
+//           rememberMe: true,
+//         },
+//         headers: fromNodeHeaders(req.headers),
+//       });
+//     return res.json(session);
+// };
