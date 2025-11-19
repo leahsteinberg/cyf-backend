@@ -1,11 +1,12 @@
 import { prisma } from "../auth.js";
 import type { Offer } from '../../types.js';
+import { OPEN_OFFER_STATE } from "../utils.js";
 
 export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offer[]> => {
     const offers = await prisma.offer.findMany({
         where: {
             userOfferedId: userId,
-            offerState: 'OPEN'
+            offerState: OPEN_OFFER_STATE
         },
         include: {
             meeting: {
@@ -30,7 +31,6 @@ export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offe
 };
 
 export const getOfferById = async ({offerId}: {offerId: string}): Promise<Offer | null> => {
-    console.log("getOfferById", offerId);
     const offer = await prisma.offer.findUnique({
         where:
         {

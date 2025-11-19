@@ -5,7 +5,6 @@ import type { Request, Response } from 'express';
 
 export const handleGetOffers = async (req: Request, res: Response) => {
   const { userId } = req.body;
-  console.log("handle get offers ---", userId);
   
   if (!userId) {
     return res.status(400).json({ error: "userId is required" });

@@ -10,8 +10,7 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
   const meeting = await createMeeting({userFromId, scheduledEnd, scheduledFor, title});
   const processedMeeting = await processOfferForNewMeeting(meeting);
 
-  console.log("Created Meeting---------", meeting);
-  console.log("Processed Meeting-----", processedMeeting);
+  console.log("Created Processed Meeting-----", processedMeeting);
 
   res.json(processedMeeting)
 }

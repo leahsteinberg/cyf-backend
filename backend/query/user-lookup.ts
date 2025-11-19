@@ -1,10 +1,10 @@
 import { prisma } from "../auth.js";
 
-export const getUsersFromIds = async (friendIds: string[]) => {
+export const getUsersFromIds = async (userIds: string[]) => {
     const users = await prisma.user.findMany({
         where: {
             id: {
-                in: friendIds,
+                in: userIds,
             },
         },
     });

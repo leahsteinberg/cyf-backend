@@ -8,7 +8,6 @@ export const getFriendshipsUser1Side = async (id: string) => {
 }
 
 export const getFriendshipsUser2Side = async (id: string) => {
-
     const friendships = await prisma.friendship.findMany({
         where: { userId2: id }
     });

@@ -10,7 +10,7 @@ export const handleCronRound = async (req: Request, res: Response) => {
     count++;
 
     for (const meeting of openMeetings) {
-        console.log("meeting is:", meeting.id, meeting.meetingState, " ------------ ")
+        //console.log("meeting is:", meeting.id, meeting.meetingState, " ------------ ")
         const processedMeeting = await processOffersForMeeting(meeting)
     }
 

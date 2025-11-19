@@ -1,5 +1,6 @@
 import type { Meeting, Offer, User } from "../../types.js";
 import { prisma } from "../auth.js";
+import { SEARCHING_MEETING_STATE } from "../utils.js";
 
 export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Promise<Meeting | null > => {
     const meeting = await prisma.meeting.findUnique({
@@ -19,8 +20,6 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
     return meeting;
 }
 
-
-/// LOOKUP
 export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Promise<Meeting[]> => {
     const meetings = await prisma.meeting.findMany({
         where: {
@@ -68,7 +67,7 @@ export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: str
 export const getAllSearchingMeetings = async (): Promise<Meeting[]> => {
     const meetings = await prisma.meeting.findMany({
         where: {
-            meetingState: 'SEARCHING',
+            meetingState: SEARCHING_MEETING_STATE,
         }
     });
     return meetings;

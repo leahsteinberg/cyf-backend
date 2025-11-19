@@ -15,12 +15,4 @@ export const createUser = async ({ email, phoneNumber, name, password }: { email
 };
 
 
-export const signOutUser: RequestHandler = async (req) => {
-    // console.log("user id d---- ", userId);
-    // const user = await auth.api.signOut({
-    //     headers: fromNodeHeaders(req.headers),
-
-    // })
-    // console.log("sign out --- ", user);
-    // return user;
-};
+export const signOutUser: RequestHandler = async (req) => {};

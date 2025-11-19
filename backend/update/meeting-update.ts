@@ -1,5 +1,6 @@
 import type { Meeting, MeetingState } from "../../types.js";
 import { prisma } from "../auth.js";
+import { ACCEPTED_MEETING_STATE } from "../utils.js";
 
 export const createMeeting = async (
     { userFromId, scheduledFor, scheduledEnd, title }
@@ -35,7 +36,7 @@ export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string
             id: meetingId,
         },
         data: {
-            meetingState: 'ACCEPTED',
+            meetingState: ACCEPTED_MEETING_STATE,
             acceptedUserId: userId,
         }
     })

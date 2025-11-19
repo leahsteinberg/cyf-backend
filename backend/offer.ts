@@ -94,7 +94,6 @@ export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
     if (!userFrom) {
         throw new Error('User not found for meeting');
     }
-    console.log("all user FriendIDs", allFriendIds)
     const offeredFriends = offers.reduce(
         (friendsOffered, offer) => {
             const userOfferedId = offer.userOfferedId.toString()

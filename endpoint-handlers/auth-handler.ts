@@ -1,6 +1,6 @@
 import {auth} from '../backend/auth.js';  
 import { toNodeHandler, fromNodeHeaders } from "better-auth/node"; 
-import { createUser, signOutUser } from '../backend/user.js';
+import { createUser } from '../backend/user.js';
 import type { Request, Response } from 'express';
 
 export const handleSignIn = async (req: Request, res: Response) => {

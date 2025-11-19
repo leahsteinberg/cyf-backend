@@ -1,3 +1,4 @@
+
 import { prisma } from "../auth.js";
 import type { Offer } from '../../types.js';
 
