@@ -13,7 +13,7 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
 
     try {
         // TODO: Implement broadcast now logic
-        const allFriends = await getFriendIds({id: userId});
+        const allFriends = await getFriendIds(userId);
         const scheduledFor = new Date();
         const scheduledEnd = addHour(scheduledFor);
 
