@@ -1,38 +1,14 @@
-import { prisma } from './auth.js';
-import { getUserFromMeeting, setMeetingAccepted, setMeetingState } from './meeting.js'
 import { getFriendIds, pickFriendIdToOffer } from './friendship.js';
 import { REJECTED_MEETING_STATE } from './utils.js';
-import type { Offer, Meeting } from '../types.js';
+import type { Offer } from '../types.js';
+import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
+import { createOffer, setOfferAccepted, setOfferRejected } from './update/offer-update.js';
+import { setMeetingAccepted, setMeetingState } from './update/meeting-update.js';
+import { getMeetingById, getUserFromMeetingId } from './query/meeting-lookup.js';
 
-export const createOffer = async ({meetingId, userOfferedId}
-    : {meetingId: string, userOfferedId: string}): Promise<Offer> => {
-    const offer = await prisma.offer.create({
-        data: {
-            meetingId,
-            userOfferedId,
-            offerState: 'OPEN'
-        }
-    })
-    console.log("Meeting ID:" , meetingId, "Made a new offer: ", offer);
-    return offer;
-};
-
-
-
-
-export const setOfferExpired = async ({ offerId }: { offerId: string }): Promise<Offer> => {
-    const expiredOffer = prisma.offer.update({
-        where: {
-            id: offerId,
-        },
-        data: {
-            offerState: 'EXPIRED',
-        }
-
-    })
-    return expiredOffer;
-
-};
+// Re-export pure Prisma functions for backward compatibility
+export { createOffer, setOfferExpired } from './update/offer-update.js';
+export { getOffersForUser, getOfferById, getMeetingOffers } from './query/offer-lookup.js';
 
 export const acceptOffer = async ({ userId, offerId }
     : { userId: string, offerId: string }): Promise<Offer> => {
@@ -42,19 +18,13 @@ export const acceptOffer = async ({ userId, offerId }
     // Return ERROR
     }
     const meetingId = offer?.meetingId;
-    
-    const acceptedOffer = await prisma.offer.update({
-        where: {
-            id: offerId,
-        },
-        data: {
-            offerState: 'ACCEPTED',
-        }
 
-    })
+    const acceptedOffer = await setOfferAccepted({ offerId });
     console.log("accepted offer --- ", acceptedOffer)
-    const acceptedMeeting = await setMeetingAccepted({ meetingId, userId });
-    console.log("accepted meeting - ", acceptedMeeting);
+    if (meetingId) {
+        const acceptedMeeting = await setMeetingAccepted({ meetingId, userId });
+        console.log("accepted meeting - ", acceptedMeeting);
+    }
     return acceptedOffer;
 
 };
@@ -66,14 +36,7 @@ export const rejectOffer = async ({ offerId }
         throw new Error('Offer not found');
     }
 
-    const rejectedOffer = await prisma.offer.update({
-        where: {
-            id: offerId,
-        },
-        data: {
-            offerState: 'REJECTED',
-        }
-    })
+    const rejectedOffer = await setOfferRejected({ offerId });
     console.log("rejected offer --- ", rejectedOffer)
     return rejectedOffer;
 };
@@ -88,9 +51,7 @@ export const processRejectedOffer = async ({ offerId }
     const meetingId = rejectedOffer.meetingId;
 
     // Get the meeting
-    const meeting = await prisma.meeting.findUnique({
-        where: { id: meetingId }
-    });
+    const meeting = await getMeetingById({ meetingId });
 
     if (!meeting) {
         throw new Error('Meeting not found');
@@ -126,51 +87,10 @@ export const processRejectedOffer = async ({ offerId }
     }
 };
 
-
-export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offer[]> => {
-    const offers = await prisma.offer.findMany({
-        where: {
-            userOfferedId: userId,
-            offerState: 'OPEN'
-        },
-        include: {
-            meeting: {
-                include: {
-                    userFrom: {
-                        select: {
-                            id: true,
-                            name: true,
-                            email: true,
-                            username: true,
-                            displayUsername: true
-                        }
-                    }
-                }
-            }
-        },
-        orderBy: {
-            createdAt: 'desc'
-        }
-    });
-    return offers;
-};
-
-export const getOfferById = async ({offerId}: {offerId: string}): Promise<Offer | null> => {
-    console.log("getOfferById", offerId);
-    const offer = await prisma.offer.findUnique({
-        where:
-        {
-            id: offerId
-        }
-    });
-    return offer;
-}
-
-
 export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
     {offers: Offer[], meetingId: string, allFriendIds: string[]}) => {
     // TODO - in the future, do this in a more systematic, yet randomized way.
-    const userFrom = await getUserFromMeeting(meetingId);
+    const userFrom = await getUserFromMeetingId(meetingId);
     if (!userFrom) {
         throw new Error('User not found for meeting');
     }
@@ -194,16 +114,7 @@ export const findRecentOffer = (offers: Offer[]) => {
         return recentOffer
     }
     return null
-    
-}
 
-export const getMeetingOffers = async ({meetingId}: {meetingId: string}): Promise<Offer[]> => {
-    const offers = await prisma.offer.findMany({
-        where: {
-            meetingId
-        }
-    })
-    return offers;
 }
 
 export const determineNeedNewOffer = async ({remainingFriendCount, minutesUntilMeeting}

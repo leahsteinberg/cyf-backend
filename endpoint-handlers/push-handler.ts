@@ -1,4 +1,4 @@
-import { updateUserPushToken } from "../backend/user.js";
+import { updateUserPushToken } from "../backend/update/user-update.js";
 import { sendPushNotification, isValidExpoPushToken } from "../backend/push-notifications.js";
 import type { Request, Response } from 'express';
 

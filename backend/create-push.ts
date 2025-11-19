@@ -1,6 +1,6 @@
 import type { Offer } from "../types.js";
 import { sendPushNotification } from "./push-notifications.js";
-import { getUserPushToken, getUserTimezone } from "./user.js";
+import { getUserPushToken, getUserTimezone } from "./query/user-lookup.js";
 import { getRelativeDateString } from "./utils.js";
 import { findMeetingWithUserFromOffer } from "./query/meeting-lookup.js";
 

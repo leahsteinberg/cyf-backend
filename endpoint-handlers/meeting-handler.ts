@@ -1,5 +1,5 @@
-import { createMeeting, getAcceptedMeetings, deleteMeeting } from "../backend/meeting.js";
-import { getCreatedMeetings } from "../backend/meeting.js";
+import { createMeeting, deleteMeeting } from "../backend/update/meeting-update.js";
+import { getCreatedMeetings, getAcceptedMeetings } from "../backend/query/meeting-lookup.js";
 import { processOfferForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
 

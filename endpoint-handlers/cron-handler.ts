@@ -1,4 +1,4 @@
-import { getAllSearchingMeetings } from "../backend/meeting.js";
+import { getAllSearchingMeetings } from "../backend/query/meeting-lookup.js";
 import { processOffersForMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
 

@@ -1,4 +1,4 @@
-import { findUserByPhone } from "../backend/user.js";
+import { findUserByPhone } from "../backend/query/user-lookup.js";
 import type { Request, Response } from 'express';
 
 

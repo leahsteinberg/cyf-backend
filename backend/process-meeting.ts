@@ -1,5 +1,5 @@
 import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired, createOffer } from './offer.js';
-import { setMeetingState, getUserFromMeeting } from './meeting.js';
+import { setMeetingState } from './update/meeting-update.js';
 import { ACCEPTED_OFFER_STATE, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.js';
 import { findUnofferedFriends, getFriendIds } from './friendship.js';
 import type { Meeting, Offer, User } from '../types.js';

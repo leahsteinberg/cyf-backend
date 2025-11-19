@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { getFriendIds } from '../backend/friendship.js';
-import { createMeeting } from '../backend/meeting.js';
+import { createMeeting } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {

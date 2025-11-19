@@ -1,6 +1,7 @@
 import { createInvite, findInvite, getSentInvites } from "../backend/invite.js";
 import { createFriendship } from "../backend/update/friendship-update.js";
-import { findUserByPhone, createUser } from "../backend/user.js";
+import { findUserByPhone } from "../backend/query/user-lookup.js";
+import { createUser } from "../backend/user.js";
 import type { Request, Response } from 'express';
 
 
