@@ -21,9 +21,10 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             userFromId: userId,
             scheduledFor,
             scheduledEnd,
-            title: '' }
+            title: 'This is a broadcast meeting' }
         );
-        
+        //const offers = await createBroadcastOffers();
+
 
         // create a meeting that starts now and ends in 1 hour.
         // special type of meeting which is a broadcast meeting
