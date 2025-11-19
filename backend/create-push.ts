@@ -2,41 +2,9 @@ import type { Offer, Meeting } from "../types.js";
 import { sendPushNotification } from "./push-notifications.js";
 import { getUserPushToken, getUserTimezone } from "./user.js";
 import { prisma } from "./auth.js";
+import { getRelativeDateString } from "./utils.js";
 
-/**
- * Generates a relative date string for push notifications
- * Uses user's timezone for accurate day comparisons
- */
-const getRelativeDateString = (meetingTime: Date, timezone: string | null): string => {
-    const now = new Date();
 
-    // Use timezone if available, otherwise fall back to UTC
-    const tz = timezone || 'UTC';
-
-    // Get date parts in user's timezone
-    const nowInTz = new Date(now.toLocaleString('en-US', { timeZone: tz }));
-    const meetingInTz = new Date(meetingTime.toLocaleString('en-US', { timeZone: tz }));
-
-    // Compare dates (ignoring time)
-    const today = new Date(nowInTz.getFullYear(), nowInTz.getMonth(), nowInTz.getDate());
-    const meetingDay = new Date(meetingInTz.getFullYear(), meetingInTz.getMonth(), meetingInTz.getDate());
-
-    const diffDays = Math.round((meetingDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "Tomorrow";
-    if (diffDays >= 2 && diffDays <= 6) {
-        // Return day name (e.g., "Monday")
-        return meetingTime.toLocaleDateString('en-US', { weekday: 'long', timeZone: tz });
-    }
-    // For dates further out, use "Mon, Nov 17" format
-    return meetingTime.toLocaleDateString('en-US', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-        timeZone: tz
-    });
-};
 
 /**
  * Generates push notification content for an offer
