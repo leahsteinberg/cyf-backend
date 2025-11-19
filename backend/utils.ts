@@ -46,7 +46,7 @@ export const addHour = (date: Date): Date => {
  * Generates a relative date string for push notifications
  * Uses user's timezone for accurate day comparisons
  */
-const getRelativeDateString = (meetingTime: Date, timezone: string | null): string => {
+export const getRelativeDateString = (meetingTime: Date, timezone: string | null): string => {
     const now = new Date();
 
     // Use timezone if available, otherwise fall back to UTC
