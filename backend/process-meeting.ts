@@ -15,7 +15,9 @@ export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeti
     
     if (friendToOfferId) {
         const offer = await makeOffer({meeting, userOfferedId: friendToOfferId, unOfferedCount});
-        createAndSendOfferPush({ offer });
+        if (offer) {
+            createAndSendOfferPush({ offer });
+        }
     }
 
     return meeting;
