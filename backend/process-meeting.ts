@@ -36,11 +36,11 @@ const determineOfferExpiration = async ({remainingFriendCount, previousTimeMarke
 
 export const makeOffer = async ({meeting, userOfferedId, unOfferedCount}:
     {meeting: Meeting; userOfferedId: string, unOfferedCount: number
-    }): Promise<Offer> => {
+    }): Promise<Offer | undefined> => {
     const meetingId = meeting.id
-    //const expiresAt = addHour(new Date());
+    const expiresAt = addHour(new Date());
     //const remainingFriendCount = await getUnofferedFriendsFromMeeting({meeting});
-    const expiresAt = await determineOfferExpiration({remainingFriendCount: unOfferedCount, previousTimeMarker: new Date(), meetingTime: new Date()});
+    //const expiresAt = await determineOfferExpiration({remainingFriendCount: unOfferedCount, previousTimeMarker: new Date(), meetingTime: new Date()});
     const newOffer = await createOffer({meetingId, userOfferedId, expiresAt});
     console.log("New Offer", newOffer)
     return newOffer;
