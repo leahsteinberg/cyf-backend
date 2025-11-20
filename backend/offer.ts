@@ -92,11 +92,6 @@ export const processRejectedOffer = async ({ offerId }
 };
 
 
-// export const findFriendIdFromUnoffered = async ({unOfferedFriends: string[]}) {
-
-//     return unO
-// };
-
 export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
     {offers: Offer[], meetingId: string, allFriendIds: string[]}): Promise<{friendToOfferId: string | undefined, unOfferedCount: number}> => {
     // TODO - in the future, do this in a more systematic, yet randomized way.
@@ -116,12 +111,12 @@ export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
 export const findRecentOffer = (offers: Offer[]): Offer | undefined => {
     if (offers.length > 0) {
         const recentOffer = offers.reduce((recent, curr) => {
-            return  recent.createdAt.getTime() > curr.createdAt.getTime() ? recent : curr
+            if (recent)  return recent.createdAt.getTime() > curr.createdAt.getTime() ? recent : curr;
+            return curr;
         }, offers[0])
         return recentOffer
     }
     return undefined;
-
 }
 
 export const determineNeedNewOffer = async ({remainingFriendCount, minutesUntilMeeting}

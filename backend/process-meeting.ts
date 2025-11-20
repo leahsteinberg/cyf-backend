@@ -85,15 +85,15 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
 
     const offers = await getMeetingOffers({meetingId})
     const allFriendIds = await getFriendIds(userFrom);
-    const [newFriendToOfferId, unOfferedCount] = await findFriendIdToOffer({offers, meetingId, allFriendIds})
+    const {friendToOfferId, unOfferedCount} = await findFriendIdToOffer({offers, meetingId, allFriendIds})
  
     // no more friends left, nothing to do.
-    if (!newFriendToOfferId) return meeting;
+    if (!friendToOfferId) return meeting;
     
     const recentOffer = findRecentOffer(offers);
 
     if (!recentOffer) {
-        const newMeeting = await makeOffer({meeting, userOfferedId: newFriendToOfferId, unOfferedCount: 0})
+        const newMeeting = await makeOffer({meeting, userOfferedId: friendToOfferId, unOfferedCount: 0})
         return newMeeting;
     }
 
@@ -105,7 +105,7 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
             await makeOfferAfterExpired({
                 meeting,
                 recentOfferId: recentOffer.id,
-                newUserOfferId: newFriendToOfferId
+                newUserOfferId: friendToOfferId
             });
         }
     }

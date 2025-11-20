@@ -20,7 +20,7 @@ export const getFriendIds = async (id: string): Promise<string[]> => {
     return friendIds;
 }
 
-const getFriendIdsFromFriendships = (selfId: string, friendships: Friendship[]): Promise<string[]> =>  {
+const getFriendIdsFromFriendships = (selfId: string, friendships: Friendship[]): string[] =>  {
     return friendships.map((friend) => {
         return selfId === friend.userId1 ? friend.userId2 : friend.userId1
     })
@@ -28,19 +28,14 @@ const getFriendIdsFromFriendships = (selfId: string, friendships: Friendship[]):
 
 export const findUnofferedFriends = (offeredFriends: string[], allUserFriendIds:string[]):string[] => {
 
-    const unOfferedFriendIds = allUserFriendIds.reduce(
-        (unOffered, friendId) => {
-            return offeredFriends.includes(friendId) ? [...unOffered] : [...unOffered, friendId];
-        },
-        []
-    );
+    const unOfferedFriendIds = allUserFriendIds.filter((allUserId) => offeredFriends.includes(allUserId));
     return unOfferedFriendIds;
 }
 
 
-export const pickFriendIdToOffer = (offeredFriends: string[], allUserFriendIds: string[]): string|undefined => {
+export const pickFriendIdToOffer = (offeredFriendsIds: string[], allUserFriendIds: string[]): string | undefined => {
     
-    const unOfferedFriendIds = findUnofferedFriends(offeredFriends, allUserFriendIds);
+    const unOfferedFriendIds = findUnofferedFriends(offeredFriendsIds, allUserFriendIds);
     if (unOfferedFriendIds.length === 0) {
         return undefined;
     }
