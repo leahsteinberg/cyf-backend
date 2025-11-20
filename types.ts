@@ -30,5 +30,10 @@ export interface Offer extends BaseEntity {
     userOfferedId: string;
     createdAt: Date;
     offerState: OfferState;
-    expiresAt: Date | null;
+    expiresAt: Date;
+}
+
+export interface Friendship extends BaseEntity {
+    userId1 : string;
+    userId2: string;
 }

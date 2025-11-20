@@ -5,6 +5,8 @@ import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
 import { createOffer, setOfferAccepted, setOfferRejected } from './update/offer-update.js';
 import { setMeetingAccepted, setMeetingState } from './update/meeting-update.js';
 import { getMeetingById, getUserFromMeetingId } from './query/meeting-lookup.js';
+import { NumberInstance } from 'twilio/lib/rest/pricing/v2/number.js';
+import { makeOffer } from './process-meeting.js';
 
 // Re-export pure Prisma functions for backward compatibility
 export { createOffer, setOfferExpired } from './update/offer-update.js';
@@ -20,10 +22,8 @@ export const acceptOffer = async ({ userId, offerId }
     const meetingId = offer?.meetingId;
 
     const acceptedOffer = await setOfferAccepted({ offerId });
-    console.log("accepted offer --- ", acceptedOffer)
     if (meetingId) {
         const acceptedMeeting = await setMeetingAccepted({ meetingId, userId });
-        console.log("accepted meeting - ", acceptedMeeting);
     }
     return acceptedOffer;
 
@@ -64,13 +64,13 @@ export const processRejectedOffer = async ({ offerId }
     const allFriendIds = await getFriendIds(meeting.userFromId);
 
     // Find the next friend to offer to
-    const newFriendToOfferId = await findFriendIdToOffer({
+    const {friendToOfferId, unOfferedCount} = await findFriendIdToOffer({
         offers: allOffers,
         meetingId,
         allFriendIds
     });
 
-    if (!newFriendToOfferId) {
+    if (!friendToOfferId) {
         // No more friends to offer to, set meeting state to REJECTED
         console.log("No more friends to offer to, setting meeting to REJECTED");
         await setMeetingState({
@@ -81,41 +81,46 @@ export const processRejectedOffer = async ({ offerId }
         // Create a new offer for the next friend
         const expiresAt = addHour(new Date());
 
-        console.log("Creating new offer for friend:", newFriendToOfferId);
-        await createOffer({
-            meetingId,
-            userOfferedId: newFriendToOfferId,
-            expiresAt
-        });
+        console.log("Creating new offer for friend:", friendToOfferId);
+        await makeOffer({meeting, userOfferedId: friendToOfferId, unOfferedCount})
+        // await createOffer({
+        //     meetingId,
+        //     userOfferedId: newFriendToOfferId,
+        //     expiresAt
+        // });
     }
 };
 
+
+// export const findFriendIdFromUnoffered = async ({unOfferedFriends: string[]}) {
+
+//     return unO
+// };
+
 export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
-    {offers: Offer[], meetingId: string, allFriendIds: string[]}) => {
+    {offers: Offer[], meetingId: string, allFriendIds: string[]}): Promise<{friendToOfferId: string | undefined, unOfferedCount: number}> => {
     // TODO - in the future, do this in a more systematic, yet randomized way.
     const userFrom = await getUserFromMeetingId(meetingId);
     if (!userFrom) {
         throw new Error('User not found for meeting');
     }
-    const offeredFriends = offers.reduce(
-        (friendsOffered, offer) => {
-            const userOfferedId = offer.userOfferedId.toString()
-                return [...friendsOffered, userOfferedId]
-            },
-        []
-    );
-    const friendToOfferId = pickFriendIdToOffer(offeredFriends, allFriendIds)
-    return friendToOfferId;
+
+    const offeredFriendsIds = offers.map((offer) => offer.userOfferedId);
+
+    const friendToOfferId = pickFriendIdToOffer(offeredFriendsIds, allFriendIds);
+    const unOfferedCount = allFriendIds.length - offeredFriendsIds.length; 
+    return {friendToOfferId, unOfferedCount};
+
 }
 
-export const findRecentOffer = (offers: Offer[]) => {
+export const findRecentOffer = (offers: Offer[]): Offer | undefined => {
     if (offers.length > 0) {
         const recentOffer = offers.reduce((recent, curr) => {
             return  recent.createdAt.getTime() > curr.createdAt.getTime() ? recent : curr
         }, offers[0])
         return recentOffer
     }
-    return null
+    return undefined;
 
 }
 
