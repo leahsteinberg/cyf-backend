@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { getFriendIds } from '../backend/friendship.js';
 import { createMeeting } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
-import { processBroadcastMeeting } from '../backend/process-broadcast.js';
+import { processNewBroadcastMeeting } from '../backend/process-broadcast.js';
 import { getOfferById } from '../backend/query/offer-lookup.js';
 import { acceptOffer } from '../backend/offer.js';
 import { getAcceptedMeetings } from '../backend/query/meeting-lookup.js';
@@ -26,7 +26,7 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             title: 'This is a broadcast meeting',
             meetingType: 'BROADCAST',
         });
-        const processedBroadcast = await processBroadcastMeeting({ meeting });
+        const processedBroadcast = await processNewBroadcastMeeting({ meeting });
         res.json({ success: true, userId, meeting: processedBroadcast });
     } catch (error) {
         console.error("Error in broadcast now:", error);

@@ -4,7 +4,6 @@ import { ACCEPTED_MEETING_STATE, ACCEPTED_OFFER_STATE, addHour, EXPIRED_OFFER_ST
 import { findUnofferedFriends, getFriendIds, getUnofferedFriendsFromMeeting } from './friendship.js';
 import type { Meeting, MeetingType, Offer } from '../types.js';
 import { createAndSendOfferPush } from './create-push.js';
-import { processBroadcastMeeting } from './process-broadcast.js';
 
 
 
@@ -31,16 +30,16 @@ const clearOutOffers = async (offers: Offer[]) => {
 }
 
 
-const determineOfferExpiration = async ({remainingFriendCount, previousTimeMarker, meetingTime}:
-    {remainingFriendCount: number; previousTimeMarker: Date; meetingTime: Date}): Promise<Date> => {
+const determineOfferExpiration = async ({meetingTime}:
+    {meetingTime: Date}): Promise<Date> => {
 
-   const totalDuration =  await minutesBetween({earlierTime: previousTimeMarker, laterTime: meetingTime});
-   const totalFriends = remainingFriendCount;
-   const timeWindow = totalDuration/totalFriends;
+//    const totalDuration =  await minutesBetween({earlierTime: previousTimeMarker, laterTime: meetingTime});
+//    const totalFriends = remainingFriendCount;
+//    const timeWindow = totalDuration/totalFriends;
   // const expiresAt = previousTimeMarker + timeWindow
    //const timeElapsed = await minutesSince({eventTime: previousTimeMarker});
 
-   return new Date();
+   return addHour(new Date());
 };
 
 export const makeBroadcastOffer = async({meeting, userOfferedId}:
@@ -54,7 +53,7 @@ export const makeBroadcastOffer = async({meeting, userOfferedId}:
 
 export const makeAdvanceOffer = async ({meeting, userOfferedId }:
     {meeting: Meeting; userOfferedId: string}): Promise<Offer | undefined> => {
-    const expiresAt = addHour(new Date());
+    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor})
     const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'ADVANCE'});
     return offer;
 }
@@ -63,7 +62,7 @@ export const makeAdvanceOffer = async ({meeting, userOfferedId }:
 const makeOfferAfterExpired = async ({meeting, recentOfferId, newUserOfferId}:
     {meeting: Meeting; recentOfferId: string; newUserOfferId: string;}) => {
     const expiredOffer = await setOfferExpired({offerId: recentOfferId});
-    const expiresAt = addHour(new Date());
+    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor})
     const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, expiresAt, offerType: 'ADVANCE'})
     return [expiredOffer, newOffer];
 };

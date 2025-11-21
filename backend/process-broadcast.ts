@@ -2,7 +2,7 @@ import type { Meeting } from "../types.js";
 import { getFriendIds } from "./friendship.js";
 import { makeBroadcastOffer } from "./process-meeting.js";
 
-export const processBroadcastMeeting = async ({meeting}: {meeting: Meeting}): Promise<Meeting> => {
+export const processNewBroadcastMeeting = async ({meeting}: {meeting: Meeting}): Promise<Meeting> => {
     const userFrom = meeting.userFromId;
 
     const allFriendIds = await getFriendIds(userFrom);
