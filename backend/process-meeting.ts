@@ -4,6 +4,7 @@ import { ACCEPTED_MEETING_STATE, ACCEPTED_OFFER_STATE, addHour, EXPIRED_OFFER_ST
 import { findUnofferedFriends, getFriendIds, getUnofferedFriendsFromMeeting } from './friendship.js';
 import type { Meeting, MeetingType, Offer } from '../types.js';
 import { createAndSendOfferPush } from './create-push.js';
+import { processBroadcastMeeting } from './process-broadcast.js';
 
 
 
@@ -21,7 +22,7 @@ export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeti
     return meeting;
 }
 
-const clearOutOlderOffers = async (offers: Offer[]) => {
+const clearOutOffers = async (offers: Offer[]) => {
     for (let offer of offers) {
         if (offer.offerState === OPEN_OFFER_STATE) {
             await setOfferExpired({offerId: offer.id})
@@ -79,19 +80,41 @@ export const makeOffer = async ({meeting, userOfferedId, expiresAt, offerType}:
     return offer;
 }
 
+const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
+    const meetingId = meeting.id;
+    const userFrom = meeting.userFromId;
+    const meetingInPast = await isTimePast({eventTime: meeting.scheduledFor});
+    if (meetingInPast) {
+        const offers = await getMeetingOffers({meetingId})
+
+        await clearOutOffers(offers);
+        return await setMeetingState({meetingId, meetingState: PAST_MEETING_STATE});
+    }
+    return meeting;
+}
+
+
 export const processOffersForMeeting = async (meeting: Meeting) => {
     const meetingId = meeting.id;
     const userFrom = meeting.userFromId;
 
+
+    if (meeting.meetingType === 'BROADCAST') {
+        return processOffersForBroadcastMeeting(meeting);
+    }
+
     // Get offers and clean up old ones first
     const offers = await getMeetingOffers({meetingId})
     const {recentOffer, olderOffers} = findRecentOffer(offers);
-    await clearOutOlderOffers(olderOffers);
 
     const meetingInPast = await isTimePast({eventTime: meeting.scheduledFor});
     if (meetingInPast) {
+        await clearOutOffers(offers);  // Clear ALL offers for past meetings
         return await setMeetingState({meetingId, meetingState: PAST_MEETING_STATE});
     }
+
+    // For active meetings, only clear older offers
+    await clearOutOffers(olderOffers);
 
     const allFriendIds = await getFriendIds(userFrom);
     const {friendToOfferId, unOfferedCount} = await findFriendIdToOffer({offers, meetingId, allFriendIds})
