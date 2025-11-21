@@ -3,6 +3,11 @@ import { getFriendIds } from "./friendship.js";
 import { makeBroadcastOffer } from "./process-meeting.js";
 
 export const processNewBroadcastMeeting = async ({meeting}: {meeting: Meeting}): Promise<Meeting> => {
+    // Validate meeting exists and has required fields
+    if (!meeting || !meeting.id || !meeting.userFromId) {
+        throw new Error("Invalid meeting: missing required fields");
+    }
+
     const userFrom = meeting.userFromId;
 
     const allFriendIds = await getFriendIds(userFrom);

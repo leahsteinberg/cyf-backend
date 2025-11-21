@@ -27,6 +27,12 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             title: 'This is a broadcast meeting',
             meetingType: 'BROADCAST',
         });
+
+        // Validate meeting was created successfully before creating offers
+        if (!meeting || !meeting.id) {
+            return res.status(500).json({ error: "Failed to create broadcast meeting" });
+        }
+
         const processedBroadcast = await processNewBroadcastMeeting({ meeting });
         res.json({ success: true, userId, meeting: processedBroadcast });
     } catch (error) {

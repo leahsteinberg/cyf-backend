@@ -10,12 +10,17 @@ import { getUserTimezone } from './query/user-lookup.js';
 
 
 export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeting> => {
+    // Validate meeting exists and has required fields
+    if (!meeting || !meeting.id || !meeting.userFromId) {
+        throw new Error("Invalid meeting: missing required fields");
+    }
+
     const meetingId = meeting.id;
     const allFriendIds = await getFriendIds(meeting.userFromId);
     const {friendToOfferId, unOfferedCount} = await findFriendIdToOffer({offers: [], meetingId, allFriendIds});
-    
+
     if (friendToOfferId) {
-        const offer = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId});
+        const offer = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId, remainingFriendsCount: unOfferedCount});
 
     }
 
@@ -35,7 +40,6 @@ const determineOfferExpiration = async ({meetingTime, userToOfferId, remainingFr
     {meetingTime: Date; userToOfferId: string, remainingFriendsCount: number}): Promise<Date> => {
 
     const now = new Date();
-    return addHour(now);
 
     // Calculate time from now until the meeting
     const minutesUntilMeeting = await minutesUntil({eventTime: meetingTime});
@@ -87,23 +91,21 @@ const determineOfferExpiration = async ({meetingTime, userToOfferId, remainingFr
             const isDuringSleepTime = userLocalHour >= 22 || userLocalHour < 10;
 
             if (isDuringSleepTime) {
-                // Adjust to 10am in user's timezone
-                const expirationLocalDate = new Date(expirationTime.toLocaleString('en-US', { timeZone: userTimezone }));
+                // Simplified approach: Add time to push to 10am
+                // If between midnight and 10am, push forward to 10am same day
+                // If between 10pm and midnight, push forward to 10am next day
 
-                // If it's past 10pm, move to next day at 10am
-                // If it's before 10am, move to same day at 10am
-                let targetDate = new Date(expirationLocalDate);
+                let hoursToAdd = 0;
                 if (userLocalHour >= 22) {
-                    targetDate.setDate(targetDate.getDate() + 1);
+                    // Between 10pm-midnight: push to 10am next day
+                    hoursToAdd = (24 - userLocalHour) + 10;
+                } else if (userLocalHour < 10) {
+                    // Between midnight-10am: push to 10am same day
+                    hoursToAdd = 10 - userLocalHour;
                 }
-                targetDate.setHours(10, 0, 0, 0);
 
-                // Convert back to UTC/server time
-                // NOTE: This is a simplified approach. JavaScript Date handling is tricky with timezones.
-                // A production app should use a proper timezone library like date-fns-tz or luxon
-                const targetUTC = new Date(targetDate.toLocaleString('en-US', { timeZone: 'UTC' }));
-
-                expirationTime = targetUTC;
+                // Add the hours to current expiration time
+                expirationTime = new Date(expirationTime.getTime() + hoursToAdd * 60 * 60 * 1000);
 
                 // Ensure we don't exceed meeting time
                 if (expirationTime > meetingTime) {

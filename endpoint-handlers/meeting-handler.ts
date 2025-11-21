@@ -6,9 +6,22 @@ import type { Request, Response } from 'express';
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
   const {userFromId, scheduledEnd, scheduledFor, title} = req.body;
-  const meeting = await createMeeting({userFromId, scheduledEnd, scheduledFor, title, meetingType: 'ADVANCE'});
-  await processOfferForNewMeeting(meeting);// TODO - Can I remove this and reuse code instead?
-  res.json(meeting)
+
+  try {
+    const meeting = await createMeeting({userFromId, scheduledEnd, scheduledFor, title, meetingType: 'ADVANCE'});
+
+    // Validate meeting was created successfully
+    if (!meeting || !meeting.id) {
+      return res.status(500).json({ error: "Failed to create meeting" });
+    }
+
+    await processOfferForNewMeeting(meeting);// TODO - Can I remove this and reuse code instead?
+    res.json(meeting)
+  } catch (error) {
+    console.error("Error creating meeting:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ error: "Failed to create meeting", details: errorMessage });
+  }
 }
 
 export const handleGetMeetings = async (req: Request, res: Response) => {
