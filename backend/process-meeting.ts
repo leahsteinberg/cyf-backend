@@ -37,7 +37,7 @@ export const makeBroadcastOffer = async({meeting, userOfferedId}:
     {meeting: Meeting; userOfferedId: string
     }): Promise<Offer | undefined> => {
         const expiresAt = addHour(new Date());
-        const offer = await makeOffer({meeting, userOfferedId, expiresAt, meetingType: 'BROADCAST'});
+        const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'BROADCAST'});
         return offer;
     }
 
@@ -47,7 +47,7 @@ export const makeBroadcastOffer = async({meeting, userOfferedId}:
 export const makeAdvanceOffer = async ({meeting, userOfferedId }:
     {meeting: Meeting; userOfferedId: string}): Promise<Offer | undefined> => {
     const expiresAt = addHour(new Date());
-    const offer = await makeOffer({meeting, userOfferedId, expiresAt, meetingType: 'ADVANCE'});
+    const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'ADVANCE'});
     return offer;
 }
 
@@ -56,15 +56,15 @@ const makeOfferAfterExpired = async ({meeting, recentOfferId, newUserOfferId}:
     {meeting: Meeting; recentOfferId: string; newUserOfferId: string;}) => {
     const expiredOffer = await setOfferExpired({offerId: recentOfferId});
     const expiresAt = addHour(new Date());
-    const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, expiresAt, meetingType: 'ADVANCE'})
+    const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, expiresAt, offerType: 'ADVANCE'})
     return [expiredOffer, newOffer];
 };
 
-export const makeOffer = async ({meeting, userOfferedId, expiresAt, meetingType}:
-    {meeting: Meeting; userOfferedId: string, expiresAt: Date, meetingType: MeetingType
+export const makeOffer = async ({meeting, userOfferedId, expiresAt, offerType}:
+    {meeting: Meeting; userOfferedId: string, expiresAt: Date, offerType: MeetingType
     }): Promise<Offer | undefined> => {
     const meetingId = meeting.id
-    const offer = await createOffer({meetingId, userOfferedId, expiresAt});
+    const offer = await createOffer({meetingId, userOfferedId, expiresAt, offerType});
     console.log("New Offer", offer)
     if (offer) {
         createAndSendOfferPush({ offer });

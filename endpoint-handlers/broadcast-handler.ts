@@ -118,3 +118,29 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Internal server error", details: errorMessage });
     }
 };
+
+export const handleRejectBroadcast = async (req: Request, res: Response) => {
+    const { userId, offerId } = req.body;
+    console.log("reject broadcast --", { userId, offerId });
+
+    if (!userId || !offerId) {
+        return res.status(400).json({ error: "userId and offerId are required" });
+    }
+
+    try {
+        // Import rejectOffer from offer.js
+        const { rejectOffer } = await import('../backend/offer.js');
+
+        // Reject the broadcast offer
+        const rejectedOffer = await rejectOffer({ offerId });
+
+        res.json({
+            success: true,
+            offer: rejectedOffer
+        });
+    } catch (error) {
+        console.error("Error rejecting broadcast:", error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        return res.status(500).json({ error: "Internal server error", details: errorMessage });
+    }
+};
