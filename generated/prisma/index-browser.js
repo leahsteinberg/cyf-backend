@@ -195,7 +195,8 @@ exports.Prisma.MeetingScalarFieldEnum = {
   scheduledFor: 'scheduledFor',
   scheduledEnd: 'scheduledEnd',
   title: 'title',
-  meetingState: 'meetingState'
+  meetingState: 'meetingState',
+  meetingType: 'meetingType'
 };
 
 exports.Prisma.OfferScalarFieldEnum = {
@@ -226,6 +227,11 @@ exports.MeetingState = exports.$Enums.MeetingState = {
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
   PAST: 'PAST'
+};
+
+exports.MeetingType = exports.$Enums.MeetingType = {
+  ADVANCE: 'ADVANCE',
+  BROADCAST: 'BROADCAST'
 };
 
 exports.OfferState = exports.$Enums.OfferState = {

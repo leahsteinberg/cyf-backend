@@ -77,6 +77,14 @@ export const MeetingState: {
 
 export type MeetingState = (typeof MeetingState)[keyof typeof MeetingState]
 
+
+export const MeetingType: {
+  ADVANCE: 'ADVANCE',
+  BROADCAST: 'BROADCAST'
+};
+
+export type MeetingType = (typeof MeetingType)[keyof typeof MeetingType]
+
 }
 
 export type OfferState = $Enums.OfferState
@@ -86,6 +94,10 @@ export const OfferState: typeof $Enums.OfferState
 export type MeetingState = $Enums.MeetingState
 
 export const MeetingState: typeof $Enums.MeetingState
+
+export type MeetingType = $Enums.MeetingType
+
+export const MeetingType: typeof $Enums.MeetingType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -8421,6 +8433,7 @@ export namespace Prisma {
     scheduledEnd: Date | null
     title: string | null
     meetingState: $Enums.MeetingState | null
+    meetingType: $Enums.MeetingType | null
   }
 
   export type MeetingMaxAggregateOutputType = {
@@ -8432,6 +8445,7 @@ export namespace Prisma {
     scheduledEnd: Date | null
     title: string | null
     meetingState: $Enums.MeetingState | null
+    meetingType: $Enums.MeetingType | null
   }
 
   export type MeetingCountAggregateOutputType = {
@@ -8443,6 +8457,7 @@ export namespace Prisma {
     scheduledEnd: number
     title: number
     meetingState: number
+    meetingType: number
     _all: number
   }
 
@@ -8456,6 +8471,7 @@ export namespace Prisma {
     scheduledEnd?: true
     title?: true
     meetingState?: true
+    meetingType?: true
   }
 
   export type MeetingMaxAggregateInputType = {
@@ -8467,6 +8483,7 @@ export namespace Prisma {
     scheduledEnd?: true
     title?: true
     meetingState?: true
+    meetingType?: true
   }
 
   export type MeetingCountAggregateInputType = {
@@ -8478,6 +8495,7 @@ export namespace Prisma {
     scheduledEnd?: true
     title?: true
     meetingState?: true
+    meetingType?: true
     _all?: true
   }
 
@@ -8562,6 +8580,7 @@ export namespace Prisma {
     scheduledEnd: Date
     title: string | null
     meetingState: $Enums.MeetingState
+    meetingType: $Enums.MeetingType
     _count: MeetingCountAggregateOutputType | null
     _min: MeetingMinAggregateOutputType | null
     _max: MeetingMaxAggregateOutputType | null
@@ -8590,6 +8609,7 @@ export namespace Prisma {
     scheduledEnd?: boolean
     title?: boolean
     meetingState?: boolean
+    meetingType?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
     offers?: boolean | Meeting$offersArgs<ExtArgs>
@@ -8605,6 +8625,7 @@ export namespace Prisma {
     scheduledEnd?: boolean
     title?: boolean
     meetingState?: boolean
+    meetingType?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
   }, ExtArgs["result"]["meeting"]>
@@ -8618,6 +8639,7 @@ export namespace Prisma {
     scheduledEnd?: boolean
     title?: boolean
     meetingState?: boolean
+    meetingType?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
   }, ExtArgs["result"]["meeting"]>
@@ -8631,9 +8653,10 @@ export namespace Prisma {
     scheduledEnd?: boolean
     title?: boolean
     meetingState?: boolean
+    meetingType?: boolean
   }
 
-  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "acceptedUserId" | "createdAt" | "scheduledFor" | "scheduledEnd" | "title" | "meetingState", ExtArgs["result"]["meeting"]>
+  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "acceptedUserId" | "createdAt" | "scheduledFor" | "scheduledEnd" | "title" | "meetingState" | "meetingType", ExtArgs["result"]["meeting"]>
   export type MeetingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
@@ -8665,6 +8688,7 @@ export namespace Prisma {
       scheduledEnd: Date
       title: string | null
       meetingState: $Enums.MeetingState
+      meetingType: $Enums.MeetingType
     }, ExtArgs["result"]["meeting"]>
     composites: {}
   }
@@ -9099,6 +9123,7 @@ export namespace Prisma {
     readonly scheduledEnd: FieldRef<"Meeting", 'DateTime'>
     readonly title: FieldRef<"Meeting", 'String'>
     readonly meetingState: FieldRef<"Meeting", 'MeetingState'>
+    readonly meetingType: FieldRef<"Meeting", 'MeetingType'>
   }
     
 
@@ -10742,7 +10767,8 @@ export namespace Prisma {
     scheduledFor: 'scheduledFor',
     scheduledEnd: 'scheduledEnd',
     title: 'title',
-    meetingState: 'meetingState'
+    meetingState: 'meetingState',
+    meetingType: 'meetingType'
   };
 
   export type MeetingScalarFieldEnum = (typeof MeetingScalarFieldEnum)[keyof typeof MeetingScalarFieldEnum]
@@ -10835,6 +10861,20 @@ export namespace Prisma {
    * Reference to a field of type 'MeetingState[]'
    */
   export type ListEnumMeetingStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeetingState[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'MeetingType'
+   */
+  export type EnumMeetingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeetingType'>
+    
+
+
+  /**
+   * Reference to a field of type 'MeetingType[]'
+   */
+  export type ListEnumMeetingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeetingType[]'>
     
 
 
@@ -11327,6 +11367,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
     title?: StringNullableFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateFilter<"Meeting"> | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFilter<"Meeting"> | $Enums.MeetingType
     userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
     acceptedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     offers?: OfferListRelationFilter
@@ -11341,6 +11382,7 @@ export namespace Prisma {
     scheduledEnd?: SortOrder
     title?: SortOrderInput | SortOrder
     meetingState?: SortOrder
+    meetingType?: SortOrder
     userFrom?: UserOrderByWithRelationInput
     acceptedUser?: UserOrderByWithRelationInput
     offers?: OfferOrderByRelationAggregateInput
@@ -11358,6 +11400,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
     title?: StringNullableFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateFilter<"Meeting"> | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFilter<"Meeting"> | $Enums.MeetingType
     userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
     acceptedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     offers?: OfferListRelationFilter
@@ -11372,6 +11415,7 @@ export namespace Prisma {
     scheduledEnd?: SortOrder
     title?: SortOrderInput | SortOrder
     meetingState?: SortOrder
+    meetingType?: SortOrder
     _count?: MeetingCountOrderByAggregateInput
     _max?: MeetingMaxOrderByAggregateInput
     _min?: MeetingMinOrderByAggregateInput
@@ -11389,6 +11433,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeWithAggregatesFilter<"Meeting"> | Date | string
     title?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateWithAggregatesFilter<"Meeting"> | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeWithAggregatesFilter<"Meeting"> | $Enums.MeetingType
   }
 
   export type OfferWhereInput = {
@@ -11957,6 +12002,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
@@ -11971,6 +12017,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
   }
 
@@ -11981,6 +12028,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
@@ -11995,6 +12043,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
   }
 
@@ -12007,6 +12056,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
   }
 
   export type MeetingUpdateManyMutationInput = {
@@ -12016,6 +12066,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type MeetingUncheckedUpdateManyInput = {
@@ -12027,6 +12078,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type OfferCreateInput = {
@@ -12510,6 +12562,13 @@ export namespace Prisma {
     not?: NestedEnumMeetingStateFilter<$PrismaModel> | $Enums.MeetingState
   }
 
+  export type EnumMeetingTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeetingType | EnumMeetingTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeetingTypeFilter<$PrismaModel> | $Enums.MeetingType
+  }
+
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -12524,6 +12583,7 @@ export namespace Prisma {
     scheduledEnd?: SortOrder
     title?: SortOrder
     meetingState?: SortOrder
+    meetingType?: SortOrder
   }
 
   export type MeetingMaxOrderByAggregateInput = {
@@ -12535,6 +12595,7 @@ export namespace Prisma {
     scheduledEnd?: SortOrder
     title?: SortOrder
     meetingState?: SortOrder
+    meetingType?: SortOrder
   }
 
   export type MeetingMinOrderByAggregateInput = {
@@ -12546,6 +12607,7 @@ export namespace Prisma {
     scheduledEnd?: SortOrder
     title?: SortOrder
     meetingState?: SortOrder
+    meetingType?: SortOrder
   }
 
   export type EnumMeetingStateWithAggregatesFilter<$PrismaModel = never> = {
@@ -12556,6 +12618,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMeetingStateFilter<$PrismaModel>
     _max?: NestedEnumMeetingStateFilter<$PrismaModel>
+  }
+
+  export type EnumMeetingTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeetingType | EnumMeetingTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeetingTypeWithAggregatesFilter<$PrismaModel> | $Enums.MeetingType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMeetingTypeFilter<$PrismaModel>
+    _max?: NestedEnumMeetingTypeFilter<$PrismaModel>
   }
 
   export type EnumOfferStateFilter<$PrismaModel = never> = {
@@ -13067,6 +13139,10 @@ export namespace Prisma {
     set?: $Enums.MeetingState
   }
 
+  export type EnumMeetingTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MeetingType
+  }
+
   export type UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput = {
     create?: XOR<UserCreateWithoutMeetingsCreatedInput, UserUncheckedCreateWithoutMeetingsCreatedInput>
     connectOrCreate?: UserCreateOrConnectWithoutMeetingsCreatedInput
@@ -13312,6 +13388,13 @@ export namespace Prisma {
     not?: NestedEnumMeetingStateFilter<$PrismaModel> | $Enums.MeetingState
   }
 
+  export type NestedEnumMeetingTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeetingType | EnumMeetingTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeetingTypeFilter<$PrismaModel> | $Enums.MeetingType
+  }
+
   export type NestedEnumMeetingStateWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.MeetingState | EnumMeetingStateFieldRefInput<$PrismaModel>
     in?: $Enums.MeetingState[] | ListEnumMeetingStateFieldRefInput<$PrismaModel>
@@ -13320,6 +13403,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMeetingStateFilter<$PrismaModel>
     _max?: NestedEnumMeetingStateFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMeetingTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeetingType | EnumMeetingTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeetingTypeWithAggregatesFilter<$PrismaModel> | $Enums.MeetingType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMeetingTypeFilter<$PrismaModel>
+    _max?: NestedEnumMeetingTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumOfferStateFilter<$PrismaModel = never> = {
@@ -13482,6 +13575,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
   }
@@ -13494,6 +13588,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
   }
 
@@ -13540,6 +13635,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
   }
@@ -13552,6 +13648,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
   }
 
@@ -13727,6 +13824,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
     title?: StringNullableFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateFilter<"Meeting"> | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFilter<"Meeting"> | $Enums.MeetingType
   }
 
   export type OfferUpsertWithWhereUniqueWithoutUserOfferedInput = {
@@ -14578,6 +14676,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
   }
@@ -14591,6 +14690,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
   }
 
   export type MeetingCreateOrConnectWithoutOffersInput = {
@@ -14667,6 +14767,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
   }
@@ -14680,6 +14781,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type UserUpsertWithoutOffersReceivedInput = {
@@ -14790,6 +14892,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
   }
 
   export type OfferCreateManyUserOfferedInput = {
@@ -14808,6 +14911,7 @@ export namespace Prisma {
     scheduledEnd: Date | string
     title?: string | null
     meetingState?: $Enums.MeetingState
+    meetingType?: $Enums.MeetingType
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -14946,6 +15050,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
   }
@@ -14958,6 +15063,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
   }
 
@@ -14969,6 +15075,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type OfferUpdateWithoutUserOfferedInput = {
@@ -15002,6 +15109,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
   }
@@ -15014,6 +15122,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
   }
 
@@ -15025,6 +15134,7 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type OfferCreateManyMeetingInput = {

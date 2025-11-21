@@ -118,6 +118,7 @@ model Meeting {
   offers         Offer[]      @relation("offers")
   title          String?
   meetingState   MeetingState @default(SEARCHING)
+  meetingType    MeetingType  @default(ADVANCE)
 
   @@map("meeting")
 }
@@ -147,4 +148,9 @@ enum MeetingState {
   ACCEPTED
   REJECTED
   PAST
+}
+
+enum MeetingType {
+  ADVANCE
+  BROADCAST
 }
