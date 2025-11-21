@@ -4,6 +4,7 @@ import { ACCEPTED_MEETING_STATE, ACCEPTED_OFFER_STATE, addHour, EXPIRED_OFFER_ST
 import { findUnofferedFriends, getFriendIds, getUnofferedFriendsFromMeeting } from './friendship.js';
 import type { Meeting, MeetingType, Offer } from '../types.js';
 import { createAndSendOfferPush } from './create-push.js';
+import { getUserTimezone } from './query/user-lookup.js';
 
 
 
@@ -30,8 +31,8 @@ const clearOutOffers = async (offers: Offer[]) => {
 }
 
 
-const determineOfferExpiration = async ({meetingTime, remainingFriendsCount}:
-    {meetingTime: Date; remainingFriendsCount: number}): Promise<Date> => {
+const determineOfferExpiration = async ({meetingTime, userToOfferId, remainingFriendsCount}:
+    {meetingTime: Date; userToOfferId: string, remainingFriendsCount: number}): Promise<Date> => {
 
     const now = new Date();
 
@@ -63,13 +64,57 @@ const determineOfferExpiration = async ({meetingTime, remainingFriendsCount}:
         expirationTime = meetingTime;
     }
 
-    // TODO: Handle sleep time (10pm-10am) based on offer-receiving-user's timezone
-    // This requires:
-    // 1. User timezone information (not currently passed to this function)
-    // 2. Convert expiration time to user's local time
-    // 3. Check if it falls between 10pm-10am
-    // 4. If yes, set to 10am in user's timezone (unless that's past meeting time)
-    // ISSUE: This will require passing userOfferedId to look up their timezone
+    // Handle sleep time (10pm-10am) based on offer-receiving-user's timezone
+    const userTimezone = await getUserTimezone({ userId: userToOfferId });
+
+    if (userTimezone) {
+        try {
+            // Get the hour in the user's local timezone
+            const timeString = expirationTime.toLocaleString('en-US', {
+                timeZone: userTimezone,
+                hour: '2-digit',
+                hour12: false
+            });
+
+            if (!timeString) {
+                throw new Error('Unable to get time string for user timezone');
+            }
+
+            const userLocalHour = parseInt(timeString.split(':')[0]);
+
+            // Check if expiration falls during sleep time: 10pm (22:00) to 10am (10:00)
+            const isDuringSleepTime = userLocalHour >= 22 || userLocalHour < 10;
+
+            if (isDuringSleepTime) {
+                // Adjust to 10am in user's timezone
+                const expirationLocalDate = new Date(expirationTime.toLocaleString('en-US', { timeZone: userTimezone }));
+
+                // If it's past 10pm, move to next day at 10am
+                // If it's before 10am, move to same day at 10am
+                let targetDate = new Date(expirationLocalDate);
+                if (userLocalHour >= 22) {
+                    targetDate.setDate(targetDate.getDate() + 1);
+                }
+                targetDate.setHours(10, 0, 0, 0);
+
+                // Convert back to UTC/server time
+                // NOTE: This is a simplified approach. JavaScript Date handling is tricky with timezones.
+                // A production app should use a proper timezone library like date-fns-tz or luxon
+                const targetUTC = new Date(targetDate.toLocaleString('en-US', { timeZone: 'UTC' }));
+
+                expirationTime = targetUTC;
+
+                // Ensure we don't exceed meeting time
+                if (expirationTime > meetingTime) {
+                    expirationTime = meetingTime;
+                }
+            }
+        } catch (error) {
+            // If timezone handling fails, log and continue with original expiration time
+            console.error('Error handling timezone for offer expiration:', error);
+            // Fall through to return original expirationTime
+        }
+    }
 
     return expirationTime;
 };
@@ -85,7 +130,7 @@ export const makeBroadcastOffer = async({meeting, userOfferedId}:
 
 export const makeAdvanceOffer = async ({meeting, userOfferedId, remainingFriendsCount}:
     {meeting: Meeting; userOfferedId: string; remainingFriendsCount: number}): Promise<Offer | undefined> => {
-    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, remainingFriendsCount})
+    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, userToOfferId: userOfferedId, remainingFriendsCount})
     const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'ADVANCE'});
     return offer;
 }
@@ -94,7 +139,7 @@ export const makeAdvanceOffer = async ({meeting, userOfferedId, remainingFriends
 const makeOfferAfterExpired = async ({meeting, recentOfferId, newUserOfferId, remainingFriendsCount}:
     {meeting: Meeting; recentOfferId: string; newUserOfferId: string; remainingFriendsCount: number}) => {
     const expiredOffer = await setOfferExpired({offerId: recentOfferId});
-    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, remainingFriendsCount})
+    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, userToOfferId: newUserOfferId, remainingFriendsCount})
     const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, expiresAt, offerType: 'ADVANCE'})
     return [expiredOffer, newOffer];
 };
@@ -154,7 +199,7 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
     if (!friendToOfferId) return meeting;
 
     if (!recentOffer) {
-        const newMeeting = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId})
+        const newMeeting = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId, remainingFriendsCount: unOfferedCount})
         return newMeeting;
     }
 
@@ -164,7 +209,8 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
             await makeOfferAfterExpired({
                 meeting,
                 recentOfferId: recentOffer.id,
-                newUserOfferId: friendToOfferId
+                newUserOfferId: friendToOfferId,
+                remainingFriendsCount: unOfferedCount
             });
         }
     } else if (recentOffer.offerState === REJECTED_OFFER_STATE) {
@@ -176,7 +222,7 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
                 meetingState: REJECTED_MEETING_STATE
             });
         } else {
-            const offer = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId})
+            const offer = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId, remainingFriendsCount: unOfferedCount})
         }
     } else if (recentOffer.offerState === ACCEPTED_OFFER_STATE) {
         await setMeetingState({
@@ -187,7 +233,8 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
         await makeOfferAfterExpired({
             meeting,
             recentOfferId: recentOffer.id,
-            newUserOfferId: friendToOfferId
+            newUserOfferId: friendToOfferId,
+            remainingFriendsCount: unOfferedCount
         });
     }
     return meeting;
