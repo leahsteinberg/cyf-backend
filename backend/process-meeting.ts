@@ -35,6 +35,7 @@ const determineOfferExpiration = async ({meetingTime, userToOfferId, remainingFr
     {meetingTime: Date; userToOfferId: string, remainingFriendsCount: number}): Promise<Date> => {
 
     const now = new Date();
+    return addHour(now);
 
     // Calculate time from now until the meeting
     const minutesUntilMeeting = await minutesUntil({eventTime: meetingTime});
