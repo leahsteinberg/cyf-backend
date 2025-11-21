@@ -63,11 +63,11 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
       const newMeeting = await processOffersForMeeting(meeting)
 
     
-
     //await processRejectedOffer({ offerId });
     //const offers = await getOffersForUser({ userId });
-    console.log("New offer,", offer);
-    res.json(offer);
+    console.log("New offer,", rejectedOffer);
+    res.json(rejectedOffer);
+    }
   } catch (error) {
     console.error("Error rejecting offer:", error);
     res.status(500).json({ error: "Internal server error" });
