@@ -28,7 +28,7 @@ const getFriendIdsFromFriendships = (selfId: string, friendships: Friendship[]):
 
 export const findUnofferedFriends = (offeredFriends: string[], allUserFriendIds:string[]):string[] => {
 
-    const unOfferedFriendIds = allUserFriendIds.filter((allUserId) => offeredFriends.includes(allUserId));
+    const unOfferedFriendIds = allUserFriendIds.filter((allUserId) => !offeredFriends.includes(allUserId));
     return unOfferedFriendIds;
 }
 

@@ -56,17 +56,14 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
     }
 
     const meetingId = rejectedOffer.meetingId;
-
     // Get the meeting
     const meeting = await getMeetingById({ meetingId });
     if (meeting) {
-      const newMeeting = await processOffersForMeeting(meeting)
-
-    
-    //await processRejectedOffer({ offerId });
-    //const offers = await getOffersForUser({ userId });
-    console.log("New offer,", rejectedOffer);
-    res.json(rejectedOffer);
+      await processOffersForMeeting(meeting)
+      console.log("New offer,", rejectedOffer);
+      res.json(rejectedOffer);
+    } else {
+      throw new Error('Meeting not found for rejected offer');
     }
   } catch (error) {
     console.error("Error rejecting offer:", error);
