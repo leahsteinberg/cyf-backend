@@ -41,61 +41,6 @@ export const rejectOffer = async ({ offerId }
     return rejectedOffer;
 };
 
-// export const processRejectedOffer = async ({ offerId }
-//     : { offerId: string }): Promise<void> => {
-//     const rejectedOffer = await getOfferById({offerId});
-//     if (!rejectedOffer) {
-//         throw new Error('Rejected offer not found');
-//     }
-
-//     const meetingId = rejectedOffer.meetingId;
-
-//     // Get the meeting
-//     const meeting = await getMeetingById({ meetingId });
-
-//     if (!meeting) {
-//         throw new Error('Meeting not found');
-//     }
-
-//     // Get all offers for this meeting to find friends already offered to
-//     const allOffers = await getMeetingOffers({meetingId});
-
-//     // Get all friend IDs of the meeting creator
-//     const allFriendIds = await getFriendIds(meeting.userFromId);
-
-//     // Find the next friend to offer to
-//     const {friendToOfferId, unOfferedCount} = await findFriendIdToOffer({
-//         offers: allOffers,
-//         meetingId,
-//         allFriendIds
-//     });
-
-//     if (!friendToOfferId) {
-//         // No more friends to offer to, set meeting state to REJECTED
-//         console.log("No more friends to offer to, setting meeting to REJECTED");
-//         await setMeetingState({
-//             meetingId,
-//             meetingState: REJECTED_MEETING_STATE
-//         });
-//     } else {
-//         // Create a new offer for the next friend
-//         const expiresAt = addHour(new Date());
-
-//         console.log("Creating new offer for friend:", friendToOfferId);
-//         await makeOffer({meeting, userOfferedId: friendToOfferId, unOfferedCount})
-//         // await createOffer({
-//         //     meetingId,
-//         //     userOfferedId: newFriendToOfferId,
-//         //     expiresAt
-//         // });
-//     }
-// };
-
-
-// export const findFriendIdFromUnoffered = async ({unOfferedFriends: string[]}) {
-
-//     return unO
-// };
 
 export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
     {offers: Offer[], meetingId: string, allFriendIds: string[]}): Promise<{friendToOfferId: string | undefined, unOfferedCount: number}> => {
