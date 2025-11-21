@@ -14,10 +14,8 @@ export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeti
     const {friendToOfferId, unOfferedCount} = await findFriendIdToOffer({offers: [], meetingId, allFriendIds});
     
     if (friendToOfferId) {
-        const offer = await makeOffer({meeting, userOfferedId: friendToOfferId, unOfferedCount});
-        if (offer) {
-            createAndSendOfferPush({ offer });
-        }
+        const offer = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId});
+
     }
 
     return meeting;
@@ -35,27 +33,44 @@ const determineOfferExpiration = async ({remainingFriendCount, previousTimeMarke
    return new Date();
 };
 
-
-export const makeOffer = async ({meeting, userOfferedId, unOfferedCount}:
-    {meeting: Meeting; userOfferedId: string, unOfferedCount: number
+export const makeBroadcastOffer = async({meeting, userOfferedId}:
+    {meeting: Meeting; userOfferedId: string
     }): Promise<Offer | undefined> => {
-    const meetingId = meeting.id
+        const expiresAt = addHour(new Date());
+        const offer = await makeOffer({meeting, userOfferedId, expiresAt});
+        return offer;
+    }
+
+
+
+
+export const makeAdvanceOffer = async ({meeting, userOfferedId }:
+    {meeting: Meeting; userOfferedId: string}): Promise<Offer | undefined> => {
     const expiresAt = addHour(new Date());
-    //const remainingFriendCount = await getUnofferedFriendsFromMeeting({meeting});
-    //const expiresAt = await determineOfferExpiration({remainingFriendCount: unOfferedCount, previousTimeMarker: new Date(), meetingTime: new Date()});
-    const newOffer = await createOffer({meetingId, userOfferedId, expiresAt});
-    console.log("New Offer", newOffer)
-    return newOffer;
+    const offer = await makeOffer({meeting, userOfferedId, expiresAt});
+    return offer;
 }
+
 
 const makeOfferAfterExpired = async ({meeting, recentOfferId, newUserOfferId}:
     {meeting: Meeting; recentOfferId: string; newUserOfferId: string;}) => {
-
     const expiredOffer = await setOfferExpired({offerId: recentOfferId});
-    const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, unOfferedCount: 0})
+    const expiresAt = addHour(new Date());
+    const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, expiresAt})
     return [expiredOffer, newOffer];
-
 };
+
+export const makeOffer = async ({meeting, userOfferedId, expiresAt}:
+    {meeting: Meeting; userOfferedId: string, expiresAt: Date
+    }): Promise<Offer | undefined> => {
+    const meetingId = meeting.id
+    const offer = await createOffer({meetingId, userOfferedId, expiresAt});
+    console.log("New Offer", offer)
+    if (offer) {
+        createAndSendOfferPush({ offer });
+    }
+    return offer;
+}
 
 export const processOffersForMeeting = async (meeting: Meeting) => {
     const meetingId = meeting.id;
@@ -76,7 +91,7 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
     const recentOffer = findRecentOffer(offers);
 
     if (!recentOffer) {
-        const newMeeting = await makeOffer({meeting, userOfferedId: friendToOfferId, unOfferedCount: 0})
+        const newMeeting = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId})
         return newMeeting;
     }
 
@@ -98,7 +113,7 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
                 meetingState: REJECTED_MEETING_STATE
             });
         } else {
-            const offer = await makeOffer({meeting, userOfferedId: friendToOfferId, unOfferedCount})
+            const offer = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId})
         }
     } else if (recentOffer.offerState === ACCEPTED_OFFER_STATE) {
         await setMeetingState({
