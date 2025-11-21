@@ -21,6 +21,15 @@ export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeti
     return meeting;
 }
 
+const clearOutOlderOffers = async (offers: Offer[]) => {
+    for (let offer of offers) {
+        if (offer.offerState === OPEN_OFFER_STATE) {
+            await setOfferExpired({offerId: offer.id})
+        }
+    }
+}
+
+
 const determineOfferExpiration = async ({remainingFriendCount, previousTimeMarker, meetingTime}:
     {remainingFriendCount: number; previousTimeMarker: Date; meetingTime: Date}): Promise<Date> => {
 
@@ -40,8 +49,6 @@ export const makeBroadcastOffer = async({meeting, userOfferedId}:
         const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'BROADCAST'});
         return offer;
     }
-
-
 
 
 export const makeAdvanceOffer = async ({meeting, userOfferedId }:
@@ -88,7 +95,8 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
     // no more friends left, nothing to do.
     if (!friendToOfferId) return meeting;
     
-    const recentOffer = findRecentOffer(offers);
+    const {recentOffer, olderOffers} = findRecentOffer(offers);
+    await clearOutOlderOffers(olderOffers);
 
     if (!recentOffer) {
         const newMeeting = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId})
@@ -96,8 +104,8 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
     }
 
     if (recentOffer.offerState === OPEN_OFFER_STATE) {
-        const isExpired = await getIsOfferExpired({offer: recentOffer});
-        if (isExpired) {
+        const isOfferExpirationPast = await getIsOfferExpired({offer: recentOffer});
+        if (isOfferExpirationPast) {
             await makeOfferAfterExpired({
                 meeting,
                 recentOfferId: recentOffer.id,

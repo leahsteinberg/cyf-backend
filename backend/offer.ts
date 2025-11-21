@@ -58,15 +58,21 @@ export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
 
 }
 
-export const findRecentOffer = (offers: Offer[]): Offer | undefined => {
+export const findRecentOffer = (offers: Offer[]):
+{recentOffer: Offer | undefined, olderOffers: Offer[]} => {
     if (offers.length > 0) {
         const recentOffer = offers.reduce((recent, curr) => {
             if (recent)  return recent.createdAt.getTime() > curr.createdAt.getTime() ? recent : curr;
             return curr;
         }, offers[0])
-        return recentOffer
+        const olderOffers = recentOffer ? offers.filter(offer => offer.id !== recentOffer.id) : [];
+        return {recentOffer, olderOffers};
+
     }
-    return undefined;
+    return {recentOffer: undefined, olderOffers: []}
+
+
+
 }
 
 export const determineNeedNewOffer = async ({remainingFriendCount, minutesUntilMeeting}
