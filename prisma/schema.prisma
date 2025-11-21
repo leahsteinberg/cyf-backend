@@ -132,6 +132,7 @@ model Offer {
   offerState      OfferState    @default(OPEN)
   createdAt       DateTime      @default(now())
   expiresAt       DateTime
+  offerType       MeetingType   @default(ADVANCE)
 
   @@map("offer")
 }

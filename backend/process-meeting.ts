@@ -80,7 +80,6 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
         return newMeeting;
     }
 
-
     if (recentOffer.offerState === OPEN_OFFER_STATE) {
         const isExpired = await getIsOfferExpired({offer: recentOffer});
         if (isExpired) {
@@ -113,8 +112,5 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
             newUserOfferId: friendToOfferId
         });
     }
-
-
-
     return meeting;
 }

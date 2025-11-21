@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { getFriendIds } from '../backend/friendship.js';
 import { createMeeting } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
+import { processBroadcastMeeting } from '../backend/process-broadcast.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -12,8 +13,6 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
     }
 
     try {
-        // TODO: Implement broadcast now logic
-        const allFriends = await getFriendIds(userId);
         const scheduledFor = new Date();
         const scheduledEnd = addHour(scheduledFor);
 
@@ -25,6 +24,7 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             meetingType: 'BROADCAST',
         }
         );
+        const processedBroadcast = await processBroadcastMeeting
         res.json({ success: true, userId });
     } catch (error) {
         console.error("Error in broadcast now:", error);

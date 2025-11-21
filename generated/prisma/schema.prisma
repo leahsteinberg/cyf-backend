@@ -124,14 +124,15 @@ model Meeting {
 }
 
 model Offer {
-  id            String     @id @default(uuid())
-  meeting       Meeting    @relation("offers", fields: [meetingId], references: [id])
+  id            String      @id @default(uuid())
+  meeting       Meeting     @relation("offers", fields: [meetingId], references: [id])
   meetingId     String
-  userOffered   User       @relation("offersReceived", fields: [userOfferedId], references: [id])
+  userOffered   User        @relation("offersReceived", fields: [userOfferedId], references: [id])
   userOfferedId String
-  offerState    OfferState @default(OPEN)
-  createdAt     DateTime   @default(now())
+  offerState    OfferState  @default(OPEN)
+  createdAt     DateTime    @default(now())
   expiresAt     DateTime
+  offerType     MeetingType @default(ADVANCE)
 
   @@map("offer")
 }

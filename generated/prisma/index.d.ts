@@ -9598,6 +9598,7 @@ export namespace Prisma {
     offerState: $Enums.OfferState | null
     createdAt: Date | null
     expiresAt: Date | null
+    offerType: $Enums.MeetingType | null
   }
 
   export type OfferMaxAggregateOutputType = {
@@ -9607,6 +9608,7 @@ export namespace Prisma {
     offerState: $Enums.OfferState | null
     createdAt: Date | null
     expiresAt: Date | null
+    offerType: $Enums.MeetingType | null
   }
 
   export type OfferCountAggregateOutputType = {
@@ -9616,6 +9618,7 @@ export namespace Prisma {
     offerState: number
     createdAt: number
     expiresAt: number
+    offerType: number
     _all: number
   }
 
@@ -9627,6 +9630,7 @@ export namespace Prisma {
     offerState?: true
     createdAt?: true
     expiresAt?: true
+    offerType?: true
   }
 
   export type OfferMaxAggregateInputType = {
@@ -9636,6 +9640,7 @@ export namespace Prisma {
     offerState?: true
     createdAt?: true
     expiresAt?: true
+    offerType?: true
   }
 
   export type OfferCountAggregateInputType = {
@@ -9645,6 +9650,7 @@ export namespace Prisma {
     offerState?: true
     createdAt?: true
     expiresAt?: true
+    offerType?: true
     _all?: true
   }
 
@@ -9727,6 +9733,7 @@ export namespace Prisma {
     offerState: $Enums.OfferState
     createdAt: Date
     expiresAt: Date
+    offerType: $Enums.MeetingType
     _count: OfferCountAggregateOutputType | null
     _min: OfferMinAggregateOutputType | null
     _max: OfferMaxAggregateOutputType | null
@@ -9753,6 +9760,7 @@ export namespace Prisma {
     offerState?: boolean
     createdAt?: boolean
     expiresAt?: boolean
+    offerType?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
     userOffered?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["offer"]>
@@ -9764,6 +9772,7 @@ export namespace Prisma {
     offerState?: boolean
     createdAt?: boolean
     expiresAt?: boolean
+    offerType?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
     userOffered?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["offer"]>
@@ -9775,6 +9784,7 @@ export namespace Prisma {
     offerState?: boolean
     createdAt?: boolean
     expiresAt?: boolean
+    offerType?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
     userOffered?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["offer"]>
@@ -9786,9 +9796,10 @@ export namespace Prisma {
     offerState?: boolean
     createdAt?: boolean
     expiresAt?: boolean
+    offerType?: boolean
   }
 
-  export type OfferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "meetingId" | "userOfferedId" | "offerState" | "createdAt" | "expiresAt", ExtArgs["result"]["offer"]>
+  export type OfferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "meetingId" | "userOfferedId" | "offerState" | "createdAt" | "expiresAt" | "offerType", ExtArgs["result"]["offer"]>
   export type OfferInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
     userOffered?: boolean | UserDefaultArgs<ExtArgs>
@@ -9815,6 +9826,7 @@ export namespace Prisma {
       offerState: $Enums.OfferState
       createdAt: Date
       expiresAt: Date
+      offerType: $Enums.MeetingType
     }, ExtArgs["result"]["offer"]>
     composites: {}
   }
@@ -10246,6 +10258,7 @@ export namespace Prisma {
     readonly offerState: FieldRef<"Offer", 'OfferState'>
     readonly createdAt: FieldRef<"Offer", 'DateTime'>
     readonly expiresAt: FieldRef<"Offer", 'DateTime'>
+    readonly offerType: FieldRef<"Offer", 'MeetingType'>
   }
     
 
@@ -10780,7 +10793,8 @@ export namespace Prisma {
     userOfferedId: 'userOfferedId',
     offerState: 'offerState',
     createdAt: 'createdAt',
-    expiresAt: 'expiresAt'
+    expiresAt: 'expiresAt',
+    offerType: 'offerType'
   };
 
   export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
@@ -11446,6 +11460,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFilter<"Offer"> | $Enums.OfferState
     createdAt?: DateTimeFilter<"Offer"> | Date | string
     expiresAt?: DateTimeFilter<"Offer"> | Date | string
+    offerType?: EnumMeetingTypeFilter<"Offer"> | $Enums.MeetingType
     meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
     userOffered?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -11457,6 +11472,7 @@ export namespace Prisma {
     offerState?: SortOrder
     createdAt?: SortOrder
     expiresAt?: SortOrder
+    offerType?: SortOrder
     meeting?: MeetingOrderByWithRelationInput
     userOffered?: UserOrderByWithRelationInput
   }
@@ -11471,6 +11487,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFilter<"Offer"> | $Enums.OfferState
     createdAt?: DateTimeFilter<"Offer"> | Date | string
     expiresAt?: DateTimeFilter<"Offer"> | Date | string
+    offerType?: EnumMeetingTypeFilter<"Offer"> | $Enums.MeetingType
     meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
     userOffered?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -11482,6 +11499,7 @@ export namespace Prisma {
     offerState?: SortOrder
     createdAt?: SortOrder
     expiresAt?: SortOrder
+    offerType?: SortOrder
     _count?: OfferCountOrderByAggregateInput
     _max?: OfferMaxOrderByAggregateInput
     _min?: OfferMinOrderByAggregateInput
@@ -11497,6 +11515,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateWithAggregatesFilter<"Offer"> | $Enums.OfferState
     createdAt?: DateTimeWithAggregatesFilter<"Offer"> | Date | string
     expiresAt?: DateTimeWithAggregatesFilter<"Offer"> | Date | string
+    offerType?: EnumMeetingTypeWithAggregatesFilter<"Offer"> | $Enums.MeetingType
   }
 
   export type UserCreateInput = {
@@ -12086,6 +12105,7 @@ export namespace Prisma {
     offerState?: $Enums.OfferState
     createdAt?: Date | string
     expiresAt: Date | string
+    offerType?: $Enums.MeetingType
     meeting: MeetingCreateNestedOneWithoutOffersInput
     userOffered: UserCreateNestedOneWithoutOffersReceivedInput
   }
@@ -12097,6 +12117,7 @@ export namespace Prisma {
     offerState?: $Enums.OfferState
     createdAt?: Date | string
     expiresAt: Date | string
+    offerType?: $Enums.MeetingType
   }
 
   export type OfferUpdateInput = {
@@ -12104,6 +12125,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     meeting?: MeetingUpdateOneRequiredWithoutOffersNestedInput
     userOffered?: UserUpdateOneRequiredWithoutOffersReceivedNestedInput
   }
@@ -12115,6 +12137,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type OfferCreateManyInput = {
@@ -12124,6 +12147,7 @@ export namespace Prisma {
     offerState?: $Enums.OfferState
     createdAt?: Date | string
     expiresAt: Date | string
+    offerType?: $Enums.MeetingType
   }
 
   export type OfferUpdateManyMutationInput = {
@@ -12131,6 +12155,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type OfferUncheckedUpdateManyInput = {
@@ -12140,6 +12165,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -12649,6 +12675,7 @@ export namespace Prisma {
     offerState?: SortOrder
     createdAt?: SortOrder
     expiresAt?: SortOrder
+    offerType?: SortOrder
   }
 
   export type OfferMaxOrderByAggregateInput = {
@@ -12658,6 +12685,7 @@ export namespace Prisma {
     offerState?: SortOrder
     createdAt?: SortOrder
     expiresAt?: SortOrder
+    offerType?: SortOrder
   }
 
   export type OfferMinOrderByAggregateInput = {
@@ -12667,6 +12695,7 @@ export namespace Prisma {
     offerState?: SortOrder
     createdAt?: SortOrder
     expiresAt?: SortOrder
+    offerType?: SortOrder
   }
 
   export type EnumOfferStateWithAggregatesFilter<$PrismaModel = never> = {
@@ -13607,6 +13636,7 @@ export namespace Prisma {
     offerState?: $Enums.OfferState
     createdAt?: Date | string
     expiresAt: Date | string
+    offerType?: $Enums.MeetingType
     meeting: MeetingCreateNestedOneWithoutOffersInput
   }
 
@@ -13616,6 +13646,7 @@ export namespace Prisma {
     offerState?: $Enums.OfferState
     createdAt?: Date | string
     expiresAt: Date | string
+    offerType?: $Enums.MeetingType
   }
 
   export type OfferCreateOrConnectWithoutUserOfferedInput = {
@@ -13853,6 +13884,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFilter<"Offer"> | $Enums.OfferState
     createdAt?: DateTimeFilter<"Offer"> | Date | string
     expiresAt?: DateTimeFilter<"Offer"> | Date | string
+    offerType?: EnumMeetingTypeFilter<"Offer"> | $Enums.MeetingType
   }
 
   export type MeetingUpsertWithWhereUniqueWithoutAcceptedUserInput = {
@@ -14518,6 +14550,7 @@ export namespace Prisma {
     offerState?: $Enums.OfferState
     createdAt?: Date | string
     expiresAt: Date | string
+    offerType?: $Enums.MeetingType
     userOffered: UserCreateNestedOneWithoutOffersReceivedInput
   }
 
@@ -14527,6 +14560,7 @@ export namespace Prisma {
     offerState?: $Enums.OfferState
     createdAt?: Date | string
     expiresAt: Date | string
+    offerType?: $Enums.MeetingType
   }
 
   export type OfferCreateOrConnectWithoutMeetingInput = {
@@ -14901,6 +14935,7 @@ export namespace Prisma {
     offerState?: $Enums.OfferState
     createdAt?: Date | string
     expiresAt: Date | string
+    offerType?: $Enums.MeetingType
   }
 
   export type MeetingCreateManyAcceptedUserInput = {
@@ -15083,6 +15118,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     meeting?: MeetingUpdateOneRequiredWithoutOffersNestedInput
   }
 
@@ -15092,6 +15128,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type OfferUncheckedUpdateManyWithoutUserOfferedInput = {
@@ -15100,6 +15137,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type MeetingUpdateWithoutAcceptedUserInput = {
@@ -15143,6 +15181,7 @@ export namespace Prisma {
     offerState?: $Enums.OfferState
     createdAt?: Date | string
     expiresAt: Date | string
+    offerType?: $Enums.MeetingType
   }
 
   export type OfferUpdateWithoutMeetingInput = {
@@ -15150,6 +15189,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     userOffered?: UserUpdateOneRequiredWithoutOffersReceivedNestedInput
   }
 
@@ -15159,6 +15199,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type OfferUncheckedUpdateManyWithoutMeetingInput = {
@@ -15167,6 +15208,7 @@ export namespace Prisma {
     offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
 
