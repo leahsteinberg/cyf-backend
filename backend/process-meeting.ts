@@ -82,21 +82,22 @@ export const makeOffer = async ({meeting, userOfferedId, expiresAt, offerType}:
 export const processOffersForMeeting = async (meeting: Meeting) => {
     const meetingId = meeting.id;
     const userFrom = meeting.userFromId;
-    
+
+    // Get offers and clean up old ones first
+    const offers = await getMeetingOffers({meetingId})
+    const {recentOffer, olderOffers} = findRecentOffer(offers);
+    await clearOutOlderOffers(olderOffers);
+
     const meetingInPast = await isTimePast({eventTime: meeting.scheduledFor});
     if (meetingInPast) {
         return await setMeetingState({meetingId, meetingState: PAST_MEETING_STATE});
     }
 
-    const offers = await getMeetingOffers({meetingId})
     const allFriendIds = await getFriendIds(userFrom);
     const {friendToOfferId, unOfferedCount} = await findFriendIdToOffer({offers, meetingId, allFriendIds})
- 
+
     // no more friends left, nothing to do.
     if (!friendToOfferId) return meeting;
-    
-    const {recentOffer, olderOffers} = findRecentOffer(offers);
-    await clearOutOlderOffers(olderOffers);
 
     if (!recentOffer) {
         const newMeeting = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId})
