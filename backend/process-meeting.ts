@@ -22,7 +22,7 @@ export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeti
     return meeting;
 }
 
-const clearOutOffers = async (offers: Offer[]) => {
+export const clearOutOffers = async (offers: Offer[]) => {
     for (let offer of offers) {
         if (offer.offerState === OPEN_OFFER_STATE) {
             await setOfferExpired({offerId: offer.id})
