@@ -28,8 +28,10 @@ export const handleAcceptOffer = async (req: Request, res: Response) => {
   }
 
   try {
-    const offer = await acceptOffer({userId, offerId})
-    res.json(offer);
+    const offer = await acceptOffer({userId, offerId});
+    const offers = await getOffersForUser({ userId });
+
+    res.json(offers);
   } catch (error) {
     console.error("Error accepting offer:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -47,7 +49,8 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
   try {
     const rejectedOffer = await rejectOffer({ offerId });
     await processRejectedOffer({ offerId });
-    res.json(rejectedOffer);
+    const offers = await getOffersForUser({ userId });
+    res.json(offers);
   } catch (error) {
     console.error("Error rejecting offer:", error);
     res.status(500).json({ error: "Internal server error" });
