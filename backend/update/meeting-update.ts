@@ -1,10 +1,10 @@
-import type { Meeting, MeetingState } from "../../types.js";
+import type { Meeting, MeetingState, MeetingType } from "../../types.js";
 import { prisma } from "../auth.js";
 import { ACCEPTED_MEETING_STATE } from "../utils.js";
 
 export const createMeeting = async (
-    { userFromId, scheduledFor, scheduledEnd, title }
-    : { userFromId: string, scheduledFor: Date, scheduledEnd:Date, title: string }):
+    { userFromId, scheduledFor, scheduledEnd, title, meetingType }
+    : { userFromId: string, scheduledFor: Date, scheduledEnd:Date, title: string, meetingType: MeetingType}):
     Promise<Meeting> => {
         const meeting = await prisma.meeting.create({
             data: {
@@ -12,6 +12,7 @@ export const createMeeting = async (
                 scheduledFor,
                 scheduledEnd,
                 title,
+                meetingType
             }
     });
     return meeting;

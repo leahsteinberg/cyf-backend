@@ -1,6 +1,7 @@
 
 export type OfferState = "OPEN" | "ACCEPTED" | "REJECTED" | "EXPIRED";
 export type MeetingState = "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST";
+export type MeetingType = "ADVANCE" | "BROADCAST";
 
 export interface BaseEntity {
     id: string;
@@ -23,6 +24,7 @@ export interface Meeting extends BaseEntity {
     userFrom?: User;
     acceptedUser?: User | null;
     title: string | null;
+    meetingType: MeetingType;
 }
 
 export interface Offer extends BaseEntity {

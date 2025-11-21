@@ -21,19 +21,10 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             userFromId: userId,
             scheduledFor,
             scheduledEnd,
-            title: 'This is a broadcast meeting' }
+            title: 'This is a broadcast meeting',
+            meetingType: 'BROADCAST',
+        }
         );
-        //const offers = await createBroadcastOffers();
-
-
-        // create a meeting that starts now and ends in 1 hour.
-        // special type of meeting which is a broadcast meeting
-        // send a special type of offer
-
-
-
-
-
         res.json({ success: true, userId });
     } catch (error) {
         console.error("Error in broadcast now:", error);
