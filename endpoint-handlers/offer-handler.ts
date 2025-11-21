@@ -1,5 +1,7 @@
 import type { Request, Response } from 'express';
 import { acceptOffer, getOffersForUser, processRejectedOffer, rejectOffer } from '../backend/offer.js';
+import { getMeetingById } from '../backend/query/meeting-lookup.js';
+import { processOffersForMeeting } from '../backend/process-meeting.js';
 
 
 
@@ -49,10 +51,23 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
   try {
     const rejectedOffer = await rejectOffer({ offerId });
     console.log("rejected offer -", rejectOffer)
-    await processRejectedOffer({ offerId });
-    const offers = await getOffersForUser({ userId });
-    console.log("New offers,", offers);
-    res.json(offers);
+    if (!rejectedOffer) {
+        throw new Error('Rejected offer not found');
+    }
+
+    const meetingId = rejectedOffer.meetingId;
+
+    // Get the meeting
+    const meeting = await getMeetingById({ meetingId });
+    if (meeting) {
+      const newMeeting = await processOffersForMeeting(meeting)
+
+    
+
+    //await processRejectedOffer({ offerId });
+    //const offers = await getOffersForUser({ userId });
+    console.log("New offer,", offer);
+    res.json(offer);
   } catch (error) {
     console.error("Error rejecting offer:", error);
     res.status(500).json({ error: "Internal server error" });

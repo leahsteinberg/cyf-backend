@@ -1,6 +1,6 @@
 import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired, createOffer, getIsOfferExpired } from './offer.js';
 import { setMeetingState } from './update/meeting-update.js';
-import { ACCEPTED_OFFER_STATE, addHour, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.js';
+import { ACCEPTED_MEETING_STATE, ACCEPTED_OFFER_STATE, addHour, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.js';
 import { findUnofferedFriends, getFriendIds, getUnofferedFriendsFromMeeting } from './friendship.js';
 import type { Meeting, Offer } from '../types.js';
 import { createAndSendOfferPush } from './create-push.js';
@@ -57,25 +57,6 @@ const makeOfferAfterExpired = async ({meeting, recentOfferId, newUserOfferId}:
 
 };
 
-
-
-
-// const determineNeedNewOffer = async ({remainingFriendCount, offerCreatedAt, meetingTime}:
-//      {remainingFriendCount: number; offerCreatedAt: Date; meetingTime: Date}): Promise<boolean> => {
-
-
-//     const totalDuration =  await minutesBetween({earlierTime: offerCreatedAt, laterTime: meetingTime});
-//     const totalFriends = remainingFriendCount + 1;
-//     const timeWindow = totalDuration/totalFriends;
-
-//     const timeElapsed = await minutesSince({eventTime: offerCreatedAt});
-
-//     return timeElapsed > timeWindow;
-// };
-
-
-
-
 export const processOffersForMeeting = async (meeting: Meeting) => {
     const meetingId = meeting.id;
     const userFrom = meeting.userFromId;
@@ -101,7 +82,6 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
 
 
     if (recentOffer.offerState === OPEN_OFFER_STATE) {
-
         const isExpired = await getIsOfferExpired({offer: recentOffer});
         if (isExpired) {
             await makeOfferAfterExpired({
@@ -110,6 +90,31 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
                 newUserOfferId: friendToOfferId
             });
         }
+    } else if (recentOffer.offerState === REJECTED_OFFER_STATE) {
+        if (!friendToOfferId) {
+            // No more friends to offer to, set meeting state to REJECTED
+            console.log("No more friends to offer to, setting meeting to REJECTED");
+            await setMeetingState({
+                meetingId,
+                meetingState: REJECTED_MEETING_STATE
+            });
+        } else {
+            const offer = await makeOffer({meeting, userOfferedId: friendToOfferId, unOfferedCount})
+        }
+    } else if (recentOffer.offerState === ACCEPTED_OFFER_STATE) {
+        await setMeetingState({
+            meetingId,
+            meetingState: ACCEPTED_MEETING_STATE
+        });
+    } else if (recentOffer.offerState === EXPIRED_OFFER_STATE) {
+        await makeOfferAfterExpired({
+            meeting,
+            recentOfferId: recentOffer.id,
+            newUserOfferId: friendToOfferId
+        });
     }
+
+
+
     return meeting;
 }
