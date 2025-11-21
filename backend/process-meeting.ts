@@ -131,6 +131,7 @@ export const makeBroadcastOffer = async({meeting, userOfferedId}:
 export const makeAdvanceOffer = async ({meeting, userOfferedId, remainingFriendsCount}:
     {meeting: Meeting; userOfferedId: string; remainingFriendsCount: number}): Promise<Offer | undefined> => {
     const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, userToOfferId: userOfferedId, remainingFriendsCount})
+    console.log("expires at-", expiresAt)
     const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'ADVANCE'});
     return offer;
 }

@@ -6,6 +6,7 @@ export const createMeeting = async (
     { userFromId, scheduledFor, scheduledEnd, title, meetingType }
     : { userFromId: string, scheduledFor: Date, scheduledEnd:Date, title: string, meetingType: MeetingType}):
     Promise<Meeting> => {
+        console.log("making a meeting SF- ", scheduledFor)
         const meeting = await prisma.meeting.create({
             data: {
                 userFromId,
