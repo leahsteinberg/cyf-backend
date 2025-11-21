@@ -48,8 +48,10 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
 
   try {
     const rejectedOffer = await rejectOffer({ offerId });
+    console.log("rejected offer -", rejectOffer)
     await processRejectedOffer({ offerId });
     const offers = await getOffersForUser({ userId });
+    console.log("New offers,", offers);
     res.json(offers);
   } catch (error) {
     console.error("Error rejecting offer:", error);
