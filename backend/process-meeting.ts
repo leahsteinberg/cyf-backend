@@ -30,16 +30,48 @@ const clearOutOffers = async (offers: Offer[]) => {
 }
 
 
-const determineOfferExpiration = async ({meetingTime}:
-    {meetingTime: Date}): Promise<Date> => {
+const determineOfferExpiration = async ({meetingTime, remainingFriendsCount}:
+    {meetingTime: Date; remainingFriendsCount: number}): Promise<Date> => {
 
-//    const totalDuration =  await minutesBetween({earlierTime: previousTimeMarker, laterTime: meetingTime});
-//    const totalFriends = remainingFriendCount;
-//    const timeWindow = totalDuration/totalFriends;
-  // const expiresAt = previousTimeMarker + timeWindow
-   //const timeElapsed = await minutesSince({eventTime: previousTimeMarker});
+    const now = new Date();
 
-   return addHour(new Date());
+    // Calculate time from now until the meeting
+    const minutesUntilMeeting = await minutesUntil({eventTime: meetingTime});
+
+    // If no more friends, set expiration to scheduledFor time
+    if (remainingFriendsCount === 0) {
+        return meetingTime;
+    }
+
+    // Try to chop up the time equally between number of friends
+    let minutesPerFriend = minutesUntilMeeting / remainingFriendsCount;
+
+    // Apply minimum constraints
+    if (minutesUntilMeeting <= 120 && remainingFriendsCount > 2) {
+        // If 2 hours or less and more than 2 friends, minimum is 30 mins
+        minutesPerFriend = Math.max(30, minutesPerFriend);
+    } else if (minutesUntilMeeting > 120) {
+        // If more than 2 hours, minimum is 1 hour
+        minutesPerFriend = Math.max(60, minutesPerFriend);
+    }
+
+    // Calculate the expiration time
+    let expirationTime = new Date(now.getTime() + minutesPerFriend * 60 * 1000);
+
+    // If this time is past the scheduledFor time, cap at scheduledFor time
+    if (expirationTime > meetingTime) {
+        expirationTime = meetingTime;
+    }
+
+    // TODO: Handle sleep time (10pm-10am) based on offer-receiving-user's timezone
+    // This requires:
+    // 1. User timezone information (not currently passed to this function)
+    // 2. Convert expiration time to user's local time
+    // 3. Check if it falls between 10pm-10am
+    // 4. If yes, set to 10am in user's timezone (unless that's past meeting time)
+    // ISSUE: This will require passing userOfferedId to look up their timezone
+
+    return expirationTime;
 };
 
 export const makeBroadcastOffer = async({meeting, userOfferedId}:
@@ -51,18 +83,18 @@ export const makeBroadcastOffer = async({meeting, userOfferedId}:
     }
 
 
-export const makeAdvanceOffer = async ({meeting, userOfferedId }:
-    {meeting: Meeting; userOfferedId: string}): Promise<Offer | undefined> => {
-    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor})
+export const makeAdvanceOffer = async ({meeting, userOfferedId, remainingFriendsCount}:
+    {meeting: Meeting; userOfferedId: string; remainingFriendsCount: number}): Promise<Offer | undefined> => {
+    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, remainingFriendsCount})
     const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'ADVANCE'});
     return offer;
 }
 
 
-const makeOfferAfterExpired = async ({meeting, recentOfferId, newUserOfferId}:
-    {meeting: Meeting; recentOfferId: string; newUserOfferId: string;}) => {
+const makeOfferAfterExpired = async ({meeting, recentOfferId, newUserOfferId, remainingFriendsCount}:
+    {meeting: Meeting; recentOfferId: string; newUserOfferId: string; remainingFriendsCount: number}) => {
     const expiredOffer = await setOfferExpired({offerId: recentOfferId});
-    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor})
+    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, remainingFriendsCount})
     const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, expiresAt, offerType: 'ADVANCE'})
     return [expiredOffer, newOffer];
 };
