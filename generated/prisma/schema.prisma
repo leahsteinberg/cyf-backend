@@ -28,6 +28,7 @@ model User {
   meetingsCreated     Meeting[]    @relation("meetingsCreated")
   offersReceived      Offer[]      @relation("offersReceived")
   meetingsAccepted    Meeting[]    @relation("meetingsAccepted")
+  isBroadcasting      Boolean      @default(false)
   // meetingsAccepted    Meeting[]     @relation("meetingsAccepted")
 
   username        String?
