@@ -5,6 +5,7 @@ import { findUnofferedFriends, getFriendIds, getUnofferedFriendsFromMeeting } fr
 import type { Meeting, MeetingType, Offer } from '../types.js';
 import { createAndSendOfferPush } from './create-push.js';
 import { getUserTimezone } from './query/user-lookup.js';
+import { setIsBroadcasting } from './update/user-update.js';
 
 
 
@@ -162,12 +163,11 @@ export const makeOffer = async ({meeting, userOfferedId, expiresAt, offerType}:
 
 const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
     const meetingId = meeting.id;
-    const userFrom = meeting.userFromId;
-    const meetingInPast = await isTimePast({eventTime: meeting.scheduledFor});
+    const meetingInPast = await isTimePast({eventTime: meeting.scheduledEnd});
     if (meetingInPast) {
         const offers = await getMeetingOffers({meetingId})
-
         await clearOutOffers(offers);
+        await setIsBroadcasting({userId: meeting.userFromId});
         return await setMeetingState({meetingId, meetingState: PAST_MEETING_STATE});
     }
     return meeting;
