@@ -8,6 +8,7 @@ import { acceptOffer } from '../backend/offer.js';
 import { getAcceptedMeetings, getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { deleteBroadcastedMeeting, findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
+import { getIsBroadcasting } from '../backend/query/user-lookup.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -161,6 +162,24 @@ export const handleRejectBroadcast = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.error("Error rejecting broadcast:", error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        return res.status(500).json({ error: "Internal server error", details: errorMessage });
+    }
+};
+
+export const handleIsUserBroadcasting = async (req: Request, res: Response) => {
+    const { userId } = req.body;
+    console.log("is user broadcasting --", { userId });
+
+    if (!userId) {
+        return res.status(400).json({ error: "userId is required" });
+    }
+
+    try {
+        const isBroadcasting = await getIsBroadcasting({ userId });
+        res.json({ success: true, userId, isBroadcasting });
+    } catch (error) {
+        console.error("Error checking if user is broadcasting:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);
         return res.status(500).json({ error: "Internal server error", details: errorMessage });
     }

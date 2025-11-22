@@ -11,7 +11,7 @@ import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoin
 import { handleCronRound } from './endpoint-handlers/cron-handler.js';
 import cron from 'node-cron';
 import { handlePush } from './endpoint-handlers/push-handler.js';
-import { handleBroadcastNow, handleBroadcastEnd, handleTryAcceptBroadcast, handleAcceptBroadcast, handleRejectBroadcast } from './endpoint-handlers/broadcast-handler.js';
+import { handleBroadcastNow, handleBroadcastEnd, handleTryAcceptBroadcast, handleAcceptBroadcast, handleRejectBroadcast, handleIsUserBroadcasting } from './endpoint-handlers/broadcast-handler.js';
 
 const app = express();
 const port = 3000;
@@ -63,6 +63,7 @@ app.post('/api/reject-offer', handleRejectOffer);
 //BROADCAST ENDPOINTS
 app.post('/api/broadcast-now', handleBroadcastNow);
 app.post('/api/broadcast-end', handleBroadcastEnd);
+app.post('/api/is-user-broadcasting', handleIsUserBroadcasting);
 app.post('/api/try-accept-broadcast', handleTryAcceptBroadcast);
 app.post('/api/accept-broadcast', handleAcceptBroadcast);
 app.post('/api/reject-broadcast', handleRejectBroadcast);

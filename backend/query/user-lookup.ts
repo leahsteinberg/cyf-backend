@@ -49,3 +49,16 @@ export const getUserTimezone = async ({ userId }: { userId: string }): Promise<s
 
     return user?.timezone ?? null;
 };
+
+export const getIsBroadcasting = async ({ userId }: { userId: string }): Promise<boolean> => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId
+        },
+        select: {
+            isBroadcasting: true
+        }
+    });
+
+    return user?.isBroadcasting ?? false;
+};
