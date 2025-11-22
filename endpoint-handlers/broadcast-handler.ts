@@ -7,6 +7,7 @@ import { getOfferById } from '../backend/query/offer-lookup.js';
 import { acceptOffer } from '../backend/offer.js';
 import { getAcceptedMeetings, getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { deleteBroadcastedMeeting, findBroadcastedMeetings } from '../backend/meeting.js';
+import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -34,6 +35,10 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
         }
 
         const processedBroadcast = await processNewBroadcastMeeting({ meeting });
+
+        // Set user as broadcasting
+        await setIsBroadcasting({ userId });
+
         res.json({ success: true, userId, meeting: processedBroadcast });
     } catch (error) {
         console.error("Error in broadcast now:", error);
@@ -53,11 +58,14 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
     try {
         const meetings = await getCreatedMeetings({userFromId: userId});
         const broadcastMeetings = await findBroadcastedMeetings(meetings);
-        // should be just one meeting, but want to account for error state 
+        // should be just one meeting, but want to account for error state
         // where there are somehow two broadcast meetings.
         for (let broadcastMeeting of broadcastMeetings) {
             await deleteBroadcastedMeeting(broadcastMeeting);
         }
+
+        // Set user as not broadcasting
+        await setIsNotBroadcasting({ userId });
 
         res.json({ success: true, userId });
     } catch (error) {
