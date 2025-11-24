@@ -11,7 +11,7 @@ export const PAST_MEETING_STATE = 'PAST';
 
 export const isTimePast = async ({eventTime}: {eventTime: Date}): Promise<boolean> => {
     const now = new Date();
-    return ((eventTime.getTime() - now.getTime()) <= 0);
+    return ((eventTime.getTime() - now.getTime()) <= -15);
 };
 
 export const minutesUntil = async ({eventTime}: {eventTime: Date}): Promise<number> => {
