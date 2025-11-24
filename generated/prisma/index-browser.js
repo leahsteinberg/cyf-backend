@@ -197,8 +197,13 @@ exports.Prisma.MeetingScalarFieldEnum = {
   scheduledEnd: 'scheduledEnd',
   title: 'title',
   meetingState: 'meetingState',
-  meetingType: 'meetingType',
-  broadcastSubState: 'broadcastSubState'
+  meetingType: 'meetingType'
+};
+
+exports.Prisma.BroadcastMetadataScalarFieldEnum = {
+  id: 'id',
+  meetingId: 'meetingId',
+  subState: 'subState'
 };
 
 exports.Prisma.OfferScalarFieldEnum = {
@@ -258,6 +263,7 @@ exports.Prisma.ModelName = {
   Friendship: 'Friendship',
   Invitation: 'Invitation',
   Meeting: 'Meeting',
+  BroadcastMetadata: 'BroadcastMetadata',
   Offer: 'Offer'
 };
 

@@ -7,13 +7,26 @@ export const createMeeting = async (
     : { userFromId: string, scheduledFor: Date, scheduledEnd:Date, title: string, meetingType: MeetingType}):
     Promise<Meeting> => {
         console.log("making a meeting SF- ", scheduledFor)
+
+        // Create meeting with broadcast metadata if it's a broadcast type
         const meeting = await prisma.meeting.create({
             data: {
                 userFromId,
                 scheduledFor,
                 scheduledEnd,
                 title,
-                meetingType
+                meetingType,
+                // Create broadcast metadata for broadcast meetings
+                ...(meetingType === 'BROADCAST' && {
+                    broadcastMetadata: {
+                        create: {
+                            subState: 'UNCLAIMED'
+                        }
+                    }
+                })
+            },
+            include: {
+                broadcastMetadata: true
             }
     });
     return meeting;
