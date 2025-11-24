@@ -1,4 +1,4 @@
-import type { Meeting, MeetingState, MeetingType } from "../../types.js";
+import type { Meeting, MeetingState, MeetingType, BroadcastSubState, BroadcastMetadata } from "../../types.js";
 import { prisma } from "../auth.js";
 import { ACCEPTED_MEETING_STATE } from "../utils.js";
 
@@ -56,6 +56,18 @@ export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string
         }
     })
     return updatedMeeting;
+};
+
+export const setBroadcastSubState = async ({meetingId, subState}: {meetingId: string, subState: BroadcastSubState}): Promise<BroadcastMetadata> => {
+    const updatedMetadata = await prisma.broadcastMetadata.update({
+        where: {
+            meetingId: meetingId,
+        },
+        data: {
+            subState: subState
+        }
+    });
+    return updatedMetadata;
 };
 
 

@@ -14,7 +14,8 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
                     username: true,
                     email: true,
                 }
-            }
+            },
+            broadcastMetadata: true
         }
     });
     return meeting;
@@ -35,6 +36,7 @@ export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Pr
                     displayUsername: true
                 },
             },
+            broadcastMetadata: true
         },
     });
 
@@ -57,6 +59,7 @@ export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: str
                     displayUsername: true
                 },
             },
+            broadcastMetadata: true
         },
     });
 
@@ -68,6 +71,9 @@ export const getAllSearchingMeetings = async (): Promise<Meeting[]> => {
     const meetings = await prisma.meeting.findMany({
         where: {
             meetingState: SEARCHING_MEETING_STATE,
+        },
+        include: {
+            broadcastMetadata: true
         }
     });
     return meetings;
@@ -85,7 +91,10 @@ export const getUserFromMeeting = async (meeting: Meeting): Promise<User | null>
 
 export const getMeetingById = async ({meetingId}: {meetingId: string}): Promise<Meeting | null> => {
     const meeting = await prisma.meeting.findUnique({
-        where: { id: meetingId }
+        where: { id: meetingId },
+        include: {
+            broadcastMetadata: true
+        }
     });
     return meeting;
 };
@@ -94,7 +103,8 @@ export const getUserFromMeetingId = async (meetingId: string): Promise<User | nu
     const meeting = await prisma.meeting.findUnique({
         where: { id: meetingId },
         include: {
-            userFrom: true
+            userFrom: true,
+            broadcastMetadata: true
         }
     });
     return meeting?.userFrom ?? null;
