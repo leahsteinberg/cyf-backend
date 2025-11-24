@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express';
 import { getFriendIds } from '../backend/friendship.js';
-import { createMeeting } from '../backend/update/meeting-update.js';
+import { createMeeting, setBroadcastSubState } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
 import { processNewBroadcastMeeting } from '../backend/process-broadcast.js';
-import { getOfferById } from '../backend/query/offer-lookup.js';
+import { getMeetingOffers, getOfferById } from '../backend/query/offer-lookup.js';
 import { acceptOffer } from '../backend/offer.js';
-import { getAcceptedMeetings, getCreatedMeetings } from '../backend/query/meeting-lookup.js';
+import { getAcceptedMeetings, getCreatedMeetings, getMeetingById } from '../backend/query/meeting-lookup.js';
 import { deleteBroadcastedMeeting, findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
@@ -100,11 +100,25 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
             });
         }
 
+        const meeting = await getMeetingById({meetingId: offer.meetingId});
+        const broadcastSubState = meeting?.broadcastMetadata?.subState;
+
+        if (broadcastSubState) {
+            if (broadcastSubState === 'CLAIMED' || broadcastSubState === 'PENDING_CLAIMED') {
+                
+
+            } else if (broadcastSubState === 'UNCLAIMED') {
+                await setBroadcastSubState({meetingId: meeting.id, subState: 'PENDING_CLAIMED'});
+            }
+        }
+
+        
         // Check if user has any conflicting accepted meetings
         const acceptedMeetings = await getAcceptedMeetings({ acceptedUserId: userId });
 
         // For now, allow accepting if no conflicts (you can add time-based conflict checking here)
-        const canAccept = true;
+ 
+
 
         res.json({
             success: true,
@@ -127,6 +141,16 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
     }
 
     try {
+
+        const meeting = await getMeetingById({meetingId: offer.meetingId});
+        const broadcastUnclaimed = meeting?.broadcastMetadata?.subState;
+
+        if (broadcastUnclaimed && broadcastUnclaimed === 'UNCLAIMED') {
+            await setBroadcastSubState({meetingId: meeting.id, subState: 'PENDING_CLAIMED'});
+        
+        }
+
+
         // Use the existing acceptOffer logic
         const acceptedOffer = await acceptOffer({ userId, offerId });
 

@@ -126,10 +126,10 @@ model Meeting {
 }
 
 model BroadcastMetadata {
-  id        String            @id @default(uuid())
-  meeting   Meeting           @relation(fields: [meetingId], references: [id], onDelete: Cascade)
-  meetingId String            @unique
-  subState  BroadcastSubState @default(UNCLAIMED)
+  id                String            @id @default(uuid())
+  meeting           Meeting           @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  meetingId         String            @unique
+  subState          BroadcastSubState @default(UNCLAIMED)
 
   @@map("broadcast_metadata")
 }
