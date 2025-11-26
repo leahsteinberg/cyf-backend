@@ -1,13 +1,78 @@
-import type { Meeting } from "../types.js";
+import type { Meeting, Offer } from "../types.js";
 import { getFriendIds } from "./friendship.js";
 import { makeBroadcastOffer } from "./process-meeting.js";
 import { setBroadcastPending, setBroadcastUnclaimed } from "./update/broadcast-update.js";
+import { getOfferById } from "./query/offer-lookup.js";
+import { getMeetingById } from "./query/meeting-lookup.js";
 
+type ValidationResult =
+    | { valid: true; offer: Offer; meeting: Meeting }
+    | { valid: false; error: string; statusCode: number };
 
-export const validateBroadcastRequest = async () => {
-    // TODO - this should be an all-purpose function for catching common errors in requests for 
-    // broadcasts, including try-accept-broadcast, accept-broadcast, reject-broadcast.
-    // may need a different one for new-broadcast and broadcast-end.
+export const validateBroadcastRequest = async (
+    {userId, offerId}: {userId: string, offerId: string}
+): Promise<ValidationResult> => {
+    // Validate userId and offerId are provided
+    if (!userId || !offerId) {
+        return {
+            valid: false,
+            error: "userId and offerId are required",
+            statusCode: 400
+        };
+    }
+
+    // Check if offer exists
+    const offer = await getOfferById({ offerId });
+    if (!offer) {
+        return {
+            valid: false,
+            error: "Offer not found",
+            statusCode: 404
+        };
+    }
+
+    // Check if offer belongs to the user
+    if (offer.userOfferedId !== userId) {
+        return {
+            valid: false,
+            error: "Offer does not belong to this user",
+            statusCode: 403
+        };
+    }
+
+    // Check if meeting exists
+    const meeting = await getMeetingById({ meetingId: offer.meetingId });
+    if (!meeting) {
+        return {
+            valid: false,
+            error: "Meeting not found",
+            statusCode: 404
+        };
+    }
+
+    // Check if meeting is BROADCAST type
+    if (meeting.meetingType !== 'BROADCAST') {
+        return {
+            valid: false,
+            error: "This operation is only valid for broadcast meetings",
+            statusCode: 400
+        };
+    }
+
+    // Check if meeting has broadcast metadata
+    if (!meeting.broadcastMetadata) {
+        return {
+            valid: false,
+            error: "Broadcast meeting is missing metadata",
+            statusCode: 500
+        };
+    }
+
+    return {
+        valid: true,
+        offer,
+        meeting
+    };
 };
 
 export const processNewBroadcastMeeting = async ({meeting}: {meeting: Meeting}): Promise<Meeting> => {

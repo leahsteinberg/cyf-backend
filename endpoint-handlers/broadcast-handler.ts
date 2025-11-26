@@ -1,11 +1,9 @@
 import type { Request, Response } from 'express';
-import { getFriendIds } from '../backend/friendship.js';
 import { createMeeting, setBroadcastSubState } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
-import { processNewBroadcastMeeting } from '../backend/process-broadcast.js';
-import { getMeetingOffers, getOfferById } from '../backend/query/offer-lookup.js';
-import { acceptOffer } from '../backend/offer.js';
-import { getAcceptedMeetings, getCreatedMeetings, getMeetingById } from '../backend/query/meeting-lookup.js';
+import { processNewBroadcastMeeting, validateBroadcastRequest } from '../backend/process-broadcast.js';
+import { acceptOffer, rejectOffer } from '../backend/offer.js';
+import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { deleteBroadcastedMeeting, findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
@@ -80,16 +78,17 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
     const { userId, offerId } = req.body;
     console.log("try accept broadcast --", { userId, offerId });
 
-    if (!userId || !offerId) {
-        return res.status(400).json({ error: "userId and offerId are required" });
-    }
-
     try {
-        // Check if the offer exists
-        const offer = await getOfferById({ offerId });
-        if (!offer) {
-            return res.status(404).json({ error: "Offer not found", canAccept: false });
+        // Validate broadcast request
+        const validation = await validateBroadcastRequest({ userId, offerId });
+        if (!validation.valid) {
+            return res.status(validation.statusCode).json({
+                error: validation.error,
+                canAccept: false
+            });
         }
+
+        const { offer, meeting } = validation;
 
         // Check if the offer is still open
         if (offer.offerState !== 'OPEN') {
@@ -100,33 +99,27 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
             });
         }
 
-        const meeting = await getMeetingById({meetingId: offer.meetingId});
-        const broadcastSubState = meeting?.broadcastMetadata?.subState;
+        const broadcastSubState = meeting.broadcastMetadata?.subState;
+        let canAccept = false;
 
-        if (broadcastSubState) {
-
-            } if (broadcastSubState === 'UNCLAIMED') {
-                
-
-            } else if (broadcastSubState === 'CLAIMED') {
-
-            } else if ( broadcastSubState === 'PENDING_CLAIMED') {
-
-
+        if (broadcastSubState === 'UNCLAIMED') {
+            canAccept = true;
+        } else if (broadcastSubState === 'CLAIMED') {
+            canAccept = false;
+        } else if (broadcastSubState === 'PENDING_CLAIMED') {
+            // Check if this user has the pending claim
+            if (meeting.broadcastMetadata?.offerClaimedId === offerId) {
+                canAccept = true;
+            } else {
+                canAccept = false;
+            }
         }
-
-        
-        // Check if user has any conflicting accepted meetings
-        const acceptedMeetings = await getAcceptedMeetings({ acceptedUserId: userId });
-
-        // For now, allow accepting if no conflicts (you can add time-based conflict checking here)
- 
-
 
         res.json({
             success: true,
             canAccept,
-            offer
+            offer,
+            broadcastSubState
         });
     } catch (error) {
         console.error("Error in try accept broadcast:", error);
@@ -139,20 +132,32 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
     const { userId, offerId } = req.body;
     console.log("accept broadcast --", { userId, offerId });
 
-    if (!userId || !offerId) {
-        return res.status(400).json({ error: "userId and offerId are required" });
-    }
-
     try {
-
-        const meeting = await getMeetingById({meetingId: offer.meetingId});
-        const broadcastUnclaimed = meeting?.broadcastMetadata?.subState;
-
-        if (broadcastUnclaimed && broadcastUnclaimed === 'UNCLAIMED') {
-            await setBroadcastSubState({meetingId: meeting.id, subState: 'PENDING_CLAIMED'});
-        
+        // Validate broadcast request
+        const validation = await validateBroadcastRequest({ userId, offerId });
+        if (!validation.valid) {
+            return res.status(validation.statusCode).json({ error: validation.error });
         }
 
+        const { offer, meeting } = validation;
+
+        // Check broadcast state and update if needed
+        const broadcastSubState = meeting.broadcastMetadata?.subState;
+
+        if (broadcastSubState === 'UNCLAIMED') {
+            await setBroadcastSubState({meetingId: meeting.id, subState: 'PENDING_CLAIMED'});
+        } else if (broadcastSubState === 'PENDING_CLAIMED') {
+            // Verify this user has the pending claim
+            if (meeting.broadcastMetadata?.offerClaimedId !== offerId) {
+                return res.status(403).json({
+                    error: "This broadcast is pending acceptance by another user"
+                });
+            }
+        } else if (broadcastSubState === 'CLAIMED') {
+            return res.status(400).json({
+                error: "This broadcast has already been claimed"
+            });
+        }
 
         // Use the existing acceptOffer logic
         const acceptedOffer = await acceptOffer({ userId, offerId });
@@ -172,13 +177,12 @@ export const handleRejectBroadcast = async (req: Request, res: Response) => {
     const { userId, offerId } = req.body;
     console.log("reject broadcast --", { userId, offerId });
 
-    if (!userId || !offerId) {
-        return res.status(400).json({ error: "userId and offerId are required" });
-    }
-
     try {
-        // Import rejectOffer from offer.js
-        const { rejectOffer } = await import('../backend/offer.js');
+        // Validate broadcast request
+        const validation = await validateBroadcastRequest({ userId, offerId });
+        if (!validation.valid) {
+            return res.status(validation.statusCode).json({ error: validation.error });
+        }
 
         // Reject the broadcast offer
         const rejectedOffer = await rejectOffer({ offerId });
