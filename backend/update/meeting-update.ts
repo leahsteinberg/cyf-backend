@@ -64,7 +64,7 @@ export const setBroadcastSubState = async ({meetingId, subState}: {meetingId: st
             meetingId: meetingId,
         },
         data: {
-            subState: subState
+            subState: subState,
         }
     });
     return updatedMetadata;
