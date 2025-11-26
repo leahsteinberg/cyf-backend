@@ -203,7 +203,9 @@ exports.Prisma.MeetingScalarFieldEnum = {
 exports.Prisma.BroadcastMetadataScalarFieldEnum = {
   id: 'id',
   meetingId: 'meetingId',
-  subState: 'subState'
+  subState: 'subState',
+  pendingAt: 'pendingAt',
+  offerClaimedId: 'offerClaimedId'
 };
 
 exports.Prisma.OfferScalarFieldEnum = {

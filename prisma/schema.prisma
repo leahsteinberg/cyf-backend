@@ -130,6 +130,8 @@ model BroadcastMetadata {
   meeting           Meeting           @relation(fields: [meetingId], references: [id], onDelete: Cascade)
   meetingId         String            @unique
   subState          BroadcastSubState @default(UNCLAIMED)
+  pendingAt         DateTime?
+  offerClaimedId    String?
 
   @@map("broadcast_metadata")
 }

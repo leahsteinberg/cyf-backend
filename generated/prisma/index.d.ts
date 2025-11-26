@@ -9735,18 +9735,24 @@ export namespace Prisma {
     id: string | null
     meetingId: string | null
     subState: $Enums.BroadcastSubState | null
+    pendingAt: Date | null
+    offerClaimedId: string | null
   }
 
   export type BroadcastMetadataMaxAggregateOutputType = {
     id: string | null
     meetingId: string | null
     subState: $Enums.BroadcastSubState | null
+    pendingAt: Date | null
+    offerClaimedId: string | null
   }
 
   export type BroadcastMetadataCountAggregateOutputType = {
     id: number
     meetingId: number
     subState: number
+    pendingAt: number
+    offerClaimedId: number
     _all: number
   }
 
@@ -9755,18 +9761,24 @@ export namespace Prisma {
     id?: true
     meetingId?: true
     subState?: true
+    pendingAt?: true
+    offerClaimedId?: true
   }
 
   export type BroadcastMetadataMaxAggregateInputType = {
     id?: true
     meetingId?: true
     subState?: true
+    pendingAt?: true
+    offerClaimedId?: true
   }
 
   export type BroadcastMetadataCountAggregateInputType = {
     id?: true
     meetingId?: true
     subState?: true
+    pendingAt?: true
+    offerClaimedId?: true
     _all?: true
   }
 
@@ -9846,6 +9858,8 @@ export namespace Prisma {
     id: string
     meetingId: string
     subState: $Enums.BroadcastSubState
+    pendingAt: Date | null
+    offerClaimedId: string | null
     _count: BroadcastMetadataCountAggregateOutputType | null
     _min: BroadcastMetadataMinAggregateOutputType | null
     _max: BroadcastMetadataMaxAggregateOutputType | null
@@ -9869,6 +9883,8 @@ export namespace Prisma {
     id?: boolean
     meetingId?: boolean
     subState?: boolean
+    pendingAt?: boolean
+    offerClaimedId?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["broadcastMetadata"]>
 
@@ -9876,6 +9892,8 @@ export namespace Prisma {
     id?: boolean
     meetingId?: boolean
     subState?: boolean
+    pendingAt?: boolean
+    offerClaimedId?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["broadcastMetadata"]>
 
@@ -9883,6 +9901,8 @@ export namespace Prisma {
     id?: boolean
     meetingId?: boolean
     subState?: boolean
+    pendingAt?: boolean
+    offerClaimedId?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["broadcastMetadata"]>
 
@@ -9890,9 +9910,11 @@ export namespace Prisma {
     id?: boolean
     meetingId?: boolean
     subState?: boolean
+    pendingAt?: boolean
+    offerClaimedId?: boolean
   }
 
-  export type BroadcastMetadataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "meetingId" | "subState", ExtArgs["result"]["broadcastMetadata"]>
+  export type BroadcastMetadataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "meetingId" | "subState" | "pendingAt" | "offerClaimedId", ExtArgs["result"]["broadcastMetadata"]>
   export type BroadcastMetadataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
   }
@@ -9912,6 +9934,8 @@ export namespace Prisma {
       id: string
       meetingId: string
       subState: $Enums.BroadcastSubState
+      pendingAt: Date | null
+      offerClaimedId: string | null
     }, ExtArgs["result"]["broadcastMetadata"]>
     composites: {}
   }
@@ -10339,6 +10363,8 @@ export namespace Prisma {
     readonly id: FieldRef<"BroadcastMetadata", 'String'>
     readonly meetingId: FieldRef<"BroadcastMetadata", 'String'>
     readonly subState: FieldRef<"BroadcastMetadata", 'BroadcastSubState'>
+    readonly pendingAt: FieldRef<"BroadcastMetadata", 'DateTime'>
+    readonly offerClaimedId: FieldRef<"BroadcastMetadata", 'String'>
   }
     
 
@@ -11963,7 +11989,9 @@ export namespace Prisma {
   export const BroadcastMetadataScalarFieldEnum: {
     id: 'id',
     meetingId: 'meetingId',
-    subState: 'subState'
+    subState: 'subState',
+    pendingAt: 'pendingAt',
+    offerClaimedId: 'offerClaimedId'
   };
 
   export type BroadcastMetadataScalarFieldEnum = (typeof BroadcastMetadataScalarFieldEnum)[keyof typeof BroadcastMetadataScalarFieldEnum]
@@ -12661,6 +12689,8 @@ export namespace Prisma {
     id?: StringFilter<"BroadcastMetadata"> | string
     meetingId?: StringFilter<"BroadcastMetadata"> | string
     subState?: EnumBroadcastSubStateFilter<"BroadcastMetadata"> | $Enums.BroadcastSubState
+    pendingAt?: DateTimeNullableFilter<"BroadcastMetadata"> | Date | string | null
+    offerClaimedId?: StringNullableFilter<"BroadcastMetadata"> | string | null
     meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
   }
 
@@ -12668,6 +12698,8 @@ export namespace Prisma {
     id?: SortOrder
     meetingId?: SortOrder
     subState?: SortOrder
+    pendingAt?: SortOrderInput | SortOrder
+    offerClaimedId?: SortOrderInput | SortOrder
     meeting?: MeetingOrderByWithRelationInput
   }
 
@@ -12678,6 +12710,8 @@ export namespace Prisma {
     OR?: BroadcastMetadataWhereInput[]
     NOT?: BroadcastMetadataWhereInput | BroadcastMetadataWhereInput[]
     subState?: EnumBroadcastSubStateFilter<"BroadcastMetadata"> | $Enums.BroadcastSubState
+    pendingAt?: DateTimeNullableFilter<"BroadcastMetadata"> | Date | string | null
+    offerClaimedId?: StringNullableFilter<"BroadcastMetadata"> | string | null
     meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
   }, "id" | "meetingId">
 
@@ -12685,6 +12719,8 @@ export namespace Prisma {
     id?: SortOrder
     meetingId?: SortOrder
     subState?: SortOrder
+    pendingAt?: SortOrderInput | SortOrder
+    offerClaimedId?: SortOrderInput | SortOrder
     _count?: BroadcastMetadataCountOrderByAggregateInput
     _max?: BroadcastMetadataMaxOrderByAggregateInput
     _min?: BroadcastMetadataMinOrderByAggregateInput
@@ -12697,6 +12733,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"BroadcastMetadata"> | string
     meetingId?: StringWithAggregatesFilter<"BroadcastMetadata"> | string
     subState?: EnumBroadcastSubStateWithAggregatesFilter<"BroadcastMetadata"> | $Enums.BroadcastSubState
+    pendingAt?: DateTimeNullableWithAggregatesFilter<"BroadcastMetadata"> | Date | string | null
+    offerClaimedId?: StringNullableWithAggregatesFilter<"BroadcastMetadata"> | string | null
   }
 
   export type OfferWhereInput = {
@@ -13363,6 +13401,8 @@ export namespace Prisma {
   export type BroadcastMetadataCreateInput = {
     id?: string
     subState?: $Enums.BroadcastSubState
+    pendingAt?: Date | string | null
+    offerClaimedId?: string | null
     meeting: MeetingCreateNestedOneWithoutBroadcastMetadataInput
   }
 
@@ -13370,11 +13410,15 @@ export namespace Prisma {
     id?: string
     meetingId: string
     subState?: $Enums.BroadcastSubState
+    pendingAt?: Date | string | null
+    offerClaimedId?: string | null
   }
 
   export type BroadcastMetadataUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
+    pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offerClaimedId?: NullableStringFieldUpdateOperationsInput | string | null
     meeting?: MeetingUpdateOneRequiredWithoutBroadcastMetadataNestedInput
   }
 
@@ -13382,23 +13426,31 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     meetingId?: StringFieldUpdateOperationsInput | string
     subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
+    pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offerClaimedId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BroadcastMetadataCreateManyInput = {
     id?: string
     meetingId: string
     subState?: $Enums.BroadcastSubState
+    pendingAt?: Date | string | null
+    offerClaimedId?: string | null
   }
 
   export type BroadcastMetadataUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
+    pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offerClaimedId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BroadcastMetadataUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     meetingId?: StringFieldUpdateOperationsInput | string
     subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
+    pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offerClaimedId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OfferCreateInput = {
@@ -13981,18 +14033,24 @@ export namespace Prisma {
     id?: SortOrder
     meetingId?: SortOrder
     subState?: SortOrder
+    pendingAt?: SortOrder
+    offerClaimedId?: SortOrder
   }
 
   export type BroadcastMetadataMaxOrderByAggregateInput = {
     id?: SortOrder
     meetingId?: SortOrder
     subState?: SortOrder
+    pendingAt?: SortOrder
+    offerClaimedId?: SortOrder
   }
 
   export type BroadcastMetadataMinOrderByAggregateInput = {
     id?: SortOrder
     meetingId?: SortOrder
     subState?: SortOrder
+    pendingAt?: SortOrder
+    offerClaimedId?: SortOrder
   }
 
   export type EnumBroadcastSubStateWithAggregatesFilter<$PrismaModel = never> = {
@@ -16015,11 +16073,15 @@ export namespace Prisma {
   export type BroadcastMetadataCreateWithoutMeetingInput = {
     id?: string
     subState?: $Enums.BroadcastSubState
+    pendingAt?: Date | string | null
+    offerClaimedId?: string | null
   }
 
   export type BroadcastMetadataUncheckedCreateWithoutMeetingInput = {
     id?: string
     subState?: $Enums.BroadcastSubState
+    pendingAt?: Date | string | null
+    offerClaimedId?: string | null
   }
 
   export type BroadcastMetadataCreateOrConnectWithoutMeetingInput = {
@@ -16175,11 +16237,15 @@ export namespace Prisma {
   export type BroadcastMetadataUpdateWithoutMeetingInput = {
     id?: StringFieldUpdateOperationsInput | string
     subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
+    pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offerClaimedId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BroadcastMetadataUncheckedUpdateWithoutMeetingInput = {
     id?: StringFieldUpdateOperationsInput | string
     subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
+    pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offerClaimedId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MeetingCreateWithoutBroadcastMetadataInput = {
