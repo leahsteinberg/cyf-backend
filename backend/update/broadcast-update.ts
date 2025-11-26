@@ -1,7 +1,7 @@
 import type { BroadcastMetadata, BroadcastSubState } from "../../types.js";
 import { prisma } from "../auth.js";
 
-export const setBroadcastPending = async ({meetingId}: {meetingId: string}) => {
+export const setBroadcastPending = async ({meetingId, offerClaimedId}: {meetingId: string, offerClaimedId: string}) => {
     const updatedMetadata = await prisma.broadcastMetadata.update({
         where: {
             meetingId: meetingId,
@@ -9,6 +9,7 @@ export const setBroadcastPending = async ({meetingId}: {meetingId: string}) => {
         data: {
             subState: "PENDING_CLAIMED",
             pendingAt: new Date(),
+            offerClaimedId,
         }
     });
     return updatedMetadata;
@@ -37,6 +38,7 @@ export const setBroadcastUnclaimed = async ({meetingId}: {meetingId: string}) =>
         data: {
             subState: "UNCLAIMED",
             pendingAt: null,
+            offerClaimedId: null,
         }
     });
     return updatedMetadata;

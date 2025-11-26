@@ -104,14 +104,15 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
         const broadcastSubState = meeting?.broadcastMetadata?.subState;
 
         if (broadcastSubState) {
-            if (broadcastSubState === 'CLAIMED') {
+
+            } if (broadcastSubState === 'UNCLAIMED') {
+                
+
+            } else if (broadcastSubState === 'CLAIMED') {
 
             } else if ( broadcastSubState === 'PENDING_CLAIMED') {
 
 
-            } else if (broadcastSubState === 'UNCLAIMED') {
-                await setBroadcastSubState({meetingId: meeting.id, subState: 'PENDING_CLAIMED'});
-            }
         }
 
         

@@ -18,6 +18,8 @@ export interface User extends BaseEntity {
 export interface BroadcastMetadata extends BaseEntity {
     meetingId: string;
     subState: BroadcastSubState;
+    pendingAt: Date | null,
+    offerClaimedId: string | null,
 }
 
 export interface Meeting extends BaseEntity {
