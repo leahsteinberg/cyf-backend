@@ -16,7 +16,7 @@ export const setBroadcastPending = async ({meetingId, offerClaimedId}: {meetingI
 };
 
 
-export const setBroadcastClaimed = async ({meetingId}: {meetingId: string}) => {
+export const setBroadcastClaimed = async ({meetingId, offerClaimedId}: {meetingId: string, offerClaimedId: string}) => {
     const updatedMetadata = await prisma.broadcastMetadata.update({
         where: {
             meetingId: meetingId,
@@ -24,6 +24,7 @@ export const setBroadcastClaimed = async ({meetingId}: {meetingId: string}) => {
         data: {
             subState: "CLAIMED",
             pendingAt: null,
+            offerClaimedId,
         }
     });
     return updatedMetadata;

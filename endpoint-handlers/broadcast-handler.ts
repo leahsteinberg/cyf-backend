@@ -7,7 +7,7 @@ import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { deleteBroadcastedMeeting, findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
-import { setBroadcastClaimed } from '../backend/update/broadcast-update.js';
+import { setBroadcastClaimed, setBroadcastUnclaimed } from '../backend/update/broadcast-update.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -91,26 +91,26 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
 
         const { offer, meeting } = validation;
 
-        // Check if the offer is still open
+            // Check if the offer is still open
         if (offer.offerState !== 'OPEN') {
-            return res.status(400).json({
+            return {
+                valid: false,
                 error: "Offer is no longer available",
-                canAccept: false,
-                offerState: offer.offerState
-            });
+                statusCode: 403
+            };
         }
 
         const broadcastSubState = meeting.broadcastMetadata?.subState;
         let canAccept = false;
 
         if (broadcastSubState === 'UNCLAIMED') {
+            await tryAcceptUnclaimedBroadcast({meeting: meeting, offerId: offer.id})
             canAccept = true;
         } else if (broadcastSubState === 'CLAIMED') {
             canAccept = false;
         } else if (broadcastSubState === 'PENDING_CLAIMED') {
             // Check if this user has the pending claim
             if (meeting.broadcastMetadata?.offerClaimedId === offerId) {
-                await tryAcceptUnclaimedBroadcast({meeting: meeting, offerId: offer.id})
                 canAccept = true;
             } else {
                 canAccept = false;
@@ -143,11 +143,22 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
 
         const { offer, meeting } = validation;
 
+            // Check if the offer is still open
+        if (offer.offerState !== 'OPEN') {
+            return {
+                valid: false,
+                error: "Offer is no longer available",
+                statusCode: 403
+            };
+        }
+
         // Check broadcast state and update if needed
         const broadcastSubState = meeting.broadcastMetadata?.subState;
 
         if (broadcastSubState === 'UNCLAIMED') {
-            await setBroadcastSubState({meetingId: meeting.id, subState: 'PENDING_CLAIMED'});
+            return res.status(400).json({
+                error: "This broadcast must be pending-claimed before it can be claimed."
+            });
         } else if (broadcastSubState === 'PENDING_CLAIMED') {
             // Verify this user has the pending claim
             if (meeting.broadcastMetadata?.offerClaimedId !== offerId) {
@@ -155,6 +166,7 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
                     error: "This broadcast is pending acceptance by another user"
                 });
             }
+
         } else if (broadcastSubState === 'CLAIMED') {
             return res.status(400).json({
                 error: "This broadcast has already been claimed"
@@ -162,6 +174,7 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
         }
 
         // Use the existing acceptOffer logic
+        await setBroadcastClaimed({meetingId: meeting.id, offerClaimedId: offer.id})
         const acceptedOffer = await acceptOffer({ userId, offerId });
 
         res.json({
@@ -185,9 +198,11 @@ export const handleRejectBroadcast = async (req: Request, res: Response) => {
         if (!validation.valid) {
             return res.status(validation.statusCode).json({ error: validation.error });
         }
+        const { meeting } = validation;
 
         // Reject the broadcast offer
         const rejectedOffer = await rejectOffer({ offerId });
+        await setBroadcastUnclaimed({meetingId: meeting.id});
 
         res.json({
             success: true,
