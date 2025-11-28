@@ -1,12 +1,13 @@
 import type { Request, Response } from 'express';
-import { createMeeting, setBroadcastSubState } from '../backend/update/meeting-update.js';
+import { createMeeting } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
-import { processNewBroadcastMeeting, validateBroadcastRequest } from '../backend/process-broadcast.js';
+import { processNewBroadcastMeeting, tryAcceptUnclaimedBroadcast, validateBroadcastRequest } from '../backend/process-broadcast.js';
 import { acceptOffer, rejectOffer } from '../backend/offer.js';
 import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { deleteBroadcastedMeeting, findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
+import { setBroadcastClaimed } from '../backend/update/broadcast-update.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -109,6 +110,7 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
         } else if (broadcastSubState === 'PENDING_CLAIMED') {
             // Check if this user has the pending claim
             if (meeting.broadcastMetadata?.offerClaimedId === offerId) {
+                await tryAcceptUnclaimedBroadcast({meeting: meeting, offerId: offer.id})
                 canAccept = true;
             } else {
                 canAccept = false;

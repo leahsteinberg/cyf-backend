@@ -40,6 +40,15 @@ export const validateBroadcastRequest = async (
         };
     }
 
+    // Check if the offer is still open
+    if (offer.offerState !== 'OPEN') {
+        return res.status(400).json({
+            error: "Offer is no longer available",
+            canAccept: false,
+            offerState: offer.offerState
+        });
+    }
+
     // Check if meeting exists
     const meeting = await getMeetingById({ meetingId: offer.meetingId });
     if (!meeting) {
