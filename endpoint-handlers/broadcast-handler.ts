@@ -201,8 +201,9 @@ export const handleRejectBroadcast = async (req: Request, res: Response) => {
         const { meeting } = validation;
 
         // Reject the broadcast offer
-        const rejectedOffer = await rejectOffer({ offerId });
         await setBroadcastUnclaimed({meetingId: meeting.id});
+        const rejectedOffer = await rejectOffer({ offerId });
+
 
         res.json({
             success: true,
