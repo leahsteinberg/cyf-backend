@@ -3,7 +3,7 @@ import express from 'express';
 import { toNodeHandler } from "better-auth/node"; 
 import cors from 'cors';
 import { handleMe, handleSignIn, handleSignUpPhone, handleSignOut } from './endpoint-handlers/auth-handler.js';
-import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites } from './endpoint-handlers/invite-handler.js';
+import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites, handleGetFriendInvites } from './endpoint-handlers/invite-handler.js';
 import { handleGetUserByPhone } from './endpoint-handlers/user-handler.js';
 import { handleGetFriends } from './endpoint-handlers/friend-handler.js';
 import { handleCreateMeeting, handleGetMeetings, handleDeleteMeeting } from './endpoint-handlers/meeting-handler.js';
@@ -43,6 +43,7 @@ app.post('/api/user-by-phone', handleGetUserByPhone);
 app.post('/api/create-invite', handleCreateInvite);
 app.post('/api/sign-up-accept-invite', handleInviteSignUp);
 app.post('/api/get-sent-invites', handleGetSentInvites);
+app.post('/api/get-friend-invites', handleGetFriendInvites);
 // TODO *** app.post('/api/sign-in-accept-invite, ()=>{})
 
 

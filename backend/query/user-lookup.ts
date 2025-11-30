@@ -62,3 +62,16 @@ export const getIsBroadcasting = async ({ userId }: { userId: string }): Promise
 
     return user?.isBroadcasting ?? false;
 };
+
+export const getUserPhoneNumber = async ({ userId }: { userId: string }): Promise<string | null> => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId
+        },
+        select: {
+            phoneNumber: true
+        }
+    });
+
+    return user?.phoneNumber ?? null;
+};

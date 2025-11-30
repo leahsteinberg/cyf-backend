@@ -1,9 +1,9 @@
 import { createFriendship } from "../backend/update/friendship-update.js";
-import { findUserByPhone } from "../backend/query/user-lookup.js";
+import { findUserByPhone, getUserPhoneNumber } from "../backend/query/user-lookup.js";
 import { createUser } from "../backend/user.js";
 import type { Request, Response } from 'express';
 import { createInvite } from "../backend/update/invite-update.js";
-import { findInvite, getSentInvites } from "../backend/query/invite-lookup.js";
+import { findInvite, getSentInvites, getFriendInvites } from "../backend/query/invite-lookup.js";
 
 
 export const handleCreateInvite = async (req: Request, res: Response) => {
@@ -34,3 +34,15 @@ export const handleGetSentInvites = async(req: Request, res: Response) => {
     const sentInvites = await getSentInvites({userFromId: id})
     res.json(sentInvites);// TODO - switch to res.json()?
   };
+
+export const handleGetFriendInvites = async(req: Request, res: Response) => {
+    const {id} = req.body;
+    const phoneNumber = await getUserPhoneNumber({userId: id});
+
+    if (!phoneNumber) {
+        return res.status(404).json({ error: "User not found or phone number not set" });
+    }
+
+    const friendInvites = await getFriendInvites({userToPhoneNumber: phoneNumber});
+    res.json(friendInvites);
+};

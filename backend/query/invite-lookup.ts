@@ -16,3 +16,12 @@ export const getSentInvites = async ({userFromId}: {userFromId: string}) => {
     });
     return sentInvites;
 };
+
+export const getFriendInvites = async ({userToPhoneNumber}: {userToPhoneNumber: string}) => {
+    const friendInvites = await prisma.invitation.findMany({
+        where: {
+            userToPhoneNumber
+        }
+    });
+    return friendInvites;
+};
