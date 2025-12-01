@@ -21,7 +21,14 @@ export const getFriendInvites = async ({userToPhoneNumber}: {userToPhoneNumber: 
     const friendInvites = await prisma.invitation.findMany({
         where: {
             userToPhoneNumber
-        }
+        },
+        include: {
+            userFrom: {
+                select: {
+                    name: true,
+                },
+            },
+        },
     });
     return friendInvites;
 };
