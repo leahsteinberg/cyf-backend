@@ -26,6 +26,7 @@ export const getFriendInvites = async ({userToPhoneNumber}: {userToPhoneNumber: 
             userFrom: {
                 select: {
                     name: true,
+                    phoneNumber: true,
                 },
             },
         },
