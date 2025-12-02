@@ -105,7 +105,15 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
 
         if (broadcastSubState === 'UNCLAIMED') {
             await tryAcceptUnclaimedBroadcast({meeting: meeting, offerId: offer.id})
-            canAccept = true;
+
+            if (meeting.broadcastMetadata?.offerClaimedId === offerId) {
+                canAccept = true;
+            } else {
+                canAccept = false;
+                return res.status(403).json({
+                    error: "This broadcast is pending acceptance by another user"
+                });
+            }
         } else if (broadcastSubState === 'CLAIMED') {
             canAccept = false;
         } else if (broadcastSubState === 'PENDING_CLAIMED') {
@@ -114,6 +122,9 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
                 canAccept = true;
             } else {
                 canAccept = false;
+                return res.status(403).json({
+                    error: "This broadcast is pending acceptance by another user"
+                });
             }
         }
 
