@@ -1,6 +1,6 @@
 import type { Meeting, MeetingState, MeetingType, BroadcastSubState, BroadcastMetadata } from "../../types.js";
 import { prisma } from "../auth.js";
-import { ACCEPTED_MEETING_STATE } from "../utils.js";
+import { ACCEPTED_MEETING_STATE, SEARCHING_MEETING_STATE } from "../utils.js";
 
 export const createMeeting = async (
     { userFromId, scheduledFor, scheduledEnd, title, meetingType }
@@ -55,6 +55,31 @@ export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string
             acceptedUserId: userId,
         }
     })
+    return updatedMeeting;
+};
+
+export const unclaimBroadcastMeeting = async ({meetingId}: {meetingId: string}): Promise<Meeting> => {
+    // Update meeting to searching state with no accepted user
+    // Also update broadcast metadata to unclaimed
+    const updatedMeeting = await prisma.meeting.update({
+        where: {
+            id: meetingId,
+        },
+        data: {
+            meetingState: SEARCHING_MEETING_STATE,
+            acceptedUserId: null,
+            broadcastMetadata: {
+                update: {
+                    subState: 'UNCLAIMED',
+                    pendingAt: null,
+                    offerClaimedId: null
+                }
+            }
+        },
+        include: {
+            broadcastMetadata: true
+        }
+    });
     return updatedMeeting;
 };
 
