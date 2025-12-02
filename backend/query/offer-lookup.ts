@@ -19,7 +19,8 @@ export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offe
                             username: true,
                             displayUsername: true
                         }
-                    }
+                    },
+                    broadcastMetadata: true,
                 }
             }
         },
