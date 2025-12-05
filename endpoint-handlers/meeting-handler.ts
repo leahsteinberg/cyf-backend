@@ -8,6 +8,45 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
   const {userFromId, scheduledEnd, scheduledFor, title} = req.body;
 
   try {
+    // Check if user already has any active meetings (created or accepted) that overlap with the requested time
+    const createdMeetings = await getCreatedMeetings({userFromId});
+    const acceptedMeetings = await getAcceptedMeetings({acceptedUserId: userFromId});
+
+    const newMeetingStart = new Date(scheduledFor);
+    const newMeetingEnd = new Date(scheduledEnd);
+
+    // Helper function to check time overlap
+    const hasTimeOverlap = (existingStart: Date, existingEnd: Date) => {
+      return (newMeetingStart < existingEnd && newMeetingEnd > existingStart);
+    };
+
+    // Filter out PAST meetings and BROADCAST meetings, then check for time conflicts
+    const conflictingCreatedMeeting = createdMeetings.find(m =>
+      m.meetingState !== 'PAST' &&
+      m.meetingType !== 'BROADCAST' &&
+      hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd))
+    );
+
+    const conflictingAcceptedMeeting = acceptedMeetings.find(m =>
+      m.meetingState !== 'PAST' &&
+      m.meetingType !== 'BROADCAST' &&
+      hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd))
+    );
+
+    if (conflictingCreatedMeeting) {
+      return res.status(409).json({
+        error: "You already have a meeting you created at this time",
+        existingMeeting: conflictingCreatedMeeting
+      });
+    }
+
+    if (conflictingAcceptedMeeting) {
+      return res.status(409).json({
+        error: "You already have a meeting you accepted at this time",
+        existingMeeting: conflictingAcceptedMeeting
+      });
+    }
+
     const meeting = await createMeeting({userFromId, scheduledEnd, scheduledFor, title, meetingType: 'ADVANCE'});
 
     // Validate meeting was created successfully
