@@ -18,6 +18,19 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
     }
 
     try {
+        // Check if user already has an active broadcast
+        const createdMeetings = await getCreatedMeetings({userFromId: userId});
+        const activeBroadcast = createdMeetings.find(m =>
+            m.meetingType === 'BROADCAST' && m.meetingState !== 'PAST'
+        );
+
+        if (activeBroadcast) {
+            return res.status(409).json({
+                error: "You already have an active broadcast",
+                existingBroadcast: activeBroadcast
+            });
+        }
+
         const scheduledFor = new Date();
         const scheduledEnd = addHour(scheduledFor);
 
