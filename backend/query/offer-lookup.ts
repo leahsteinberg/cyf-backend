@@ -20,6 +20,15 @@ export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offe
                             displayUsername: true
                         }
                     },
+                    acceptedUser: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            username: true,
+                            displayUsername: true
+                        }
+                    },
                     broadcastMetadata: true,
                 }
             }
@@ -36,6 +45,40 @@ export const getOfferById = async ({offerId}: {offerId: string}): Promise<Offer 
         where:
         {
             id: offerId
+        },
+        include: {
+            meeting: {
+                include: {
+                    userFrom: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            username: true,
+                            displayUsername: true
+                        }
+                    },
+                    acceptedUser: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            username: true,
+                            displayUsername: true
+                        }
+                    },
+                    broadcastMetadata: true
+                }
+            },
+            userOffered: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            }
         }
     });
     return offer;
@@ -45,6 +88,17 @@ export const getMeetingOffers = async ({meetingId}: {meetingId: string}): Promis
     const offers = await prisma.offer.findMany({
         where: {
             meetingId
+        },
+        include: {
+            userOffered: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            }
         }
     })
     return offers;

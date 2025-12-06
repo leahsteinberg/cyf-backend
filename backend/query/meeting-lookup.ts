@@ -15,6 +15,15 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
                     email: true,
                 }
             },
+            acceptedUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            },
             broadcastMetadata: true
         }
     });
@@ -73,6 +82,15 @@ export const getAllSearchingMeetings = async (): Promise<Meeting[]> => {
             meetingState: SEARCHING_MEETING_STATE,
         },
         include: {
+            userFrom: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            },
             broadcastMetadata: true
         }
     });
@@ -93,6 +111,24 @@ export const getMeetingById = async ({meetingId}: {meetingId: string}): Promise<
     const meeting = await prisma.meeting.findUnique({
         where: { id: meetingId },
         include: {
+            userFrom: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            },
+            acceptedUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            },
             broadcastMetadata: true
         }
     });
