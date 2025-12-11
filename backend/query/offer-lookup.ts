@@ -1,6 +1,6 @@
 import { prisma } from "../auth.js";
 import type { Offer } from '../../types.js';
-import { OPEN_OFFER_STATE } from "../utils.js";
+import { ACCEPTED_OFFER_STATE, OPEN_OFFER_STATE } from "../utils.js";
 
 export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offer[]> => {
     const offers = await prisma.offer.findMany({
@@ -102,4 +102,48 @@ export const getMeetingOffers = async ({meetingId}: {meetingId: string}): Promis
         }
     })
     return offers;
+};
+
+export const getAcceptedOfferByMeetingId = async ({meetingId}: {meetingId: string}): Promise<Offer | null> => {
+    const offer = await prisma.offer.findFirst({
+        where: {
+            meetingId,
+            offerState: ACCEPTED_OFFER_STATE
+        },
+        include: {
+            meeting: {
+                include: {
+                    userFrom: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            username: true,
+                            displayUsername: true
+                        }
+                    },
+                    acceptedUser: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            username: true,
+                            displayUsername: true
+                        }
+                    },
+                    broadcastMetadata: true
+                }
+            },
+            userOffered: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            }
+        }
+    });
+    return offer;
 };

@@ -9,6 +9,7 @@ import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
 import { setBroadcastClaimed, setBroadcastUnclaimed } from '../backend/update/broadcast-update.js';
 import { setOfferOpen } from '../backend/update/offer-update.js';
+import { getAcceptedOfferByMeetingId } from '../backend/query/offer-lookup.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -220,13 +221,13 @@ export const handleRejectBroadcast = async (req: Request, res: Response) => {
 
         // Reject the broadcast offer
         await setBroadcastUnclaimed({meetingId: meeting.id});
-        const openOffer = await setOfferOpen({offerId})
+        // TODO - figure out what this should do/...
         //const rejectedOffer = await rejectOffer({ offerId });
 
 
         res.json({
             success: true,
-            offer: openOffer
+            offer: offer
         });
     } catch (error) {
         console.error("Error rejecting broadcast:", error);
@@ -279,12 +280,21 @@ export const handleCancelBroadcastAcceptance = async (req: Request, res: Respons
             return res.status(403).json({ error: "You are not the user who accepted this broadcast" });
         }
 
+        // Get the accepted offer for this meeting
+        const acceptedOffer = await getAcceptedOfferByMeetingId({ meetingId });
+
+        if (!acceptedOffer) {
+            return res.status(404).json({ error: "No accepted offer found for this meeting" });
+        }
+
         // Unclaim the broadcast - sets meeting back to SEARCHING, clears acceptedUserId, sets broadcast to UNCLAIMED
         const unclaimedMeeting = await unclaimBroadcastMeeting({ meetingId });
+        const openOffer = await setOfferOpen({ offerId: acceptedOffer.id });
 
         res.json({
             success: true,
-            meeting: unclaimedMeeting
+            meeting: unclaimedMeeting,
+            offer: openOffer
         });
     } catch (error) {
         console.error("Error canceling broadcast acceptance:", error);
