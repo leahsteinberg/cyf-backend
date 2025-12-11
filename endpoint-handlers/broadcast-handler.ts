@@ -215,16 +215,16 @@ export const handleRejectBroadcast = async (req: Request, res: Response) => {
         if (!validation.valid) {
             return res.status(validation.statusCode).json({ error: validation.error });
         }
-        const { meeting } = validation;
+        const { meeting, offer } = validation;
 
         // Reject the broadcast offer
         await setBroadcastUnclaimed({meetingId: meeting.id});
-        const rejectedOffer = await rejectOffer({ offerId });
+        //const rejectedOffer = await rejectOffer({ offerId });
 
 
         res.json({
             success: true,
-            offer: rejectedOffer
+            offer: offer
         });
     } catch (error) {
         console.error("Error rejecting broadcast:", error);
