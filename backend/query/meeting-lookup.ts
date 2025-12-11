@@ -24,7 +24,23 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
                     displayUsername: true
                 }
             },
-            broadcastMetadata: true
+            broadcastMetadata: {
+                include: {
+                    offerClaimed: {
+                        include: {
+                            userOffered: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    username: true,
+                                    displayUsername: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     });
     return meeting;
@@ -45,7 +61,23 @@ export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Pr
                     displayUsername: true
                 },
             },
-            broadcastMetadata: true
+            broadcastMetadata: {
+                include: {
+                    offerClaimed: {
+                        include: {
+                            userOffered: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    username: true,
+                                    displayUsername: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
     });
 
@@ -68,7 +100,23 @@ export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: str
                     displayUsername: true
                 },
             },
-            broadcastMetadata: true
+            broadcastMetadata: {
+                include: {
+                    offerClaimed: {
+                        include: {
+                            userOffered: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    username: true,
+                                    displayUsername: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
     });
 
@@ -91,7 +139,23 @@ export const getAllSearchingMeetings = async (): Promise<Meeting[]> => {
                     displayUsername: true
                 }
             },
-            broadcastMetadata: true
+            broadcastMetadata: {
+                include: {
+                    offerClaimed: {
+                        include: {
+                            userOffered: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    username: true,
+                                    displayUsername: true
+                                }
+                            }
+                        }
+                    }
+                }
+            },
         }
     });
     return meetings;
@@ -129,7 +193,23 @@ export const getMeetingById = async ({meetingId}: {meetingId: string}): Promise<
                     displayUsername: true
                 }
             },
-            broadcastMetadata: true
+            broadcastMetadata: {
+                include: {
+                    offerClaimed: {
+                        include: {
+                            userOffered: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    username: true,
+                                    displayUsername: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     });
     return meeting;
@@ -140,7 +220,23 @@ export const getUserFromMeetingId = async (meetingId: string): Promise<User | nu
         where: { id: meetingId },
         include: {
             userFrom: true,
-            broadcastMetadata: true
+            broadcastMetadata: {
+                include: {
+                    offerClaimed: {
+                        include: {
+                            userOffered: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    username: true,
+                                    displayUsername: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     });
     return meeting?.userFrom ?? null;

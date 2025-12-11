@@ -131,21 +131,23 @@ model BroadcastMetadata {
   meetingId      String            @unique
   subState       BroadcastSubState @default(UNCLAIMED)
   pendingAt      DateTime?
+  offerClaimed   Offer?            @relation("broadcastClaimed", fields: [offerClaimedId], references: [id])
   offerClaimedId String?
 
   @@map("broadcast_metadata")
 }
 
 model Offer {
-  id            String      @id @default(uuid())
-  meeting       Meeting     @relation("offers", fields: [meetingId], references: [id])
-  meetingId     String
-  userOffered   User        @relation("offersReceived", fields: [userOfferedId], references: [id])
-  userOfferedId String
-  offerState    OfferState  @default(OPEN)
-  createdAt     DateTime    @default(now())
-  expiresAt     DateTime
-  offerType     MeetingType @default(ADVANCE)
+  id              String              @id @default(uuid())
+  meeting         Meeting             @relation("offers", fields: [meetingId], references: [id])
+  meetingId       String
+  userOffered     User                @relation("offersReceived", fields: [userOfferedId], references: [id])
+  userOfferedId   String
+  offerState      OfferState          @default(OPEN)
+  createdAt       DateTime            @default(now())
+  expiresAt       DateTime
+  offerType       MeetingType         @default(ADVANCE)
+  broadcastClaims BroadcastMetadata[] @relation("broadcastClaimed")
 
   @@map("offer")
 }

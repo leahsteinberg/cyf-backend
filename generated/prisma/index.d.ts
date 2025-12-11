@@ -1767,6 +1767,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type OfferCountOutputType
+   */
+
+  export type OfferCountOutputType = {
+    broadcastClaims: number
+  }
+
+  export type OfferCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    broadcastClaims?: boolean | OfferCountOutputTypeCountBroadcastClaimsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * OfferCountOutputType without action
+   */
+  export type OfferCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfferCountOutputType
+     */
+    select?: OfferCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * OfferCountOutputType without action
+   */
+  export type OfferCountOutputTypeCountBroadcastClaimsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BroadcastMetadataWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -9886,6 +9917,7 @@ export namespace Prisma {
     pendingAt?: boolean
     offerClaimedId?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    offerClaimed?: boolean | BroadcastMetadata$offerClaimedArgs<ExtArgs>
   }, ExtArgs["result"]["broadcastMetadata"]>
 
   export type BroadcastMetadataSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9895,6 +9927,7 @@ export namespace Prisma {
     pendingAt?: boolean
     offerClaimedId?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    offerClaimed?: boolean | BroadcastMetadata$offerClaimedArgs<ExtArgs>
   }, ExtArgs["result"]["broadcastMetadata"]>
 
   export type BroadcastMetadataSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9904,6 +9937,7 @@ export namespace Prisma {
     pendingAt?: boolean
     offerClaimedId?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    offerClaimed?: boolean | BroadcastMetadata$offerClaimedArgs<ExtArgs>
   }, ExtArgs["result"]["broadcastMetadata"]>
 
   export type BroadcastMetadataSelectScalar = {
@@ -9917,18 +9951,22 @@ export namespace Prisma {
   export type BroadcastMetadataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "meetingId" | "subState" | "pendingAt" | "offerClaimedId", ExtArgs["result"]["broadcastMetadata"]>
   export type BroadcastMetadataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    offerClaimed?: boolean | BroadcastMetadata$offerClaimedArgs<ExtArgs>
   }
   export type BroadcastMetadataIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    offerClaimed?: boolean | BroadcastMetadata$offerClaimedArgs<ExtArgs>
   }
   export type BroadcastMetadataIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
+    offerClaimed?: boolean | BroadcastMetadata$offerClaimedArgs<ExtArgs>
   }
 
   export type $BroadcastMetadataPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "BroadcastMetadata"
     objects: {
       meeting: Prisma.$MeetingPayload<ExtArgs>
+      offerClaimed: Prisma.$OfferPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10331,6 +10369,7 @@ export namespace Prisma {
   export interface Prisma__BroadcastMetadataClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     meeting<T extends MeetingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MeetingDefaultArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    offerClaimed<T extends BroadcastMetadata$offerClaimedArgs<ExtArgs> = {}>(args?: Subset<T, BroadcastMetadata$offerClaimedArgs<ExtArgs>>): Prisma__OfferClient<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10761,6 +10800,25 @@ export namespace Prisma {
   }
 
   /**
+   * BroadcastMetadata.offerClaimed
+   */
+  export type BroadcastMetadata$offerClaimedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Offer
+     */
+    select?: OfferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Offer
+     */
+    omit?: OfferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfferInclude<ExtArgs> | null
+    where?: OfferWhereInput
+  }
+
+  /**
    * BroadcastMetadata without action
    */
   export type BroadcastMetadataDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10961,6 +11019,8 @@ export namespace Prisma {
     offerType?: boolean
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
     userOffered?: boolean | UserDefaultArgs<ExtArgs>
+    broadcastClaims?: boolean | Offer$broadcastClaimsArgs<ExtArgs>
+    _count?: boolean | OfferCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["offer"]>
 
   export type OfferSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11001,6 +11061,8 @@ export namespace Prisma {
   export type OfferInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
     userOffered?: boolean | UserDefaultArgs<ExtArgs>
+    broadcastClaims?: boolean | Offer$broadcastClaimsArgs<ExtArgs>
+    _count?: boolean | OfferCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OfferIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meeting?: boolean | MeetingDefaultArgs<ExtArgs>
@@ -11016,6 +11078,7 @@ export namespace Prisma {
     objects: {
       meeting: Prisma.$MeetingPayload<ExtArgs>
       userOffered: Prisma.$UserPayload<ExtArgs>
+      broadcastClaims: Prisma.$BroadcastMetadataPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11421,6 +11484,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     meeting<T extends MeetingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MeetingDefaultArgs<ExtArgs>>): Prisma__MeetingClient<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     userOffered<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    broadcastClaims<T extends Offer$broadcastClaimsArgs<ExtArgs> = {}>(args?: Subset<T, Offer$broadcastClaimsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BroadcastMetadataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11850,6 +11914,30 @@ export namespace Prisma {
      * Limit how many Offers to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Offer.broadcastClaims
+   */
+  export type Offer$broadcastClaimsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BroadcastMetadata
+     */
+    select?: BroadcastMetadataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BroadcastMetadata
+     */
+    omit?: BroadcastMetadataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BroadcastMetadataInclude<ExtArgs> | null
+    where?: BroadcastMetadataWhereInput
+    orderBy?: BroadcastMetadataOrderByWithRelationInput | BroadcastMetadataOrderByWithRelationInput[]
+    cursor?: BroadcastMetadataWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BroadcastMetadataScalarFieldEnum | BroadcastMetadataScalarFieldEnum[]
   }
 
   /**
@@ -12692,6 +12780,7 @@ export namespace Prisma {
     pendingAt?: DateTimeNullableFilter<"BroadcastMetadata"> | Date | string | null
     offerClaimedId?: StringNullableFilter<"BroadcastMetadata"> | string | null
     meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
+    offerClaimed?: XOR<OfferNullableScalarRelationFilter, OfferWhereInput> | null
   }
 
   export type BroadcastMetadataOrderByWithRelationInput = {
@@ -12701,6 +12790,7 @@ export namespace Prisma {
     pendingAt?: SortOrderInput | SortOrder
     offerClaimedId?: SortOrderInput | SortOrder
     meeting?: MeetingOrderByWithRelationInput
+    offerClaimed?: OfferOrderByWithRelationInput
   }
 
   export type BroadcastMetadataWhereUniqueInput = Prisma.AtLeast<{
@@ -12713,6 +12803,7 @@ export namespace Prisma {
     pendingAt?: DateTimeNullableFilter<"BroadcastMetadata"> | Date | string | null
     offerClaimedId?: StringNullableFilter<"BroadcastMetadata"> | string | null
     meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
+    offerClaimed?: XOR<OfferNullableScalarRelationFilter, OfferWhereInput> | null
   }, "id" | "meetingId">
 
   export type BroadcastMetadataOrderByWithAggregationInput = {
@@ -12750,6 +12841,7 @@ export namespace Prisma {
     offerType?: EnumMeetingTypeFilter<"Offer"> | $Enums.MeetingType
     meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
     userOffered?: XOR<UserScalarRelationFilter, UserWhereInput>
+    broadcastClaims?: BroadcastMetadataListRelationFilter
   }
 
   export type OfferOrderByWithRelationInput = {
@@ -12762,6 +12854,7 @@ export namespace Prisma {
     offerType?: SortOrder
     meeting?: MeetingOrderByWithRelationInput
     userOffered?: UserOrderByWithRelationInput
+    broadcastClaims?: BroadcastMetadataOrderByRelationAggregateInput
   }
 
   export type OfferWhereUniqueInput = Prisma.AtLeast<{
@@ -12777,6 +12870,7 @@ export namespace Prisma {
     offerType?: EnumMeetingTypeFilter<"Offer"> | $Enums.MeetingType
     meeting?: XOR<MeetingScalarRelationFilter, MeetingWhereInput>
     userOffered?: XOR<UserScalarRelationFilter, UserWhereInput>
+    broadcastClaims?: BroadcastMetadataListRelationFilter
   }, "id">
 
   export type OfferOrderByWithAggregationInput = {
@@ -13402,8 +13496,8 @@ export namespace Prisma {
     id?: string
     subState?: $Enums.BroadcastSubState
     pendingAt?: Date | string | null
-    offerClaimedId?: string | null
     meeting: MeetingCreateNestedOneWithoutBroadcastMetadataInput
+    offerClaimed?: OfferCreateNestedOneWithoutBroadcastClaimsInput
   }
 
   export type BroadcastMetadataUncheckedCreateInput = {
@@ -13418,8 +13512,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
     pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    offerClaimedId?: NullableStringFieldUpdateOperationsInput | string | null
     meeting?: MeetingUpdateOneRequiredWithoutBroadcastMetadataNestedInput
+    offerClaimed?: OfferUpdateOneWithoutBroadcastClaimsNestedInput
   }
 
   export type BroadcastMetadataUncheckedUpdateInput = {
@@ -13442,7 +13536,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
     pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    offerClaimedId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BroadcastMetadataUncheckedUpdateManyInput = {
@@ -13461,6 +13554,7 @@ export namespace Prisma {
     offerType?: $Enums.MeetingType
     meeting: MeetingCreateNestedOneWithoutOffersInput
     userOffered: UserCreateNestedOneWithoutOffersReceivedInput
+    broadcastClaims?: BroadcastMetadataCreateNestedManyWithoutOfferClaimedInput
   }
 
   export type OfferUncheckedCreateInput = {
@@ -13471,6 +13565,7 @@ export namespace Prisma {
     createdAt?: Date | string
     expiresAt: Date | string
     offerType?: $Enums.MeetingType
+    broadcastClaims?: BroadcastMetadataUncheckedCreateNestedManyWithoutOfferClaimedInput
   }
 
   export type OfferUpdateInput = {
@@ -13481,6 +13576,7 @@ export namespace Prisma {
     offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     meeting?: MeetingUpdateOneRequiredWithoutOffersNestedInput
     userOffered?: UserUpdateOneRequiredWithoutOffersReceivedNestedInput
+    broadcastClaims?: BroadcastMetadataUpdateManyWithoutOfferClaimedNestedInput
   }
 
   export type OfferUncheckedUpdateInput = {
@@ -13491,6 +13587,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    broadcastClaims?: BroadcastMetadataUncheckedUpdateManyWithoutOfferClaimedNestedInput
   }
 
   export type OfferCreateManyInput = {
@@ -14029,6 +14126,11 @@ export namespace Prisma {
     isNot?: MeetingWhereInput
   }
 
+  export type OfferNullableScalarRelationFilter = {
+    is?: OfferWhereInput | null
+    isNot?: OfferWhereInput | null
+  }
+
   export type BroadcastMetadataCountOrderByAggregateInput = {
     id?: SortOrder
     meetingId?: SortOrder
@@ -14068,6 +14170,16 @@ export namespace Prisma {
     in?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
     notIn?: $Enums.OfferState[] | ListEnumOfferStateFieldRefInput<$PrismaModel>
     not?: NestedEnumOfferStateFilter<$PrismaModel> | $Enums.OfferState
+  }
+
+  export type BroadcastMetadataListRelationFilter = {
+    every?: BroadcastMetadataWhereInput
+    some?: BroadcastMetadataWhereInput
+    none?: BroadcastMetadataWhereInput
+  }
+
+  export type BroadcastMetadataOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type OfferCountOrderByAggregateInput = {
@@ -14658,6 +14770,12 @@ export namespace Prisma {
     connect?: MeetingWhereUniqueInput
   }
 
+  export type OfferCreateNestedOneWithoutBroadcastClaimsInput = {
+    create?: XOR<OfferCreateWithoutBroadcastClaimsInput, OfferUncheckedCreateWithoutBroadcastClaimsInput>
+    connectOrCreate?: OfferCreateOrConnectWithoutBroadcastClaimsInput
+    connect?: OfferWhereUniqueInput
+  }
+
   export type EnumBroadcastSubStateFieldUpdateOperationsInput = {
     set?: $Enums.BroadcastSubState
   }
@@ -14670,6 +14788,16 @@ export namespace Prisma {
     update?: XOR<XOR<MeetingUpdateToOneWithWhereWithoutBroadcastMetadataInput, MeetingUpdateWithoutBroadcastMetadataInput>, MeetingUncheckedUpdateWithoutBroadcastMetadataInput>
   }
 
+  export type OfferUpdateOneWithoutBroadcastClaimsNestedInput = {
+    create?: XOR<OfferCreateWithoutBroadcastClaimsInput, OfferUncheckedCreateWithoutBroadcastClaimsInput>
+    connectOrCreate?: OfferCreateOrConnectWithoutBroadcastClaimsInput
+    upsert?: OfferUpsertWithoutBroadcastClaimsInput
+    disconnect?: OfferWhereInput | boolean
+    delete?: OfferWhereInput | boolean
+    connect?: OfferWhereUniqueInput
+    update?: XOR<XOR<OfferUpdateToOneWithWhereWithoutBroadcastClaimsInput, OfferUpdateWithoutBroadcastClaimsInput>, OfferUncheckedUpdateWithoutBroadcastClaimsInput>
+  }
+
   export type MeetingCreateNestedOneWithoutOffersInput = {
     create?: XOR<MeetingCreateWithoutOffersInput, MeetingUncheckedCreateWithoutOffersInput>
     connectOrCreate?: MeetingCreateOrConnectWithoutOffersInput
@@ -14680,6 +14808,20 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutOffersReceivedInput, UserUncheckedCreateWithoutOffersReceivedInput>
     connectOrCreate?: UserCreateOrConnectWithoutOffersReceivedInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type BroadcastMetadataCreateNestedManyWithoutOfferClaimedInput = {
+    create?: XOR<BroadcastMetadataCreateWithoutOfferClaimedInput, BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput> | BroadcastMetadataCreateWithoutOfferClaimedInput[] | BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput[]
+    connectOrCreate?: BroadcastMetadataCreateOrConnectWithoutOfferClaimedInput | BroadcastMetadataCreateOrConnectWithoutOfferClaimedInput[]
+    createMany?: BroadcastMetadataCreateManyOfferClaimedInputEnvelope
+    connect?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
+  }
+
+  export type BroadcastMetadataUncheckedCreateNestedManyWithoutOfferClaimedInput = {
+    create?: XOR<BroadcastMetadataCreateWithoutOfferClaimedInput, BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput> | BroadcastMetadataCreateWithoutOfferClaimedInput[] | BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput[]
+    connectOrCreate?: BroadcastMetadataCreateOrConnectWithoutOfferClaimedInput | BroadcastMetadataCreateOrConnectWithoutOfferClaimedInput[]
+    createMany?: BroadcastMetadataCreateManyOfferClaimedInputEnvelope
+    connect?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
   }
 
   export type EnumOfferStateFieldUpdateOperationsInput = {
@@ -14700,6 +14842,34 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutOffersReceivedInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOffersReceivedInput, UserUpdateWithoutOffersReceivedInput>, UserUncheckedUpdateWithoutOffersReceivedInput>
+  }
+
+  export type BroadcastMetadataUpdateManyWithoutOfferClaimedNestedInput = {
+    create?: XOR<BroadcastMetadataCreateWithoutOfferClaimedInput, BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput> | BroadcastMetadataCreateWithoutOfferClaimedInput[] | BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput[]
+    connectOrCreate?: BroadcastMetadataCreateOrConnectWithoutOfferClaimedInput | BroadcastMetadataCreateOrConnectWithoutOfferClaimedInput[]
+    upsert?: BroadcastMetadataUpsertWithWhereUniqueWithoutOfferClaimedInput | BroadcastMetadataUpsertWithWhereUniqueWithoutOfferClaimedInput[]
+    createMany?: BroadcastMetadataCreateManyOfferClaimedInputEnvelope
+    set?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
+    disconnect?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
+    delete?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
+    connect?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
+    update?: BroadcastMetadataUpdateWithWhereUniqueWithoutOfferClaimedInput | BroadcastMetadataUpdateWithWhereUniqueWithoutOfferClaimedInput[]
+    updateMany?: BroadcastMetadataUpdateManyWithWhereWithoutOfferClaimedInput | BroadcastMetadataUpdateManyWithWhereWithoutOfferClaimedInput[]
+    deleteMany?: BroadcastMetadataScalarWhereInput | BroadcastMetadataScalarWhereInput[]
+  }
+
+  export type BroadcastMetadataUncheckedUpdateManyWithoutOfferClaimedNestedInput = {
+    create?: XOR<BroadcastMetadataCreateWithoutOfferClaimedInput, BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput> | BroadcastMetadataCreateWithoutOfferClaimedInput[] | BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput[]
+    connectOrCreate?: BroadcastMetadataCreateOrConnectWithoutOfferClaimedInput | BroadcastMetadataCreateOrConnectWithoutOfferClaimedInput[]
+    upsert?: BroadcastMetadataUpsertWithWhereUniqueWithoutOfferClaimedInput | BroadcastMetadataUpsertWithWhereUniqueWithoutOfferClaimedInput[]
+    createMany?: BroadcastMetadataCreateManyOfferClaimedInputEnvelope
+    set?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
+    disconnect?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
+    delete?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
+    connect?: BroadcastMetadataWhereUniqueInput | BroadcastMetadataWhereUniqueInput[]
+    update?: BroadcastMetadataUpdateWithWhereUniqueWithoutOfferClaimedInput | BroadcastMetadataUpdateWithWhereUniqueWithoutOfferClaimedInput[]
+    updateMany?: BroadcastMetadataUpdateManyWithWhereWithoutOfferClaimedInput | BroadcastMetadataUpdateManyWithWhereWithoutOfferClaimedInput[]
+    deleteMany?: BroadcastMetadataScalarWhereInput | BroadcastMetadataScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -15109,6 +15279,7 @@ export namespace Prisma {
     expiresAt: Date | string
     offerType?: $Enums.MeetingType
     meeting: MeetingCreateNestedOneWithoutOffersInput
+    broadcastClaims?: BroadcastMetadataCreateNestedManyWithoutOfferClaimedInput
   }
 
   export type OfferUncheckedCreateWithoutUserOfferedInput = {
@@ -15118,6 +15289,7 @@ export namespace Prisma {
     createdAt?: Date | string
     expiresAt: Date | string
     offerType?: $Enums.MeetingType
+    broadcastClaims?: BroadcastMetadataUncheckedCreateNestedManyWithoutOfferClaimedInput
   }
 
   export type OfferCreateOrConnectWithoutUserOfferedInput = {
@@ -16049,6 +16221,7 @@ export namespace Prisma {
     expiresAt: Date | string
     offerType?: $Enums.MeetingType
     userOffered: UserCreateNestedOneWithoutOffersReceivedInput
+    broadcastClaims?: BroadcastMetadataCreateNestedManyWithoutOfferClaimedInput
   }
 
   export type OfferUncheckedCreateWithoutMeetingInput = {
@@ -16058,6 +16231,7 @@ export namespace Prisma {
     createdAt?: Date | string
     expiresAt: Date | string
     offerType?: $Enums.MeetingType
+    broadcastClaims?: BroadcastMetadataUncheckedCreateNestedManyWithoutOfferClaimedInput
   }
 
   export type OfferCreateOrConnectWithoutMeetingInput = {
@@ -16074,7 +16248,7 @@ export namespace Prisma {
     id?: string
     subState?: $Enums.BroadcastSubState
     pendingAt?: Date | string | null
-    offerClaimedId?: string | null
+    offerClaimed?: OfferCreateNestedOneWithoutBroadcastClaimsInput
   }
 
   export type BroadcastMetadataUncheckedCreateWithoutMeetingInput = {
@@ -16238,7 +16412,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
     pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    offerClaimedId?: NullableStringFieldUpdateOperationsInput | string | null
+    offerClaimed?: OfferUpdateOneWithoutBroadcastClaimsNestedInput
   }
 
   export type BroadcastMetadataUncheckedUpdateWithoutMeetingInput = {
@@ -16279,6 +16453,31 @@ export namespace Prisma {
     create: XOR<MeetingCreateWithoutBroadcastMetadataInput, MeetingUncheckedCreateWithoutBroadcastMetadataInput>
   }
 
+  export type OfferCreateWithoutBroadcastClaimsInput = {
+    id?: string
+    offerState?: $Enums.OfferState
+    createdAt?: Date | string
+    expiresAt: Date | string
+    offerType?: $Enums.MeetingType
+    meeting: MeetingCreateNestedOneWithoutOffersInput
+    userOffered: UserCreateNestedOneWithoutOffersReceivedInput
+  }
+
+  export type OfferUncheckedCreateWithoutBroadcastClaimsInput = {
+    id?: string
+    meetingId: string
+    userOfferedId: string
+    offerState?: $Enums.OfferState
+    createdAt?: Date | string
+    expiresAt: Date | string
+    offerType?: $Enums.MeetingType
+  }
+
+  export type OfferCreateOrConnectWithoutBroadcastClaimsInput = {
+    where: OfferWhereUniqueInput
+    create: XOR<OfferCreateWithoutBroadcastClaimsInput, OfferUncheckedCreateWithoutBroadcastClaimsInput>
+  }
+
   export type MeetingUpsertWithoutBroadcastMetadataInput = {
     update: XOR<MeetingUpdateWithoutBroadcastMetadataInput, MeetingUncheckedUpdateWithoutBroadcastMetadataInput>
     create: XOR<MeetingCreateWithoutBroadcastMetadataInput, MeetingUncheckedCreateWithoutBroadcastMetadataInput>
@@ -16314,6 +16513,37 @@ export namespace Prisma {
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
+  }
+
+  export type OfferUpsertWithoutBroadcastClaimsInput = {
+    update: XOR<OfferUpdateWithoutBroadcastClaimsInput, OfferUncheckedUpdateWithoutBroadcastClaimsInput>
+    create: XOR<OfferCreateWithoutBroadcastClaimsInput, OfferUncheckedCreateWithoutBroadcastClaimsInput>
+    where?: OfferWhereInput
+  }
+
+  export type OfferUpdateToOneWithWhereWithoutBroadcastClaimsInput = {
+    where?: OfferWhereInput
+    data: XOR<OfferUpdateWithoutBroadcastClaimsInput, OfferUncheckedUpdateWithoutBroadcastClaimsInput>
+  }
+
+  export type OfferUpdateWithoutBroadcastClaimsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meeting?: MeetingUpdateOneRequiredWithoutOffersNestedInput
+    userOffered?: UserUpdateOneRequiredWithoutOffersReceivedNestedInput
+  }
+
+  export type OfferUncheckedUpdateWithoutBroadcastClaimsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    meetingId?: StringFieldUpdateOperationsInput | string
+    userOfferedId?: StringFieldUpdateOperationsInput | string
+    offerState?: EnumOfferStateFieldUpdateOperationsInput | $Enums.OfferState
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
   }
 
   export type MeetingCreateWithoutOffersInput = {
@@ -16398,6 +16628,30 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutOffersReceivedInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutOffersReceivedInput, UserUncheckedCreateWithoutOffersReceivedInput>
+  }
+
+  export type BroadcastMetadataCreateWithoutOfferClaimedInput = {
+    id?: string
+    subState?: $Enums.BroadcastSubState
+    pendingAt?: Date | string | null
+    meeting: MeetingCreateNestedOneWithoutBroadcastMetadataInput
+  }
+
+  export type BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput = {
+    id?: string
+    meetingId: string
+    subState?: $Enums.BroadcastSubState
+    pendingAt?: Date | string | null
+  }
+
+  export type BroadcastMetadataCreateOrConnectWithoutOfferClaimedInput = {
+    where: BroadcastMetadataWhereUniqueInput
+    create: XOR<BroadcastMetadataCreateWithoutOfferClaimedInput, BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput>
+  }
+
+  export type BroadcastMetadataCreateManyOfferClaimedInputEnvelope = {
+    data: BroadcastMetadataCreateManyOfferClaimedInput | BroadcastMetadataCreateManyOfferClaimedInput[]
+    skipDuplicates?: boolean
   }
 
   export type MeetingUpsertWithoutOffersInput = {
@@ -16494,6 +16748,33 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+  }
+
+  export type BroadcastMetadataUpsertWithWhereUniqueWithoutOfferClaimedInput = {
+    where: BroadcastMetadataWhereUniqueInput
+    update: XOR<BroadcastMetadataUpdateWithoutOfferClaimedInput, BroadcastMetadataUncheckedUpdateWithoutOfferClaimedInput>
+    create: XOR<BroadcastMetadataCreateWithoutOfferClaimedInput, BroadcastMetadataUncheckedCreateWithoutOfferClaimedInput>
+  }
+
+  export type BroadcastMetadataUpdateWithWhereUniqueWithoutOfferClaimedInput = {
+    where: BroadcastMetadataWhereUniqueInput
+    data: XOR<BroadcastMetadataUpdateWithoutOfferClaimedInput, BroadcastMetadataUncheckedUpdateWithoutOfferClaimedInput>
+  }
+
+  export type BroadcastMetadataUpdateManyWithWhereWithoutOfferClaimedInput = {
+    where: BroadcastMetadataScalarWhereInput
+    data: XOR<BroadcastMetadataUpdateManyMutationInput, BroadcastMetadataUncheckedUpdateManyWithoutOfferClaimedInput>
+  }
+
+  export type BroadcastMetadataScalarWhereInput = {
+    AND?: BroadcastMetadataScalarWhereInput | BroadcastMetadataScalarWhereInput[]
+    OR?: BroadcastMetadataScalarWhereInput[]
+    NOT?: BroadcastMetadataScalarWhereInput | BroadcastMetadataScalarWhereInput[]
+    id?: StringFilter<"BroadcastMetadata"> | string
+    meetingId?: StringFilter<"BroadcastMetadata"> | string
+    subState?: EnumBroadcastSubStateFilter<"BroadcastMetadata"> | $Enums.BroadcastSubState
+    pendingAt?: DateTimeNullableFilter<"BroadcastMetadata"> | Date | string | null
+    offerClaimedId?: StringNullableFilter<"BroadcastMetadata"> | string | null
   }
 
   export type SessionCreateManyUserInput = {
@@ -16743,6 +17024,7 @@ export namespace Prisma {
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     meeting?: MeetingUpdateOneRequiredWithoutOffersNestedInput
+    broadcastClaims?: BroadcastMetadataUpdateManyWithoutOfferClaimedNestedInput
   }
 
   export type OfferUncheckedUpdateWithoutUserOfferedInput = {
@@ -16752,6 +17034,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    broadcastClaims?: BroadcastMetadataUncheckedUpdateManyWithoutOfferClaimedNestedInput
   }
 
   export type OfferUncheckedUpdateManyWithoutUserOfferedInput = {
@@ -16816,6 +17099,7 @@ export namespace Prisma {
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     userOffered?: UserUpdateOneRequiredWithoutOffersReceivedNestedInput
+    broadcastClaims?: BroadcastMetadataUpdateManyWithoutOfferClaimedNestedInput
   }
 
   export type OfferUncheckedUpdateWithoutMeetingInput = {
@@ -16825,6 +17109,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    broadcastClaims?: BroadcastMetadataUncheckedUpdateManyWithoutOfferClaimedNestedInput
   }
 
   export type OfferUncheckedUpdateManyWithoutMeetingInput = {
@@ -16834,6 +17119,34 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offerType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+  }
+
+  export type BroadcastMetadataCreateManyOfferClaimedInput = {
+    id?: string
+    meetingId: string
+    subState?: $Enums.BroadcastSubState
+    pendingAt?: Date | string | null
+  }
+
+  export type BroadcastMetadataUpdateWithoutOfferClaimedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
+    pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meeting?: MeetingUpdateOneRequiredWithoutBroadcastMetadataNestedInput
+  }
+
+  export type BroadcastMetadataUncheckedUpdateWithoutOfferClaimedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    meetingId?: StringFieldUpdateOperationsInput | string
+    subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
+    pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type BroadcastMetadataUncheckedUpdateManyWithoutOfferClaimedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    meetingId?: StringFieldUpdateOperationsInput | string
+    subState?: EnumBroadcastSubStateFieldUpdateOperationsInput | $Enums.BroadcastSubState
+    pendingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 
