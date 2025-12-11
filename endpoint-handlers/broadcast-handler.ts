@@ -8,6 +8,7 @@ import { deleteBroadcastedMeeting, findBroadcastedMeetings } from '../backend/me
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
 import { setBroadcastClaimed, setBroadcastUnclaimed } from '../backend/update/broadcast-update.js';
+import { setOfferOpen } from '../backend/update/offer-update.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -219,12 +220,13 @@ export const handleRejectBroadcast = async (req: Request, res: Response) => {
 
         // Reject the broadcast offer
         await setBroadcastUnclaimed({meetingId: meeting.id});
+        const openOffer = await setOfferOpen({offerId})
         //const rejectedOffer = await rejectOffer({ offerId });
 
 
         res.json({
             success: true,
-            offer: offer
+            offer: openOffer
         });
     } catch (error) {
         console.error("Error rejecting broadcast:", error);

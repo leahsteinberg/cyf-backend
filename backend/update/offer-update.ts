@@ -46,6 +46,19 @@ export const setOfferAccepted = async ({ offerId }: { offerId: string }): Promis
     return acceptedOffer;
 };
 
+export const setOfferOpen = async ({ offerId }: { offerId: string }): Promise<Offer> => {
+    const openOffer = await prisma.offer.update({
+        where: {
+            id: offerId,
+        },
+        data: {
+            offerState: 'OPEN',
+        }
+
+    })
+    return openOffer;
+};
+
 export const setOfferRejected = async ({ offerId }: { offerId: string }): Promise<Offer> => {
     const rejectedOffer = await prisma.offer.update({
         where: {
