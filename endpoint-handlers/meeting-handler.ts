@@ -1,5 +1,5 @@
-import { createMeeting, deleteMeeting } from "../backend/update/meeting-update.js";
-import { getCreatedMeetings, getAcceptedMeetings } from "../backend/query/meeting-lookup.js";
+import { createMeeting, deleteMeeting, setMeetingState } from "../backend/update/meeting-update.js";
+import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
 import { processOfferForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
 
@@ -85,5 +85,154 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error deleting meeting:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+/**
+ * User accepts a DRAFT meeting suggestion
+ * Moves from DRAFT → SEARCHING and creates offers
+ */
+export const handleAcceptDraftMeeting = async (req: Request, res: Response) => {
+  const { meetingId, userId } = req.body;
+
+  console.log("Accepting draft meeting:", { meetingId, userId });
+
+  if (!meetingId || !userId) {
+    return res.status(400).json({ error: "meetingId and userId are required" });
+  }
+
+  try {
+    // Get the meeting
+    const meeting = await getMeetingById({ meetingId });
+
+    if (!meeting) {
+      return res.status(404).json({ error: "Meeting not found" });
+    }
+
+    // Verify the user owns this meeting
+    if (meeting.userFromId !== userId) {
+      return res.status(403).json({ error: "You can only accept your own draft meetings" });
+    }
+
+    // Verify it's in DRAFT state
+    if (meeting.meetingState !== 'DRAFT') {
+      return res.status(400).json({
+        error: "Only DRAFT meetings can be accepted",
+        currentState: meeting.meetingState
+      });
+    }
+
+    // Check for time conflicts before activation
+    const createdMeetings = await getCreatedMeetings({ userFromId: userId });
+    const acceptedMeetings = await getAcceptedMeetings({ acceptedUserId: userId });
+
+    const newMeetingStart = new Date(meeting.scheduledFor);
+    const newMeetingEnd = new Date(meeting.scheduledEnd);
+
+    const hasTimeOverlap = (existingStart: Date, existingEnd: Date) => {
+      return (newMeetingStart < existingEnd && newMeetingEnd > existingStart);
+    };
+
+    // Filter out PAST, DRAFT, and BROADCAST meetings, then check for time conflicts
+    const conflictingCreatedMeeting = createdMeetings.find(m =>
+      m.id !== meetingId && // Don't check against itself
+      m.meetingState !== 'PAST' &&
+      m.meetingState !== 'DRAFT' &&
+      m.meetingType !== 'BROADCAST' &&
+      hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd))
+    );
+
+    const conflictingAcceptedMeeting = acceptedMeetings.find(m =>
+      m.meetingState !== 'PAST' &&
+      m.meetingState !== 'DRAFT' &&
+      m.meetingType !== 'BROADCAST' &&
+      hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd))
+    );
+
+    if (conflictingCreatedMeeting) {
+      return res.status(409).json({
+        error: "You already have a meeting you created at this time",
+        existingMeeting: conflictingCreatedMeeting
+      });
+    }
+
+    if (conflictingAcceptedMeeting) {
+      return res.status(409).json({
+        error: "You already have a meeting you accepted at this time",
+        existingMeeting: conflictingAcceptedMeeting
+      });
+    }
+
+    // Activate the meeting: move to SEARCHING state
+    await setMeetingState({ meetingId, meetingState: 'SEARCHING' });
+
+    // Refresh meeting data
+    const activatedMeeting = await getMeetingById({ meetingId });
+
+    if (!activatedMeeting) {
+      return res.status(500).json({ error: "Failed to retrieve activated meeting" });
+    }
+
+    // Create offers for the activated meeting
+    await processOfferForNewMeeting(activatedMeeting);
+
+    console.log("Draft meeting accepted and activated:", meetingId);
+    res.json({
+      success: true,
+      meeting: activatedMeeting
+    });
+  } catch (error) {
+    console.error("Error accepting draft meeting:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ error: "Failed to accept draft meeting", details: errorMessage });
+  }
+}
+
+/**
+ * User rejects a DRAFT meeting suggestion
+ * Deletes the draft meeting
+ */
+export const handleRejectDraftMeeting = async (req: Request, res: Response) => {
+  const { meetingId, userId } = req.body;
+
+  console.log("Rejecting draft meeting:", { meetingId, userId });
+
+  if (!meetingId || !userId) {
+    return res.status(400).json({ error: "meetingId and userId are required" });
+  }
+
+  try {
+    // Get the meeting
+    const meeting = await getMeetingById({ meetingId });
+
+    if (!meeting) {
+      return res.status(404).json({ error: "Meeting not found" });
+    }
+
+    // Verify the user owns this meeting
+    if (meeting.userFromId !== userId) {
+      return res.status(403).json({ error: "You can only reject your own draft meetings" });
+    }
+
+    // Verify it's in DRAFT state
+    if (meeting.meetingState !== 'DRAFT') {
+      return res.status(400).json({
+        error: "Only DRAFT meetings can be rejected",
+        currentState: meeting.meetingState
+      });
+    }
+
+    // Delete the draft meeting
+    const deletedMeeting = await deleteMeeting({ meetingId });
+
+    console.log("Draft meeting rejected and deleted:", meetingId);
+    res.json({
+      success: true,
+      meeting: deletedMeeting
+    });
+  } catch (error) {
+    console.error("Error rejecting draft meeting:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ error: "Failed to reject draft meeting", details: errorMessage });
   }
 }
