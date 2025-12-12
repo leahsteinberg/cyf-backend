@@ -197,7 +197,12 @@ exports.Prisma.MeetingScalarFieldEnum = {
   scheduledEnd: 'scheduledEnd',
   title: 'title',
   meetingState: 'meetingState',
-  meetingType: 'meetingType'
+  meetingType: 'meetingType',
+  timeType: 'timeType',
+  targetType: 'targetType',
+  sourceType: 'sourceType',
+  intentLabel: 'intentLabel',
+  targetUserId: 'targetUserId'
 };
 
 exports.Prisma.BroadcastMetadataScalarFieldEnum = {
@@ -233,15 +238,35 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 exports.MeetingState = exports.$Enums.MeetingState = {
+  DRAFT: 'DRAFT',
   SEARCHING: 'SEARCHING',
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
-  PAST: 'PAST'
+  PAST: 'PAST',
+  EXPIRED: 'EXPIRED'
 };
 
 exports.MeetingType = exports.$Enums.MeetingType = {
   ADVANCE: 'ADVANCE',
   BROADCAST: 'BROADCAST'
+};
+
+exports.TimeType = exports.$Enums.TimeType = {
+  IMMEDIATE: 'IMMEDIATE',
+  FUTURE: 'FUTURE',
+  UNKNOWN: 'UNKNOWN'
+};
+
+exports.TargetType = exports.$Enums.TargetType = {
+  OPEN: 'OPEN',
+  FRIEND_SPECIFIC: 'FRIEND_SPECIFIC',
+  GROUP: 'GROUP'
+};
+
+exports.SourceType = exports.$Enums.SourceType = {
+  USER_INTENT: 'USER_INTENT',
+  SYSTEM_PATTERN: 'SYSTEM_PATTERN',
+  SYSTEM_REAL_TIME: 'SYSTEM_REAL_TIME'
 };
 
 exports.BroadcastSubState = exports.$Enums.BroadcastSubState = {

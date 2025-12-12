@@ -119,7 +119,17 @@ model Meeting {
   offers            Offer[]             @relation("offers")
   title             String?
   meetingState      MeetingState        @default(SEARCHING)
+
+  // OLD FIELD - Keep for backwards compatibility during migration
   meetingType       MeetingType         @default(ADVANCE)
+
+  // NEW FIELDS - Nullable during migration, will become required later
+  timeType          TimeType?           // When: IMMEDIATE, FUTURE, UNKNOWN
+  targetType        TargetType?         // Who: OPEN, FRIEND_SPECIFIC, GROUP
+  sourceType        SourceType?         // Optional: tracks who/what triggered this
+  intentLabel       String?             // Optional: semantic label like "catch_up", "quick_hi"
+  targetUserId      String?             // For FRIEND_SPECIFIC meetings
+
   broadcastMetadata BroadcastMetadata?
 
   @@map("meeting")
@@ -160,13 +170,15 @@ enum OfferState {
 }
 
 enum MeetingState {
+  DRAFT      // NEW: Suggestion before activation
   SEARCHING
   ACCEPTED
   REJECTED
   PAST
+  EXPIRED    // NEW: For time-bounded suggestions
 }
 
-enum MeetingType {
+enum MeetingType {// to be deprecated, want to hold on for backwards-compatibility
   ADVANCE
   BROADCAST
 }
@@ -175,4 +187,22 @@ enum BroadcastSubState {
   PENDING_CLAIMED
   UNCLAIMED
   CLAIMED
+}
+
+enum TimeType {
+  IMMEDIATE  // Happening now (old BROADCAST)
+  FUTURE     // Scheduled for later (old ADVANCE)
+  UNKNOWN    // Time TBD (new concept)
+}
+
+enum TargetType {
+  OPEN             // Multiple friends can accept (old BROADCAST/ADVANCE)
+  FRIEND_SPECIFIC  // Specific friend (new concept)
+  GROUP            // Predefined group (future)
+}
+
+enum SourceType {
+  USER_INTENT        // User-initiated
+  SYSTEM_PATTERN     // System suggestion based on patterns
+  SYSTEM_REAL_TIME   // System suggestion in real-time
 }
