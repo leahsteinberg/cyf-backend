@@ -25,17 +25,26 @@ export const handleSignIn = async (req: Request, res: Response) => {
 };
 
 export const handleSignOut = async (req: Request, res: Response) => {
-  console.log("sign out!!!", req.body)
-  const {userId} = req.body;
+  console.log("sign out!!!", req.body);
 
-  console.log(req.headers)
-  const user = await auth.api.signOut({
-    headers: fromNodeHeaders(req.headers),
-    
-  })
-  console.log("sign out --- ", user);
-  return user;
-  //return res.json("gottt signout!!")
+  try {
+    const result = await auth.api.signOut({
+      headers: fromNodeHeaders(req.headers),
+    });
+
+    console.log("sign out successful:", result);
+    return res.json({
+      success: true,
+      message: "Signed out successfully"
+    });
+  } catch (error) {
+    console.error("Error signing out:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({
+      error: "Internal server error",
+      details: errorMessage
+    });
+  }
 }
 
 export const handleMe = async (req: Request, res: Response) => {
