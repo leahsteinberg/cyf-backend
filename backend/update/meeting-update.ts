@@ -1,34 +1,92 @@
-import type { Meeting, MeetingState, MeetingType, BroadcastSubState, BroadcastMetadata } from "../../types.js";
+import type { Meeting, MeetingState, MeetingType, TimeType, TargetType, SourceType } from "../../types.js";
+import { meetingTypeToNew, newToMeetingType } from "../../types.js";
 import { prisma } from "../auth.js";
 import { ACCEPTED_MEETING_STATE, SEARCHING_MEETING_STATE } from "../utils.js";
 
-export const createMeeting = async (
-    { userFromId, scheduledFor, scheduledEnd, title, meetingType }
-    : { userFromId: string, scheduledFor: Date, scheduledEnd:Date, title: string, meetingType: MeetingType}):
-    Promise<Meeting> => {
-        console.log("making a meeting SF- ", scheduledFor)
+// Phase 2: Dual-write parameters - support both old and new
+type CreateMeetingParams = {
+    userFromId: string;
+    scheduledFor: Date;
+    scheduledEnd: Date;
+    title: string;
 
-        // Create meeting with broadcast metadata if it's a broadcast type
-        const meeting = await prisma.meeting.create({
-            data: {
-                userFromId,
-                scheduledFor,
-                scheduledEnd,
-                title,
-                meetingType,
-                // Create broadcast metadata for broadcast meetings
-                ...(meetingType === 'BROADCAST' && {
-                    broadcastMetadata: {
-                        create: {
-                            subState: 'UNCLAIMED'
-                        }
+    // OLD PARAMETERS - for backwards compatibility
+    meetingType?: MeetingType;
+
+    // NEW PARAMETERS - optional during migration
+    timeType?: TimeType;
+    targetType?: TargetType;
+    sourceType?: SourceType;
+    intentLabel?: string;
+    targetUserId?: string;
+    meetingState?: MeetingState;  // Allow setting initial state (e.g., DRAFT)
+};
+
+export const createMeeting = async (params: CreateMeetingParams): Promise<Meeting> => {
+    const { userFromId, scheduledFor, scheduledEnd, title, meetingState } = params;
+
+    console.log("making a meeting SF- ", scheduledFor);
+
+    // DUAL-WRITE LOGIC: Determine values for both old and new systems
+    let finalMeetingType: MeetingType;
+    let finalTimeType: TimeType;
+    let finalTargetType: TargetType;
+
+    if (params.timeType && params.targetType) {
+        // NEW SYSTEM: New parameters provided, derive old from new
+        finalTimeType = params.timeType;
+        finalTargetType = params.targetType;
+        finalMeetingType = newToMeetingType(finalTimeType, finalTargetType);
+    } else if (params.meetingType) {
+        // OLD SYSTEM: Old parameter provided, derive new from old
+        finalMeetingType = params.meetingType;
+        const derived = meetingTypeToNew(finalMeetingType);
+        finalTimeType = derived.timeType;
+        finalTargetType = derived.targetType;
+    } else {
+        // FALLBACK: Default to ADVANCE behavior
+        finalMeetingType = 'ADVANCE';
+        finalTimeType = 'FUTURE';
+        finalTargetType = 'OPEN';
+    }
+
+    // Determine if broadcast metadata should be created
+    // Broadcast metadata needed when: timeType is IMMEDIATE and targetType is OPEN
+    const needsBroadcastMetadata = finalTimeType === 'IMMEDIATE' && finalTargetType === 'OPEN';
+
+    // Create meeting with dual-write to both old and new fields
+    const meeting = await prisma.meeting.create({
+        data: {
+            userFromId,
+            scheduledFor,
+            scheduledEnd,
+            title,
+            meetingState: meetingState || 'SEARCHING',  // Default to SEARCHING if not specified
+
+            // OLD FIELD - Write for backwards compatibility
+            meetingType: finalMeetingType,
+
+            // NEW FIELDS - Write to support new system
+            timeType: finalTimeType,
+            targetType: finalTargetType,
+            sourceType: params.sourceType || null,
+            intentLabel: params.intentLabel || null,
+            targetUserId: params.targetUserId || null,
+
+            // Create broadcast metadata for immediate + open meetings (broadcasts)
+            ...(needsBroadcastMetadata && {
+                broadcastMetadata: {
+                    create: {
+                        subState: 'UNCLAIMED'
                     }
-                })
-            },
-            include: {
-                broadcastMetadata: true
-            }
+                }
+            })
+        },
+        include: {
+            broadcastMetadata: true
+        }
     });
+
     return meeting;
 };
 
