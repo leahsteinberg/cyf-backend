@@ -174,8 +174,8 @@ export const handleAcceptDraftMeeting = async (req: Request, res: Response) => {
     }
 
     // Create offers for the activated meeting
-    // NOT YET IMPLEMENTED -- WILL NEED TO DO THIS CAREFULLY AND WITH NEW LOGIC!!
-    //await processOfferForNewMeeting(activatedMeeting);
+    // Now using refactored logic that supports all meeting types!
+    await processOfferForNewMeeting(activatedMeeting);
 
     console.log("Draft meeting accepted and activated:", meetingId);
     res.json({

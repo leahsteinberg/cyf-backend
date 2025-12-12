@@ -58,9 +58,10 @@ export async function createDraftMeeting(params: CreateDraftMeetingParams): Prom
         // New field system
         timeType,
         targetType,
-        sourceType,
-        intentLabel,
-        targetUserId
+        // Only include optional fields if they have values
+        ...(sourceType && { sourceType }),
+        ...(intentLabel && { intentLabel }),
+        ...(targetUserId && { targetUserId })
     });
 
     if (!meeting || !meeting.id) {

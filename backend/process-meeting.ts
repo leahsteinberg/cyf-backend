@@ -318,9 +318,6 @@ const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
  * Uses new flexible type system with fallback to old meetingType
  */
 export const processOffersForMeeting = async (meeting: Meeting) => {
-    const meetingId = meeting.id;
-    const userFrom = meeting.userFromId;
-
     // Use helper functions to get effective types (with fallback to old system)
     const timeType = getEffectiveTimeType(meeting);
     const targetType = getEffectiveTargetType(meeting);
