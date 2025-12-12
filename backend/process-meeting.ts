@@ -3,6 +3,7 @@ import { setMeetingState } from './update/meeting-update.js';
 import { ACCEPTED_MEETING_STATE, ACCEPTED_OFFER_STATE, addHour, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.js';
 import { findUnofferedFriends, getFriendIds, getUnofferedFriendsFromMeeting } from './friendship.js';
 import type { Meeting, MeetingType, Offer } from '../types.js';
+import { getEffectiveTimeType, getEffectiveTargetType } from '../types.js';
 import { createAndSendOfferPush } from './create-push.js';
 import { getUserTimezone } from './query/user-lookup.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from './update/user-update.js';
@@ -10,21 +11,159 @@ import { setIsBroadcasting, setIsNotBroadcasting } from './update/user-update.js
 
 
 
+/**
+ * Creates initial offers for a new meeting based on its type
+ * Routes to appropriate offer creation logic using new flexible type system
+ */
 export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeting> => {
     // Validate meeting exists and has required fields
     if (!meeting || !meeting.id || !meeting.userFromId) {
         throw new Error("Invalid meeting: missing required fields");
     }
 
-    const meetingId = meeting.id;
-    const allFriendIds = await getFriendIds(meeting.userFromId);
-    const {friendToOfferId, unOfferedCount} = await findFriendIdToOffer({offers: [], meetingId, allFriendIds});
+    // Use helper functions to get effective types (with fallback to old system)
+    const timeType = getEffectiveTimeType(meeting);
+    const targetType = getEffectiveTargetType(meeting);
 
-    if (friendToOfferId) {
-        const offer = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId, remainingFriendsCount: unOfferedCount});
+    console.log(`Processing new meeting: timeType=${timeType}, targetType=${targetType}`);
 
+    // Route based on flexible type combination
+    if (timeType === 'IMMEDIATE' && targetType === 'OPEN') {
+        // BROADCAST: Parallel offers to all friends, immediate
+        return await processNewBroadcastMeeting(meeting);
     }
 
+    if (timeType === 'FUTURE' && targetType === 'OPEN') {
+        // NEW BEHAVIOR: Parallel offers to all friends, scheduled for later
+        return await processNewFutureOpenMeeting(meeting);
+    }
+
+    if (targetType === 'FRIEND_SPECIFIC') {
+        // FRIEND_SPECIFIC: Single offer to specific friend
+        return await processNewFriendSpecificMeeting(meeting);
+    }
+
+    if (timeType === 'UNKNOWN') {
+        // UNKNOWN time: Don't create offers yet, wait for time to be set
+        console.log('Meeting has UNKNOWN time type, skipping offer creation');
+        return meeting;
+    }
+
+    // Fallback: treat as FUTURE + OPEN
+    console.warn(`Unknown meeting type combination: ${timeType} + ${targetType}, defaulting to FUTURE+OPEN`);
+    return await processNewFutureOpenMeeting(meeting);
+}
+
+/**
+ * Process new BROADCAST meeting (IMMEDIATE + OPEN)
+ * Creates offers to all friends immediately with 1-hour expiration
+ */
+async function processNewBroadcastMeeting(meeting: Meeting): Promise<Meeting> {
+    const allFriendIds = await getFriendIds(meeting.userFromId);
+
+    // Create offers to all friends in parallel
+    const offerPromises = allFriendIds.map(friendId =>
+        makeBroadcastOffer({ meeting, userOfferedId: friendId })
+    );
+
+    await Promise.all(offerPromises);
+
+    console.log(`Created ${allFriendIds.length} broadcast offers for meeting ${meeting.id}`);
+    return meeting;
+}
+
+/**
+ * NEW BEHAVIOR: Process FUTURE + OPEN meeting
+ * Creates parallel offers to ALL friends (not sequential)
+ * Expiration set to meeting scheduledFor time
+ */
+async function processNewFutureOpenMeeting(meeting: Meeting): Promise<Meeting> {
+    const allFriendIds = await getFriendIds(meeting.userFromId);
+
+    if (allFriendIds.length === 0) {
+        console.log(`No friends available for meeting ${meeting.id}`);
+        return meeting;
+    }
+
+    // Create offers to all friends in parallel, expiring at meeting time
+    const offerPromises = allFriendIds.map(async (friendId) => {
+        // Use meeting's scheduledFor time as expiration
+        const expiresAt = meeting.scheduledFor;
+        return makeOffer({
+            meeting,
+            userOfferedId: friendId,
+            expiresAt,
+            offerType: 'ADVANCE' // Keep as ADVANCE for backwards compatibility
+        });
+    });
+
+    await Promise.all(offerPromises);
+
+    console.log(`Created ${allFriendIds.length} parallel offers for FUTURE+OPEN meeting ${meeting.id}`);
+    return meeting;
+}
+
+/**
+ * DEPRECATED: Old sequential offer behavior for ADVANCE meetings
+ * Kept for backwards compatibility, but new FUTURE+OPEN meetings use processNewFutureOpenMeeting instead
+ */
+async function processNewAdvanceMeeting(meeting: Meeting): Promise<Meeting> {
+    const allFriendIds = await getFriendIds(meeting.userFromId);
+    const { friendToOfferId, unOfferedCount } = await findFriendIdToOffer({
+        offers: [],
+        meetingId: meeting.id,
+        allFriendIds
+    });
+
+    if (friendToOfferId) {
+        await makeAdvanceOffer({
+            meeting,
+            userOfferedId: friendToOfferId,
+            remainingFriendsCount: unOfferedCount
+        });
+        console.log(`Created sequential offer for meeting ${meeting.id}`);
+    } else {
+        console.log(`No friends available for meeting ${meeting.id}`);
+    }
+
+    return meeting;
+}
+
+/**
+ * Process new FRIEND_SPECIFIC meeting
+ * Creates single offer to the specified friend
+ */
+async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meeting> {
+    const targetUserId = meeting.targetUserId;
+
+    if (!targetUserId) {
+        throw new Error('FRIEND_SPECIFIC meeting missing targetUserId');
+    }
+
+    // Verify target user is a friend
+    const allFriendIds = await getFriendIds(meeting.userFromId);
+    if (!allFriendIds.includes(targetUserId)) {
+        throw new Error(`Target user ${targetUserId} is not a friend of ${meeting.userFromId}`);
+    }
+
+    // Determine offer type based on time type
+    const timeType = getEffectiveTimeType(meeting);
+
+    if (timeType === 'IMMEDIATE') {
+        // Immediate 1-on-1: use broadcast-style expiration (1 hour)
+        await makeBroadcastOffer({ meeting, userOfferedId: targetUserId });
+    } else {
+        // Future 1-on-1: use meeting time as expiration
+        const expiresAt = meeting.scheduledFor;
+        await makeOffer({
+            meeting,
+            userOfferedId: targetUserId,
+            expiresAt,
+            offerType: 'ADVANCE'
+        });
+    }
+
+    console.log(`Created friend-specific offer for meeting ${meeting.id} to user ${targetUserId}`);
     return meeting;
 }
 
@@ -174,41 +313,140 @@ const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
 }
 
 
+/**
+ * Processes offers for an existing meeting (called by cron or after offer state changes)
+ * Uses new flexible type system with fallback to old meetingType
+ */
 export const processOffersForMeeting = async (meeting: Meeting) => {
     const meetingId = meeting.id;
     const userFrom = meeting.userFromId;
 
+    // Use helper functions to get effective types (with fallback to old system)
+    const timeType = getEffectiveTimeType(meeting);
+    const targetType = getEffectiveTargetType(meeting);
 
-    if (meeting.meetingType === 'BROADCAST') {
+    // Handle BROADCAST meetings (IMMEDIATE + OPEN)
+    if (timeType === 'IMMEDIATE' && targetType === 'OPEN') {
         return processOffersForBroadcastMeeting(meeting);
     }
 
-    // Get offers and clean up old ones first
-    const offers = await getMeetingOffers({meetingId})
-    const {recentOffer, olderOffers} = findRecentOffer(offers);
+    // For FUTURE + OPEN meetings: All offers created at once, no sequential processing needed
+    // Just check if meeting is in past or if all offers expired/rejected
+    if (timeType === 'FUTURE' && targetType === 'OPEN') {
+        return processOffersForParallelMeeting(meeting);
+    }
 
-    const meetingInPast = await isTimePast({eventTime: meeting.scheduledFor});
+    // For FRIEND_SPECIFIC meetings: Single offer, simpler logic
+    if (targetType === 'FRIEND_SPECIFIC') {
+        return processOffersForFriendSpecificMeeting(meeting);
+    }
+
+    // Fallback: Use old ADVANCE logic for unknown combinations
+    console.warn(`Unknown meeting type in processOffersForMeeting: ${timeType} + ${targetType}`);
+    return processOffersForAdvanceMeeting(meeting);
+}
+
+/**
+ * Process offers for FUTURE + OPEN meetings (parallel offers to all friends)
+ * Since all offers are created at once, just check for meeting expiration and acceptance
+ */
+async function processOffersForParallelMeeting(meeting: Meeting): Promise<Meeting> {
+    const meetingId = meeting.id;
+    const offers = await getMeetingOffers({ meetingId });
+
+    // Check if meeting is in the past
+    const meetingInPast = await isTimePast({ eventTime: meeting.scheduledFor });
+    if (meetingInPast) {
+        await clearOutOffers(offers);
+        return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE });
+    }
+
+    // Check if any offer was accepted
+    const acceptedOffer = offers.find(o => o.offerState === ACCEPTED_OFFER_STATE);
+    if (acceptedOffer) {
+        // Clear all other offers and mark meeting as accepted
+        await clearOutOffers(offers.filter(o => o.id !== acceptedOffer.id));
+        await setMeetingState({ meetingId, meetingState: ACCEPTED_MEETING_STATE });
+        return meeting;
+    }
+
+    // Check if all offers are rejected or expired
+    const allRejectedOrExpired = offers.every(
+        o => o.offerState === REJECTED_OFFER_STATE || o.offerState === EXPIRED_OFFER_STATE
+    );
+
+    if (allRejectedOrExpired && offers.length > 0) {
+        await setMeetingState({ meetingId, meetingState: REJECTED_MEETING_STATE });
+    }
+
+    return meeting;
+}
+
+/**
+ * Process offers for FRIEND_SPECIFIC meetings (single offer to one friend)
+ */
+async function processOffersForFriendSpecificMeeting(meeting: Meeting): Promise<Meeting> {
+    const meetingId = meeting.id;
+    const offers = await getMeetingOffers({ meetingId });
+
+    // Check if meeting is in the past
+    const meetingInPast = await isTimePast({ eventTime: meeting.scheduledFor });
+    if (meetingInPast) {
+        await clearOutOffers(offers);
+        return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE });
+    }
+
+    // Should only have one offer
+    const offer = offers[0];
+    if (!offer) {
+        console.warn(`FRIEND_SPECIFIC meeting ${meetingId} has no offers`);
+        return meeting;
+    }
+
+    // Update meeting state based on offer state
+    if (offer.offerState === ACCEPTED_OFFER_STATE) {
+        await setMeetingState({ meetingId, meetingState: ACCEPTED_MEETING_STATE });
+    } else if (offer.offerState === REJECTED_OFFER_STATE || offer.offerState === EXPIRED_OFFER_STATE) {
+        await setMeetingState({ meetingId, meetingState: REJECTED_MEETING_STATE });
+    }
+
+    return meeting;
+}
+
+/**
+ * OLD SEQUENTIAL LOGIC: Process offers for ADVANCE meetings
+ * Kept for backwards compatibility with existing sequential meetings
+ */
+async function processOffersForAdvanceMeeting(meeting: Meeting): Promise<Meeting> {
+    const meetingId = meeting.id;
+    const userFrom = meeting.userFromId;
+
+    // Get offers and clean up old ones first
+    const offers = await getMeetingOffers({ meetingId });
+    const { recentOffer, olderOffers } = findRecentOffer(offers);
+
+    const meetingInPast = await isTimePast({ eventTime: meeting.scheduledFor });
     if (meetingInPast) {
         await clearOutOffers(offers);  // Clear ALL offers for past meetings
-        return await setMeetingState({meetingId, meetingState: PAST_MEETING_STATE});
+        return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE });
     }
 
     // For active meetings, only clear older offers
     await clearOutOffers(olderOffers);
 
     const allFriendIds = await getFriendIds(userFrom);
-    const {friendToOfferId, unOfferedCount} = await findFriendIdToOffer({offers, meetingId, allFriendIds})
+    const { friendToOfferId, unOfferedCount } = await findFriendIdToOffer({ offers, meetingId, allFriendIds });
 
     // no more friends left, nothing to do.
     if (!friendToOfferId) return meeting;
 
     if (!recentOffer) {
-        const newMeeting = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId, remainingFriendsCount: unOfferedCount})
-        return newMeeting;
+        await makeAdvanceOffer({ meeting, userOfferedId: friendToOfferId, remainingFriendsCount: unOfferedCount });
+        return meeting;
     }
 
     if (recentOffer.offerState === OPEN_OFFER_STATE) {
-        const isOfferExpirationPast = await getIsOfferExpired({offer: recentOffer});
+        const isOfferExpirationPast = await getIsOfferExpired({ offer: recentOffer });
         if (isOfferExpirationPast) {
             await makeOfferAfterExpired({
                 meeting,
@@ -226,7 +464,7 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
                 meetingState: REJECTED_MEETING_STATE
             });
         } else {
-            const offer = await makeAdvanceOffer({meeting, userOfferedId: friendToOfferId, remainingFriendsCount: unOfferedCount})
+            await makeAdvanceOffer({ meeting, userOfferedId: friendToOfferId, remainingFriendsCount: unOfferedCount });
         }
     } else if (recentOffer.offerState === ACCEPTED_OFFER_STATE) {
         await setMeetingState({
