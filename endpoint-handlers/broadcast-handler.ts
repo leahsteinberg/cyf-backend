@@ -48,6 +48,9 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             scheduledEnd,
             title: 'This is a broadcast meeting',
             meetingType: 'BROADCAST', // TODO: Migrate to timeType/targetType in Phase 6
+            timeType: 'IMMEDIATE',
+            targetType: 'OPEN',
+            sourceType: 'USER_INTENT',
         });
 
         // Validate meeting was created successfully before creating offers
