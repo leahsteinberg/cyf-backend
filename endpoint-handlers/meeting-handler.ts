@@ -2,6 +2,11 @@ import { createMeeting, deleteMeeting, setMeetingState } from "../backend/update
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
 import { processOfferForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
+import { getAcceptedOfferByMeetingId } from "../backend/query/offer-lookup.js";
+import { setOfferRejected } from "../backend/update/offer-update.js";
+import { SEARCHING_MEETING_STATE } from "../backend/utils.js";
+import { handleRejectOffer } from "./offer-handler.js";
+import { rejectOffer, rejectOfferWithMeeting } from "../backend/offer.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -71,7 +76,7 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
 }
 
 export const handleDeleteMeeting = async (req: Request, res: Response) => {
-  const { meetingId } = req.body;
+  const { meetingId, userId } = req.body;
   console.log("handle delete meeting ---", meetingId);
 
   if (!meetingId) {
@@ -79,6 +84,22 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
   }
 
   try {
+    // if the user is the receiver of the meeting, not the creator,
+    // then just undo the accept and reset the meeting as searching
+    const meeting = await getMeetingById({ meetingId });
+    if (!meeting) {
+      return res.status(404).json({ error: "Meeting not found" });
+    }
+    
+    if (userId !== meeting?.userFromId) {
+      const offer = await getAcceptedOfferByMeetingId({ meetingId });
+      if (!offer) {
+        return res.status(404).json({error: "No valid offer for user found."});
+      }
+      const rejectedOffer = await rejectOfferWithMeeting({offerId: offer.id})
+      res.json(rejectedOffer);
+    }
+
     // first need to delete offers
     const deletedMeeting = await deleteMeeting({ meetingId });
     res.json(deletedMeeting);

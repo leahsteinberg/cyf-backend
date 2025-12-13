@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { acceptOffer, getOffersForUser, rejectOffer } from '../backend/offer.js';
+import { acceptOffer, getOffersForUser, rejectOffer, rejectOfferWithMeeting } from '../backend/offer.js';
 import { getMeetingById } from '../backend/query/meeting-lookup.js';
 import { clearOutOffers, processOffersForMeeting } from '../backend/process-meeting.js';
 
@@ -51,22 +51,8 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
   }
 
   try {
-    const rejectedOffer = await rejectOffer({ offerId });
-    console.log("rejected offer -", rejectOffer)
-    if (!rejectedOffer) {
-        throw new Error('Rejected offer not found');
-    }
-
-    const meetingId = rejectedOffer.meetingId;
-    // Get the meeting
-    const meeting = await getMeetingById({ meetingId });
-    if (meeting) {
-      await processOffersForMeeting(meeting)
-      console.log("New offer,", rejectedOffer);
-      res.json(rejectedOffer);
-    } else {
-      throw new Error('Meeting not found for rejected offer');
-    }
+    const rejectedOffer = await rejectOfferWithMeeting({ offerId });
+    res.json(rejectedOffer);
   } catch (error) {
     console.error("Error rejecting offer:", error);
     res.status(500).json({ error: "Internal server error" });

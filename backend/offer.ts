@@ -6,7 +6,7 @@ import { createOffer, setOfferAccepted, setOfferRejected } from './update/offer-
 import { setMeetingAccepted, setMeetingState } from './update/meeting-update.js';
 import { getMeetingById, getUserFromMeetingId } from './query/meeting-lookup.js';
 import { NumberInstance } from 'twilio/lib/rest/pricing/v2/number.js';
-import { makeOffer } from './process-meeting.js';
+import { makeOffer, processOffersForMeeting } from './process-meeting.js';
 
 // Re-export pure Prisma functions for backward compatibility
 export { createOffer, setOfferExpired } from './update/offer-update.js';
@@ -40,6 +40,26 @@ export const rejectOffer = async ({ offerId }
     console.log("rejected offer --- ", rejectedOffer)
     return rejectedOffer;
 };
+
+export const rejectOfferWithMeeting = async ({offerId}: {offerId: string}) => {
+    const rejectedOffer = await rejectOffer({ offerId });
+    console.log("rejected offer -", rejectOffer)
+    if (!rejectedOffer) {
+        throw new Error('Rejected offer not found');
+    }
+
+    const meetingId = rejectedOffer.meetingId;
+    // Get the meeting
+    const meeting = await getMeetingById({ meetingId });
+    if (meeting) {
+      await processOffersForMeeting(meeting)
+      console.log("New offer,", rejectedOffer);
+      return rejectedOffer;
+    } else {
+      throw new Error('Meeting not found for rejected offer');
+    }
+
+}
 
 
 export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
