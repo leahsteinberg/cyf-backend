@@ -1,7 +1,8 @@
 
 import type { Meeting } from '../types.js';
-import { getMeetingOffers } from './offer.js';
+import { getMeetingOffers, rejectOfferWithMeeting } from './offer.js';
 import { clearOutOffers } from './process-meeting.js';
+import { getAcceptedOfferByMeetingId } from './query/offer-lookup.js';
 import { deleteMeeting } from './update/meeting-update.js';
 
 
@@ -15,4 +16,22 @@ export const deleteBroadcastedMeeting = async (meeting: Meeting) => {
 
     // deleteMeeting
     // await setOffersExpired(offers)
+}
+
+
+export const deleteAcceptedMeetingByAcceptor = async ({meetingId}: {meetingId: string}):Promise<Meeting> => {
+
+    const offer = await getAcceptedOfferByMeetingId({ meetingId });
+    
+    if (!offer) {
+      throw new Error("No valid offer for user found.");
+    }
+    const rejectedOffer = await rejectOfferWithMeeting({offerId: offer.id})
+    res.json(rejectedOffer);
+  }
+
+  // first need to delete offers
+  const deletedMeeting = await deleteMeeting({ meetingId });
+  res.json(deletedMeeting);
+
 }

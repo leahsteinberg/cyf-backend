@@ -33,6 +33,8 @@ export const handleAcceptOffer = async (req: Request, res: Response) => {
     const offer = await acceptOffer({userId, offerId});
     const offers = await getOffersForUser({ userId });
     const otherOffers = offers.filter(o => o.id !== offerId);
+    console.log("IN HANDLE ACCEPT OFFER __", offer);
+    console.log("other offers ----- :))))", otherOffers);
     await setOffersExpired(otherOffers);
     //processOffersForMeeting()
 

@@ -92,12 +92,12 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
     }
     
     if (userId !== meeting?.userFromId) {
-      const offer = await getAcceptedOfferByMeetingId({ meetingId });
-      if (!offer) {
-        return res.status(404).json({error: "No valid offer for user found."});
-      }
-      const rejectedOffer = await rejectOfferWithMeeting({offerId: offer.id})
-      res.json(rejectedOffer);
+      // const offer = await getAcceptedOfferByMeetingId({ meetingId });
+      // if (!offer) {
+      //   return res.status(404).json({error: "No valid offer for user found."});
+      // }
+      // const rejectedOffer = await rejectOfferWithMeeting({offerId: offer.id})
+      // res.json(rejectedOffer);
     }
 
     // first need to delete offers
