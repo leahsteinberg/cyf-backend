@@ -1,9 +1,9 @@
 
-import type { Meeting } from '../types.js';
+import type { Meeting, Offer } from '../types.js';
 import { getMeetingOffers, rejectOfferWithMeeting } from './offer.js';
 import { clearOutOffers } from './process-meeting.js';
 import { getAcceptedOfferByMeetingId } from './query/offer-lookup.js';
-import { deleteMeeting } from './update/meeting-update.js';
+import { deleteMeeting, setMeetingOpen } from './update/meeting-update.js';
 import { setOfferOpen, setOfferRejected } from './update/offer-update.js';
 
 
@@ -34,6 +34,7 @@ export const deleteAcceptedMeetingByAcceptor = async ({meetingId}: {meetingId: s
     for (let otherOffer of otherOffers) {
         await setOfferOpen( {offerId: otherOffer.id});
     }
+    const openMeeting = await setMeetingOpen({ meetingId })
 
   return rejectedOffer;
 

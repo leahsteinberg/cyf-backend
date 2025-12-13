@@ -116,6 +116,19 @@ export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string
     return updatedMeeting;
 };
 
+export const setMeetingOpen = async ({meetingId}: {meetingId: string}): Promise<Meeting> => {
+    const updatedMeeting = prisma.meeting.update({
+        where: {
+            id: meetingId,
+        },
+        data: {
+            meetingState: SEARCHING_MEETING_STATE,
+            acceptedUserId: null,
+        }
+    })
+    return updatedMeeting;
+};
+
 export const unclaimBroadcastMeeting = async ({meetingId}: {meetingId: string}): Promise<Meeting> => {
     // Update meeting to searching state with no accepted user
     // Also update broadcast metadata to unclaimed
