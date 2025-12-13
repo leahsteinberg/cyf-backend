@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { acceptOffer, getMeetingOffers, getOffersForUser, rejectOffer, rejectOfferWithMeeting, setOffersExpired } from '../backend/offer.js';
+import { acceptOffer, getMeetingOffers, getOfferById, getOffersForUser, rejectOffer, rejectOfferWithMeeting, setOffersExpired } from '../backend/offer.js';
 import { getMeetingById } from '../backend/query/meeting-lookup.js';
 import { clearOutOffers, processOffersForMeeting } from '../backend/process-meeting.js';
 
@@ -30,8 +30,17 @@ export const handleAcceptOffer = async (req: Request, res: Response) => {
   }
 
   try {
-    const offer = await acceptOffer({userId, offerId});
-    const offers = await getOffersForUser({ userId });
+    const offer = await getOfferById({offerId})
+    if (!offer) {
+      throw new Error("Cannot find offer")
+    }
+    const meetingId = offer.meetingId;
+    const meeting = await getMeetingById({meetingId})
+    if (!meeting) {
+      throw new Error("Cannot find meeting to accept")
+    }
+    const acceptedOffer = await acceptOffer({userId, offerId});
+    const offers = await getMeetingOffers({ meetingId });
     const otherOffers = offers.filter(o => o.id !== offerId);
     console.log("IN HANDLE ACCEPT OFFER __", offer);
     console.log("other offers ----- :))))", otherOffers);
