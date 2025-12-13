@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { acceptOffer, getOffersForUser, rejectOffer } from '../backend/offer.js';
 import { getMeetingById } from '../backend/query/meeting-lookup.js';
-import { processOffersForMeeting } from '../backend/process-meeting.js';
+import { clearOutOffers, processOffersForMeeting } from '../backend/process-meeting.js';
 
 
 
@@ -32,6 +32,8 @@ export const handleAcceptOffer = async (req: Request, res: Response) => {
   try {
     const offer = await acceptOffer({userId, offerId});
     const offers = await getOffersForUser({ userId });
+    const otherOffers = offers.filter(o => o.id !== offerId);
+    await clearOutOffers(otherOffers);
 
     res.json(offers);
   } catch (error) {
