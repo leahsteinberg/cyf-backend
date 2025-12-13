@@ -61,7 +61,9 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
       return (newMeetingStart < existingEnd && newMeetingEnd > existingStart);
     };
 
-    // Filter out PAST meetings and BROADCAST meetings (IMMEDIATE + OPEN), then check for time conflicts
+    // Filter out PAST meetings, BROADCAST meetings (IMMEDIATE + OPEN), and check for time conflicts
+    // TODO: Also filter out DISMISSED meetings (they shouldn't cause conflicts)
+    // Add: && m.meetingState !== 'DISMISSED'
     const conflictingCreatedMeeting = createdMeetings.find(m => {
       const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
       return m.meetingState !== 'PAST' &&
@@ -123,6 +125,12 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
   const {userFromId} = req.body;
   const meetings = await getCreatedMeetings({userFromId});
   const acceptedMeetings = await getAcceptedMeetings({acceptedUserId: userFromId});
+
+  // TODO: Filter out DISMISSED meetings from the response
+  // DISMISSED meetings should not appear in user's active meeting list
+  // They're kept in DB for analytics but hidden from UI
+  // Add: .filter(m => m.meetingState !== 'DISMISSED')
+
   res.json([...meetings, ...acceptedMeetings])
 }
 
@@ -201,7 +209,8 @@ export const handleAcceptDraftMeeting = async (req: Request, res: Response) => {
       return (newMeetingStart < existingEnd && newMeetingEnd > existingStart);
     };
 
-    // Filter out PAST, DRAFT, and BROADCAST meetings (IMMEDIATE + OPEN), then check for time conflicts
+    // Filter out PAST, DRAFT, DISMISSED, and BROADCAST meetings (IMMEDIATE + OPEN), then check for time conflicts
+    // TODO: Add m.meetingState !== 'DISMISSED' to exclude dismissed suggestions from conflicts
     const conflictingCreatedMeeting = createdMeetings.find(m => {
       const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
       return m.id !== meetingId && // Don't check against itself

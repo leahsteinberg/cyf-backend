@@ -13,6 +13,7 @@ import cron from 'node-cron';
 import { handlePush } from './endpoint-handlers/push-handler.js';
 import { handleBroadcastNow, handleBroadcastEnd, handleTryAcceptBroadcast, handleAcceptBroadcast, handleRejectBroadcast, handleIsUserBroadcasting, handleCancelBroadcastAcceptance } from './endpoint-handlers/broadcast-handler.js';
 import { handleCallIntent, handleUndoCallIntent } from './endpoint-handlers/call-intent-handler.js';
+import { handleAcceptSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
 
 const app = express();
 const port = 3000;
@@ -77,6 +78,10 @@ app.post('/api/cancel-broadcast-acceptance', handleCancelBroadcastAcceptance);
 //CALL INTENT ENDPOINTS
 app.post('/api/call-intent', handleCallIntent);
 app.post('/api/undo-call-intent', handleUndoCallIntent);
+
+//SUGGESTION ENDPOINTS
+app.post('/api/accept-suggestion', handleAcceptSuggestion);
+app.post('/api/dismiss-suggestion', handleDismissSuggestion);
 
 app.get('/api/simulate-cron-round', handleCronRound)
 

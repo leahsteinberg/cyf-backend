@@ -316,8 +316,19 @@ const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
 /**
  * Processes offers for an existing meeting (called by cron or after offer state changes)
  * Uses new flexible type system with fallback to old meetingType
+ *
+ * NOTE: DISMISSED meetings should be skipped by the cron job before calling this function
+ * - DISMISSED meetings have no active offers and shouldn't be processed
+ * - They're kept for analytics but are functionally "dead"
+ * - TODO: Add early return if meeting.meetingState === 'DISMISSED'
  */
 export const processOffersForMeeting = async (meeting: Meeting) => {
+    // Skip processing DISMISSED meetings (they're kept for analytics only)
+    if (meeting.meetingState === 'DISMISSED') {
+        console.log(`Skipping DISMISSED meeting ${meeting.id}`);
+        return meeting;
+    }
+
     // Use helper functions to get effective types (with fallback to old system)
     const timeType = getEffectiveTimeType(meeting);
     const targetType = getEffectiveTargetType(meeting);
