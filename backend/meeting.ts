@@ -35,8 +35,6 @@ export const deleteAcceptedMeetingByAcceptor = async ({meetingId}: {meetingId: s
         await setOfferOpen( {offerId: otherOffer.id});
     }
 
-  // first need to delete offers
   return rejectedOffer;
-  //res.json(deletedMeeting);
 
 }

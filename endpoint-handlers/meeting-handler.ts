@@ -94,7 +94,7 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
     
     if (userId !== meeting?.userFromId) {
       const rejectedOffer = await deleteAcceptedMeetingByAcceptor({meetingId});
-      res.json(meeting);
+      return res.json(meeting);
     }
 
     // first need to delete offers
