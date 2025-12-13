@@ -51,8 +51,12 @@ export const validateBroadcastRequest = async (
         };
     }
 
-    // Check if meeting is BROADCAST type
-    if (meeting.meetingType !== 'BROADCAST') {
+    // Check if meeting is BROADCAST type (IMMEDIATE + OPEN)
+    const timeType = getEffectiveTimeType(meeting);
+    const targetType = getEffectiveTargetType(meeting);
+    const isBroadcast = timeType === 'IMMEDIATE' && targetType === 'OPEN';
+
+    if (!isBroadcast) {
         return {
             valid: false,
             error: "This operation is only valid for broadcast meetings",

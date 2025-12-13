@@ -10,6 +10,7 @@ import { getIsBroadcasting } from '../backend/query/user-lookup.js';
 import { setBroadcastClaimed, setBroadcastUnclaimed } from '../backend/update/broadcast-update.js';
 import { setOfferOpen } from '../backend/update/offer-update.js';
 import { getAcceptedOfferByMeetingId } from '../backend/query/offer-lookup.js';
+import { getEffectiveTimeType, getEffectiveTargetType } from '../types.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -20,11 +21,12 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
     }
 
     try {
-        // Check if user already has an active broadcast
+        // Check if user already has an active broadcast (IMMEDIATE + OPEN)
         const createdMeetings = await getCreatedMeetings({userFromId: userId});
-        const activeBroadcast = createdMeetings.find(m =>
-            m.meetingType === 'BROADCAST' && m.meetingState !== 'PAST'
-        );
+        const activeBroadcast = createdMeetings.find(m => {
+            const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
+            return isBroadcast && m.meetingState !== 'PAST';
+        });
 
         if (activeBroadcast) {
             return res.status(409).json({
@@ -270,8 +272,9 @@ export const handleCancelBroadcastAcceptance = async (req: Request, res: Respons
             return res.status(404).json({ error: "Meeting not found" });
         }
 
-        // Verify it's a broadcast meeting
-        if (meeting.meetingType !== 'BROADCAST') {
+        // Verify it's a broadcast meeting (IMMEDIATE + OPEN)
+        const isBroadcast = getEffectiveTimeType(meeting) === 'IMMEDIATE' && getEffectiveTargetType(meeting) === 'OPEN';
+        if (!isBroadcast) {
             return res.status(400).json({ error: "This operation is only valid for broadcast meetings" });
         }
 
