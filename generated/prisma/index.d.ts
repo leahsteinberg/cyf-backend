@@ -79,7 +79,8 @@ export const MeetingState: {
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
   PAST: 'PAST',
-  EXPIRED: 'EXPIRED'
+  EXPIRED: 'EXPIRED',
+  DISMISSED: 'DISMISSED'
 };
 
 export type MeetingState = (typeof MeetingState)[keyof typeof MeetingState]

@@ -176,6 +176,7 @@ enum MeetingState {
   REJECTED
   PAST
   EXPIRED    // NEW: For time-bounded suggestions
+  DISMISSED  // NEW: For suggestions the user dismisses
 }
 
 enum MeetingType {// to be deprecated, want to hold on for backwards-compatibility
