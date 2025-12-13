@@ -7,6 +7,7 @@ import { setOfferRejected } from "../backend/update/offer-update.js";
 import { SEARCHING_MEETING_STATE } from "../backend/utils.js";
 import { handleRejectOffer } from "./offer-handler.js";
 import { rejectOffer, rejectOfferWithMeeting } from "../backend/offer.js";
+import { deleteAcceptedMeetingByAcceptor } from "../backend/meeting.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -92,12 +93,8 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
     }
     
     if (userId !== meeting?.userFromId) {
-      // const offer = await getAcceptedOfferByMeetingId({ meetingId });
-      // if (!offer) {
-      //   return res.status(404).json({error: "No valid offer for user found."});
-      // }
-      // const rejectedOffer = await rejectOfferWithMeeting({offerId: offer.id})
-      // res.json(rejectedOffer);
+      const rejectedOffer = await deleteAcceptedMeetingByAcceptor({meetingId});
+      res.json(meeting);
     }
 
     // first need to delete offers

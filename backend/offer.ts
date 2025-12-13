@@ -2,7 +2,7 @@ import { getFriendIds, pickFriendIdToOffer } from './friendship.js';
 import { addHour, isTimePast, REJECTED_MEETING_STATE } from './utils.js';
 import type { Offer } from '../types.js';
 import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
-import { createOffer, setOfferAccepted, setOfferExpired, setOfferRejected } from './update/offer-update.js';
+import { createOffer, setOfferAccepted, setOfferExpired, setOfferOpen, setOfferRejected } from './update/offer-update.js';
 import { setMeetingAccepted, setMeetingState } from './update/meeting-update.js';
 import { getMeetingById, getUserFromMeetingId } from './query/meeting-lookup.js';
 import { NumberInstance } from 'twilio/lib/rest/pricing/v2/number.js';
@@ -47,22 +47,33 @@ export const rejectOffer = async ({ offerId }
 };
 
 export const rejectOfferWithMeeting = async ({offerId}: {offerId: string}) => {
-    const rejectedOffer = await rejectOffer({ offerId });
-    console.log("rejected offer -", rejectOffer)
-    if (!rejectedOffer) {
-        throw new Error('Rejected offer not found');
+    const offer = await getOfferById({offerId});
+
+    if (!offer) {
+        throw new Error("Cannot find offer to reject");
     }
 
-    const meetingId = rejectedOffer.meetingId;
-    // Get the meeting
+    const meetingId = offer.meetingId;
     const meeting = await getMeetingById({ meetingId });
-    if (meeting) {
-      await processOffersForMeeting(meeting)
-      console.log("New offer,", rejectedOffer);
-      return rejectedOffer;
-    } else {
-      throw new Error('Meeting not found for rejected offer');
+
+    if (!meeting) {
+        throw new Error("Cannot find meeting for offer")
     }
+
+    const rejectedOffer = await rejectOffer({ offerId });
+
+    if (!rejectedOffer) {
+        throw new Error('Error rejecting offer');
+    }
+    const offers = await getMeetingOffers({ meetingId });
+    const otherOffers = offers.filter(o => o.id != rejectedOffer.id);
+    for (let otherOffer of otherOffers) {
+        await setOfferOpen( {offerId: otherOffer.id});
+    }
+    //await processOffersForMeeting(meeting)
+    console.log("New offer,", rejectedOffer);
+    return rejectedOffer;
+
 
 }
 

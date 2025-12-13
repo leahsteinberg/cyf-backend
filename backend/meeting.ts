@@ -4,6 +4,7 @@ import { getMeetingOffers, rejectOfferWithMeeting } from './offer.js';
 import { clearOutOffers } from './process-meeting.js';
 import { getAcceptedOfferByMeetingId } from './query/offer-lookup.js';
 import { deleteMeeting } from './update/meeting-update.js';
+import { setOfferOpen } from './update/offer-update.js';
 
 
 export const findBroadcastedMeetings = (meetings: Meeting[]): Meeting[] => {
@@ -19,7 +20,7 @@ export const deleteBroadcastedMeeting = async (meeting: Meeting) => {
 }
 
 
-export const deleteAcceptedMeetingByAcceptor = async ({meetingId}: {meetingId: string}):Promise<Meeting> => {
+export const deleteAcceptedMeetingByAcceptor = async ({meetingId}: {meetingId: string}):Promise<Offer> => {
 
     const offer = await getAcceptedOfferByMeetingId({ meetingId });
     
@@ -27,11 +28,15 @@ export const deleteAcceptedMeetingByAcceptor = async ({meetingId}: {meetingId: s
       throw new Error("No valid offer for user found.");
     }
     const rejectedOffer = await rejectOfferWithMeeting({offerId: offer.id})
-    res.json(rejectedOffer);
-  }
+    //res.json(rejectedOffer);
+    const offers = await getMeetingOffers({ meetingId });
+    const otherOffers = offers.filter(o => o.id != rejectedOffer.id);
+    for (let otherOffer of otherOffers) {
+        await setOfferOpen( {offerId: otherOffer.id});
+    }
 
   // first need to delete offers
-  const deletedMeeting = await deleteMeeting({ meetingId });
-  res.json(deletedMeeting);
+  return rejectedOffer;
+  //res.json(deletedMeeting);
 
 }
