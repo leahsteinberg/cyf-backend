@@ -1,5 +1,6 @@
 
 import type { Meeting, Offer } from '../types.js';
+import { getEffectiveTimeType, getEffectiveTargetType } from '../types.js';
 import { getMeetingOffers, rejectOfferWithMeeting } from './offer.js';
 import { clearOutOffers } from './process-meeting.js';
 import { getAcceptedOfferByMeetingId } from './query/offer-lookup.js';
@@ -8,7 +9,11 @@ import { setOfferOpen, setOfferRejected } from './update/offer-update.js';
 
 
 export const findBroadcastedMeetings = (meetings: Meeting[]): Meeting[] => {
-    return meetings.filter(meeting => meeting.meetingType === 'BROADCAST');
+    return meetings.filter(meeting => {
+        const timeType = getEffectiveTimeType(meeting);
+        const targetType = getEffectiveTargetType(meeting);
+        return timeType === 'IMMEDIATE' && targetType === 'OPEN';
+    });
 }
 
 export const deleteBroadcastedMeeting = async (meeting: Meeting) => {

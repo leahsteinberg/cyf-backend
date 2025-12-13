@@ -8,6 +8,7 @@ import { SEARCHING_MEETING_STATE } from "../backend/utils.js";
 import { handleRejectOffer } from "./offer-handler.js";
 import { rejectOffer, rejectOfferWithMeeting } from "../backend/offer.js";
 import { deleteAcceptedMeetingByAcceptor } from "../backend/meeting.js";
+import { getEffectiveTimeType, getEffectiveTargetType } from "../types.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -26,18 +27,20 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
       return (newMeetingStart < existingEnd && newMeetingEnd > existingStart);
     };
 
-    // Filter out PAST meetings and BROADCAST meetings, then check for time conflicts
-    const conflictingCreatedMeeting = createdMeetings.find(m =>
-      m.meetingState !== 'PAST' &&
-      m.meetingType !== 'BROADCAST' &&
-      hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd))
-    );
+    // Filter out PAST meetings and BROADCAST meetings (IMMEDIATE + OPEN), then check for time conflicts
+    const conflictingCreatedMeeting = createdMeetings.find(m => {
+      const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
+      return m.meetingState !== 'PAST' &&
+        !isBroadcast &&
+        hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd));
+    });
 
-    const conflictingAcceptedMeeting = acceptedMeetings.find(m =>
-      m.meetingState !== 'PAST' &&
-      m.meetingType !== 'BROADCAST' &&
-      hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd))
-    );
+    const conflictingAcceptedMeeting = acceptedMeetings.find(m => {
+      const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
+      return m.meetingState !== 'PAST' &&
+        !isBroadcast &&
+        hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd));
+    });
 
     if (conflictingCreatedMeeting) {
       return res.status(409).json({
@@ -151,21 +154,23 @@ export const handleAcceptDraftMeeting = async (req: Request, res: Response) => {
       return (newMeetingStart < existingEnd && newMeetingEnd > existingStart);
     };
 
-    // Filter out PAST, DRAFT, and BROADCAST meetings, then check for time conflicts
-    const conflictingCreatedMeeting = createdMeetings.find(m =>
-      m.id !== meetingId && // Don't check against itself
-      m.meetingState !== 'PAST' &&
-      m.meetingState !== 'DRAFT' &&
-      m.meetingType !== 'BROADCAST' &&
-      hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd))
-    );
+    // Filter out PAST, DRAFT, and BROADCAST meetings (IMMEDIATE + OPEN), then check for time conflicts
+    const conflictingCreatedMeeting = createdMeetings.find(m => {
+      const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
+      return m.id !== meetingId && // Don't check against itself
+        m.meetingState !== 'PAST' &&
+        m.meetingState !== 'DRAFT' &&
+        !isBroadcast &&
+        hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd));
+    });
 
-    const conflictingAcceptedMeeting = acceptedMeetings.find(m =>
-      m.meetingState !== 'PAST' &&
-      m.meetingState !== 'DRAFT' &&
-      m.meetingType !== 'BROADCAST' &&
-      hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd))
-    );
+    const conflictingAcceptedMeeting = acceptedMeetings.find(m => {
+      const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
+      return m.meetingState !== 'PAST' &&
+        m.meetingState !== 'DRAFT' &&
+        !isBroadcast &&
+        hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd));
+    });
 
     if (conflictingCreatedMeeting) {
       return res.status(409).json({
