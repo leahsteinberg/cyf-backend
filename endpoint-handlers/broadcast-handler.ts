@@ -38,12 +38,16 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
         const scheduledFor = new Date();
         const scheduledEnd = addHour(scheduledFor);
 
+        // NOTE: Currently using old meetingType parameter for backwards compatibility
+        // Future: Should migrate to timeType: 'IMMEDIATE', targetType: 'OPEN'
+        console.log('[METRICS] api.broadcast_now.old_format', { userId });
+
         const meeting = await createMeeting({
             userFromId: userId,
             scheduledFor,
             scheduledEnd,
             title: 'This is a broadcast meeting',
-            meetingType: 'BROADCAST',
+            meetingType: 'BROADCAST', // TODO: Migrate to timeType/targetType in Phase 6
         });
 
         // Validate meeting was created successfully before creating offers

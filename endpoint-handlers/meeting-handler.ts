@@ -12,9 +12,43 @@ import { getEffectiveTimeType, getEffectiveTargetType } from "../types.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
-  const {userFromId, scheduledEnd, scheduledFor, title} = req.body;
+  const {
+    userFromId,
+    scheduledEnd,
+    scheduledFor,
+    title,
+    // OLD API (deprecated)
+    meetingType,
+    // NEW API (preferred)
+    timeType,
+    targetType,
+    sourceType,
+    intentLabel,
+    targetUserId
+  } = req.body;
 
   try {
+    // DEPRECATION WARNING: Log usage of old API
+    if (meetingType && !timeType && !targetType) {
+      console.warn('⚠️ DEPRECATED: meetingType parameter is deprecated. Use timeType + targetType instead.', {
+        userFromId,
+        meetingType,
+        endpoint: 'handleCreateMeeting'
+      });
+      // Add deprecation header
+      res.setHeader('X-Deprecated-API', 'meetingType will be removed in v2.0. Use timeType and targetType instead.');
+    }
+
+    // USAGE TRACKING: Track old vs new API usage
+    if (meetingType && !timeType && !targetType) {
+      console.log('[METRICS] api.create_meeting.old_format', { userFromId, meetingType });
+    } else if (timeType && targetType) {
+      console.log('[METRICS] api.create_meeting.new_format', { userFromId, timeType, targetType });
+    } else if (!meetingType && !timeType && !targetType) {
+      // Default behavior (no params provided)
+      console.log('[METRICS] api.create_meeting.default_format', { userFromId });
+    }
+
     // Check if user already has any active meetings (created or accepted) that overlap with the requested time
     const createdMeetings = await getCreatedMeetings({userFromId});
     const acceptedMeetings = await getAcceptedMeetings({acceptedUserId: userFromId});
@@ -56,7 +90,20 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
       });
     }
 
-    const meeting = await createMeeting({userFromId, scheduledEnd, scheduledFor, title, meetingType: 'ADVANCE'});
+    // Create meeting with dual-write support (old or new API)
+    const meeting = await createMeeting({
+      userFromId,
+      scheduledEnd,
+      scheduledFor,
+      title,
+      // Support both old and new API
+      meetingType: meetingType || undefined,
+      timeType: timeType || undefined,
+      targetType: targetType || undefined,
+      sourceType: sourceType || undefined,
+      intentLabel: intentLabel || undefined,
+      targetUserId: targetUserId || undefined
+    });
 
     // Validate meeting was created successfully
     if (!meeting || !meeting.id) {
