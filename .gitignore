@@ -4,6 +4,7 @@
 ./generated/prisma
 ./node_modules
 node_modules
+.gitignore
 ca.crt
 ca.key
 cert.crt
@@ -11,3 +12,7 @@ cert.key
 TODO
 ADVANCE_PARALLEL_IMPLEMENTATION_GUIDE
 TESTING_STRATEGY
+ADVANCE_PARALLEL_IMPLEMENTATION_GUIDE.md
+ARCHITECTURAL_REFACTOR.md
+MIGRATION_PLAN_DRAFT_MEETINGS.md
+TESTING_STRATEGY.md
