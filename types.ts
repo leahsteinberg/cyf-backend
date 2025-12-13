@@ -1,6 +1,6 @@
 
 export type OfferState = "OPEN" | "ACCEPTED" | "REJECTED" | "EXPIRED";
-export type MeetingState = "DRAFT" | "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST" | "EXPIRED";
+export type MeetingState = "DRAFT" | "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST" | "EXPIRED" | "DISMISSED";
 export type MeetingType = "ADVANCE" | "BROADCAST";
 export type BroadcastSubState = "PENDING_CLAIMED" | "UNCLAIMED" | "CLAIMED";
 
@@ -8,6 +8,37 @@ export type BroadcastSubState = "PENDING_CLAIMED" | "UNCLAIMED" | "CLAIMED";
 export type TimeType = "IMMEDIATE" | "FUTURE" | "UNKNOWN";
 export type TargetType = "OPEN" | "FRIEND_SPECIFIC" | "GROUP";
 export type SourceType = "USER_INTENT" | "SYSTEM_PATTERN" | "SYSTEM_REAL_TIME";
+
+export const OPEN_OFFER_STATE_TYPE = 'OPEN';
+export const ACCEPTED_OFFER_STATE_TYPE = 'ACCEPTED';
+export const REJECTED_OFFER_STATE_TYPE = 'REJECTED';
+export const EXPIRED_OFFER_STATE_TYPE = 'EXPIRED';
+
+export const DRAFT_MEETING_STATE_TYPE = 'DRAFT';
+export const SEARCHING_MEETING_STATE_TYPE = 'SEARCHING';
+export const ACCEPTED_MEETING_STATE_TYPE = 'ACCEPTED';
+export const REJECTED_MEETING_STATE_TYPE = 'REJECTED';
+export const PAST_MEETING_STATE_TYPE = 'PAST';
+
+
+export const IMMEDIATE_TIME_TYPE = 'IMMEDIATE';
+export const FUTURE_TIME_TYPE = 'FUTURE';
+export const UNKNOWN_TIME_TYPE = 'UNKNOWN';
+
+export const OPEN_TARGET_TYPE = 'OPEN';
+export const FRIEND_SPECIFIC_TARGET_TYPE = 'FRIEND_SPECIFIC';
+export const GROUP_TARGET_TYPE = 'GROUP';
+
+export const USER_INTENT_SOURCE_TYPE = 'USER_INTENT';
+export const SYSTEM_PATTERN_SOURCE_TYPE = 'SYSTEM_PATTERN';
+export const SYSTEM_REAL_TIME_SOURCE_TYPE = 'SYSTEM_REAL_TIME';
+
+
+
+
+
+
+
 
 export interface BaseEntity {
     id: string;
