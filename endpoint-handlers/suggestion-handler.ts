@@ -3,6 +3,7 @@ import { getMeetingById, getCreatedMeetings, getAcceptedMeetings } from '../back
 import { setMeetingState } from '../backend/update/meeting-update.js';
 import { processOfferForNewMeeting } from '../backend/process-meeting.js';
 import { getEffectiveTimeType, getEffectiveTargetType } from '../types.js';
+import { findMeetingTimeConflict } from '../backend/meeting-conflict.js';
 
 /**
  * Accepts a suggestion (DRAFT meeting) and converts it to an active meeting
@@ -62,46 +63,22 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             const createdMeetings = await getCreatedMeetings({ userFromId: userId });
             const acceptedMeetings = await getAcceptedMeetings({ acceptedUserId: userId });
 
-            const suggestionStart = new Date(suggestion.scheduledFor);
-            const suggestionEnd = new Date(suggestion.scheduledEnd);
-
-            const hasTimeOverlap = (existingStart: Date, existingEnd: Date) => {
-                return (suggestionStart < existingEnd && suggestionEnd > existingStart);
-            };
-
-            // Check for conflicts (exclude PAST, DRAFT, and BROADCAST meetings)
-            const conflictingCreatedMeeting = createdMeetings.find(m => {
-                const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
-                const isUnknownTime = getEffectiveTimeType(m) === 'UNKNOWN';
-                return m.id !== meetingId && // Don't check against itself
-                    m.meetingState !== 'PAST' &&
-                    m.meetingState !== 'DRAFT' &&
-                    !isBroadcast &&
-                    !isUnknownTime &&
-                    hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd));
+            // Use centralized conflict checking logic (excludes this suggestion)
+            const conflict = findMeetingTimeConflict({
+                userCreatedMeetings: createdMeetings,
+                userAcceptedMeetings: acceptedMeetings,
+                scheduledFor: new Date(suggestion.scheduledFor),
+                scheduledEnd: new Date(suggestion.scheduledEnd),
+                excludeMeetingId: meetingId // Don't check against itself
             });
 
-            const conflictingAcceptedMeeting = acceptedMeetings.find(m => {
-                const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
-                const isUnknownTime = getEffectiveTimeType(m) === 'UNKNOWN';
-                return m.meetingState !== 'PAST' &&
-                    m.meetingState !== 'DRAFT' &&
-                    !isBroadcast &&
-                    !isUnknownTime &&
-                    hasTimeOverlap(new Date(m.scheduledFor), new Date(m.scheduledEnd));
-            });
-
-            if (conflictingCreatedMeeting) {
+            if (conflict) {
+                const errorMessage = conflict.type === 'created'
+                    ? "You already have a meeting at this time"
+                    : "You already have a meeting you accepted at this time";
                 return res.status(409).json({
-                    error: "You already have a meeting at this time",
-                    existingMeeting: conflictingCreatedMeeting
-                });
-            }
-
-            if (conflictingAcceptedMeeting) {
-                return res.status(409).json({
-                    error: "You already have a meeting you accepted at this time",
-                    existingMeeting: conflictingAcceptedMeeting
+                    error: errorMessage,
+                    existingMeeting: conflict.conflictingMeeting
                 });
             }
         }
