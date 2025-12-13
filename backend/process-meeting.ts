@@ -1,4 +1,4 @@
-import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired, createOffer, getIsOfferExpired } from './offer.js';
+import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired, createOffer, getIsOfferExpired, setOffersExpired } from './offer.js';
 import { setMeetingState } from './update/meeting-update.js';
 import { ACCEPTED_MEETING_STATE, ACCEPTED_OFFER_STATE, addHour, EXPIRED_OFFER_STATE, isTimePast, minutesBetween, minutesSince, minutesUntil, OPEN_OFFER_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, REJECTED_OFFER_STATE } from './utils.js';
 import { findUnofferedFriends, getFriendIds, getUnofferedFriendsFromMeeting } from './friendship.js';
@@ -305,7 +305,7 @@ const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
     const meetingInPast = await isTimePast({eventTime: meeting.scheduledEnd});
     if (meetingInPast) {
         const offers = await getMeetingOffers({meetingId})
-        await clearOutOffers(offers);
+        await setOffersExpire(offers);
         await setIsNotBroadcasting({userId: meeting.userFromId});
         return await setMeetingState({meetingId, meetingState: PAST_MEETING_STATE});
     }
@@ -354,7 +354,7 @@ async function processOffersForParallelMeeting(meeting: Meeting): Promise<Meetin
     // Check if meeting is in the past
     const meetingInPast = await isTimePast({ eventTime: meeting.scheduledFor });
     if (meetingInPast) {
-        await clearOutOffers(offers);
+        await setOffersExpired(offers);
         return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE });
     }
 
@@ -362,7 +362,7 @@ async function processOffersForParallelMeeting(meeting: Meeting): Promise<Meetin
     const acceptedOffer = offers.find(o => o.offerState === ACCEPTED_OFFER_STATE);
     if (acceptedOffer) {
         // Clear all other offers and mark meeting as accepted
-        await clearOutOffers(offers.filter(o => o.id !== acceptedOffer.id));
+        await setOffersExpired(offers.filter(o => o.id !== acceptedOffer.id));
         await setMeetingState({ meetingId, meetingState: ACCEPTED_MEETING_STATE });
         return meeting;
     }
@@ -389,7 +389,7 @@ async function processOffersForFriendSpecificMeeting(meeting: Meeting): Promise<
     // Check if meeting is in the past
     const meetingInPast = await isTimePast({ eventTime: meeting.scheduledFor });
     if (meetingInPast) {
-        await clearOutOffers(offers);
+        await setOffersExpired(offers);
         return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE });
     }
 
@@ -424,12 +424,12 @@ async function processOffersForAdvanceMeeting(meeting: Meeting): Promise<Meeting
 
     const meetingInPast = await isTimePast({ eventTime: meeting.scheduledFor });
     if (meetingInPast) {
-        await clearOutOffers(offers);  // Clear ALL offers for past meetings
+        await setOffersExpired(offers);  // Clear ALL offers for past meetings
         return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE });
     }
 
     // For active meetings, only clear older offers
-    await clearOutOffers(olderOffers);
+    await setOffersExpired(olderOffers);
 
     const allFriendIds = await getFriendIds(userFrom);
     const { friendToOfferId, unOfferedCount } = await findFriendIdToOffer({ offers, meetingId, allFriendIds });

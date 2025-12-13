@@ -115,7 +115,10 @@ export const getIsOfferExpired = async({offer}: {offer: Offer}): Promise<Boolean
 }
 
 
-const setOffersExpired = async (offers: Offer[]): Promise<Offer[]> => {
-    const expiredOffers = await offers.map(o => await setOfferExpired({offerId: o.id}));
-    return expiredOffers;
+export const setOffersExpired = async (offers: Offer[]): Promise<Offer[]> => {
+    let expiredOffers: Offer[] = [];
+    for (let offer of offers) {
+        const expiredOffer = await setOfferExpired({offerId: offer.id})
+    }
+    return expiredOffers
 }

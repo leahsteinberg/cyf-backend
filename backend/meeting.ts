@@ -14,5 +14,5 @@ export const deleteBroadcastedMeeting = async (meeting: Meeting) => {
     // const offers = await getMeetingOffers({meetingId: meeting.id})
 
     // deleteMeeting
-    // await clearOutOffers(offers)
+    // await setOffersExpired(offers)
 }
