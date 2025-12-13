@@ -2,7 +2,7 @@ import { getFriendIds, pickFriendIdToOffer } from './friendship.js';
 import { addHour, isTimePast, REJECTED_MEETING_STATE } from './utils.js';
 import type { Offer } from '../types.js';
 import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
-import { createOffer, setOfferAccepted, setOfferRejected } from './update/offer-update.js';
+import { createOffer, setOfferAccepted, setOfferExpired, setOfferRejected } from './update/offer-update.js';
 import { setMeetingAccepted, setMeetingState } from './update/meeting-update.js';
 import { getMeetingById, getUserFromMeetingId } from './query/meeting-lookup.js';
 import { NumberInstance } from 'twilio/lib/rest/pricing/v2/number.js';
@@ -18,15 +18,20 @@ export const acceptOffer = async ({ userId, offerId }
     if (!offer) {
     // TO DO - make sure we address not having the offer (offer === null)
     // Return ERROR
+    throw new Error("Could not find valid offer")
+
     }
     const meetingId = offer?.meetingId;
+    const meeting = getMeetingById({ meetingId });
+    if (!meeting) {
+        throw new Error("Could not find meeting for offer");
+    }
 
     const acceptedOffer = await setOfferAccepted({ offerId });
-    if (meetingId) {
-        const acceptedMeeting = await setMeetingAccepted({ meetingId, userId });
-    }
+    const acceptedMeeting = await setMeetingAccepted({ meetingId, userId });
+    const otherOffers = await getMeetingOffers({ meetingId });
+    const expiredOffers = await setOffersExpired(otherOffers);
     return acceptedOffer;
-
 };
 
 export const rejectOffer = async ({ offerId }
@@ -107,4 +112,10 @@ export const determineNeedNewOffer = async ({remainingFriendCount, minutesUntilM
 
 export const getIsOfferExpired = async({offer}: {offer: Offer}): Promise<Boolean> => {
     return isTimePast({eventTime: offer.expiresAt});
+}
+
+
+const setOffersExpired = async (offers: Offer[]): Promise<Offer[]> => {
+    const expiredOffers = await offers.map(o => await setOfferExpired({offerId: o.id}));
+    return expiredOffers;
 }
