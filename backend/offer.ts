@@ -29,8 +29,15 @@ export const acceptOffer = async ({ userId, offerId }
 
     const acceptedOffer = await setOfferAccepted({ offerId });
     const acceptedMeeting = await setMeetingAccepted({ meetingId, userId });
-    const otherOffers = await getMeetingOffers({ meetingId });
-    const expiredOffers = await setOffersExpired(otherOffers);
+    // const otherOffers = await getMeetingOffers({ meetingId });
+    // const expiredOffers = await setOffersExpired(otherOffers);
+    const offers = await getMeetingOffers({ meetingId });
+
+    const otherOffers = offers.filter(o => o.id !== offerId);
+    console.log("IN HANDLE ACCEPT OFFER __", offer);
+    console.log("other offers ----- :))))", otherOffers);
+    await setOffersExpired(otherOffers);
+
     return acceptedOffer;
 };
 
@@ -65,11 +72,7 @@ export const rejectOfferWithMeeting = async ({offerId}: {offerId: string}) => {
     if (!rejectedOffer) {
         throw new Error('Error rejecting offer');
     }
-    const offers = await getMeetingOffers({ meetingId });
-    const otherOffers = offers.filter(o => o.id != rejectedOffer.id);
-    for (let otherOffer of otherOffers) {
-        await setOfferOpen( {offerId: otherOffer.id});
-    }
+    
     //await processOffersForMeeting(meeting)
     console.log("New offer,", rejectedOffer);
     return rejectedOffer;

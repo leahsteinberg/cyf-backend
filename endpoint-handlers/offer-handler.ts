@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { acceptOffer, getMeetingOffers, getOfferById, getOffersForUser, rejectOffer, rejectOfferWithMeeting, setOffersExpired } from '../backend/offer.js';
 import { getMeetingById } from '../backend/query/meeting-lookup.js';
 import { clearOutOffers, processOffersForMeeting } from '../backend/process-meeting.js';
+import { setOfferRejected } from '../backend/update/offer-update.js';
 
 
 
@@ -63,7 +64,7 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
   }
 
   try {
-    const rejectedOffer = await rejectOfferWithMeeting({ offerId });
+    const rejectedOffer = await setOfferRejected({ offerId });
     res.json(rejectedOffer);
   } catch (error) {
     console.error("Error rejecting offer:", error);

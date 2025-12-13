@@ -4,7 +4,7 @@ import { getMeetingOffers, rejectOfferWithMeeting } from './offer.js';
 import { clearOutOffers } from './process-meeting.js';
 import { getAcceptedOfferByMeetingId } from './query/offer-lookup.js';
 import { deleteMeeting } from './update/meeting-update.js';
-import { setOfferOpen } from './update/offer-update.js';
+import { setOfferOpen, setOfferRejected } from './update/offer-update.js';
 
 
 export const findBroadcastedMeetings = (meetings: Meeting[]): Meeting[] => {
@@ -27,7 +27,7 @@ export const deleteAcceptedMeetingByAcceptor = async ({meetingId}: {meetingId: s
     if (!offer) {
       throw new Error("No valid offer for user found.");
     }
-    const rejectedOffer = await rejectOfferWithMeeting({offerId: offer.id})
+    const rejectedOffer = await setOfferRejected({offerId: offer.id})
     //res.json(rejectedOffer);
     const offers = await getMeetingOffers({ meetingId });
     const otherOffers = offers.filter(o => o.id != rejectedOffer.id);
