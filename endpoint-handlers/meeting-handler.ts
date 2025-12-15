@@ -90,38 +90,6 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
   res.json(allMeetings)
 }
 
-export const handleDeleteMeeting = async (req: Request, res: Response) => {
-  const { meetingId, userId } = req.body;
-  console.log("handle delete meeting ---", meetingId);
-
-  if (!meetingId) {
-    return res.status(400).json({ error: "meetingId is required" });
-  }
-
-  try {
-
-    const meeting = await getMeetingById({ meetingId });
-    if (!meeting) {
-      return res.status(404).json({ error: "Meeting not found" });
-    }
-    
-      // if the user is the receiver of the meeting, not the creator,
-      // then just undo the accept and reset the meeting as searching
-    if (userId !== meeting.userFromId) {
-      if (userId !== meeting.acceptedUserId) {
-        return res.status(404).json({ error: "User not creator or acceptor of meeting" });
-      }
-      await unacceptMeetingByAcceptor({meetingId});
-      return res.json(meeting);
-    }
-
-    const deletedMeeting = await deleteMeetingAndOffers({ meetingId });
-    res.json(deletedMeeting);
-  } catch (error) {
-    console.error("Error deleting meeting:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-}
 
 
 export const handleCancelMeeting = async (req: Request, res: Response) => {

@@ -6,7 +6,7 @@ import { handleMe, handleSignIn, handleSignUpPhone, handleSignOut } from './endp
 import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites, handleGetFriendInvites, handleAcceptInvite } from './endpoint-handlers/invite-handler.js';
 import { handleGetUserByPhone } from './endpoint-handlers/user-handler.js';
 import { handleGetFriends } from './endpoint-handlers/friend-handler.js';
-import { handleCreateMeeting, handleGetMeetings, handleDeleteMeeting, handleCancelMeeting } from './endpoint-handlers/meeting-handler.js';
+import { handleCreateMeeting, handleGetMeetings, handleCancelMeeting } from './endpoint-handlers/meeting-handler.js';
 import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoint-handlers/offer-handler.js';
 import { handleCronRound } from './endpoint-handlers/cron-handler.js';
 import cron from 'node-cron';
@@ -57,7 +57,6 @@ app.post('/api/get-friends', handleGetFriends);
 //MEETING ENDPOINTS
 app.post('/api/create-meeting', handleCreateMeeting);
 app.post('/api/get-meetings', handleGetMeetings);
-app.post('/api/delete-meeting', handleDeleteMeeting);// TO BE DEPRECATED
 app.post('/api/cancel-meeting', handleCancelMeeting);
 
 
