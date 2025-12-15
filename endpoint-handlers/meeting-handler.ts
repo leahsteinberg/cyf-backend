@@ -1,10 +1,11 @@
-import { createMeeting, deleteMeeting, setMeetingDismissed, setMeetingState } from "../backend/update/meeting-update.js";
+import { createMeeting, deleteMeeting, deleteMeetingAndOffers, setMeetingDismissed, setMeetingState } from "../backend/update/meeting-update.js";
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
 import { processOfferForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
 import { DISMISSED_MEETING_STATE_TYPE } from "../types.js";
 import { unacceptMeetingByAcceptor } from "../backend/meeting.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
+import { getMeetingOffers } from "../backend/offer.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -131,9 +132,8 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
       await unacceptMeetingByAcceptor({meetingId});
       return res.json(meeting);
     }
-
-    // first need to delete offers
-    const deletedMeeting = await deleteMeeting({ meetingId });
+    
+    const deletedMeeting = await deleteMeetingAndOffers({ meetingId });
     res.json(deletedMeeting);
   } catch (error) {
     console.error("Error deleting meeting:", error);

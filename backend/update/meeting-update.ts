@@ -174,7 +174,7 @@ export const unclaimBroadcastMeeting = async ({meetingId}: {meetingId: string}):
 };
 
 
-export const deleteMeeting = async ({meetingId}: {meetingId: string}): Promise<Meeting> => {
+export const deleteMeetingAndOffers = async ({meetingId}: {meetingId: string}): Promise<Meeting> => {
     // First delete all related offers
     await prisma.offer.deleteMany({
         where: {
