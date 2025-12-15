@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { createDraftMeeting } from '../backend/draft-meeting.js';
 import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { deleteMeetingAndOffers } from '../backend/update/meeting-update.js';
-import { getEffectiveTimeType, getEffectiveTargetType, UNKNOWN_TIME_TYPE, FRIEND_SPECIFIC_TARGET_TYPE, USER_INTENT_SOURCE_TYPE, DRAFT_MEETING_STATE_TYPE } from '../types.js';
+import { getEffectiveTimeType, getEffectiveTargetType, UNKNOWN_TIME_TYPE, FRIEND_SPECIFIC_TARGET_TYPE, USER_INTENT_SOURCE_TYPE, DRAFT_MEETING_STATE } from '../types.js';
 
 /**
  * Creates a call intent (DRAFT meeting with UNKNOWN time and FRIEND_SPECIFIC target)
@@ -23,7 +23,7 @@ export const handleCallIntent = async (req: Request, res: Response) => {
         const existingCallIntent = createdMeetings.find(m => {
             const timeType = getEffectiveTimeType(m);
             const targetType = getEffectiveTargetType(m);
-            return m.meetingState === DRAFT_MEETING_STATE_TYPE &&
+            return m.meetingState === DRAFT_MEETING_STATE &&
                    timeType === UNKNOWN_TIME_TYPE &&
                    targetType === FRIEND_SPECIFIC_TARGET_TYPE &&
                    m.targetUserId === userToId;
@@ -96,7 +96,7 @@ export const handleUndoCallIntent = async (req: Request, res: Response) => {
         const callIntent = createdMeetings.find(m => {
             const timeType = getEffectiveTimeType(m);
             const targetType = getEffectiveTargetType(m);
-            return m.meetingState === DRAFT_MEETING_STATE_TYPE &&
+            return m.meetingState === DRAFT_MEETING_STATE &&
                    timeType === UNKNOWN_TIME_TYPE &&
                    targetType === FRIEND_SPECIFIC_TARGET_TYPE &&
                    m.targetUserId === userToId;

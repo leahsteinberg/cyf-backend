@@ -15,8 +15,8 @@ import {
     getEffectiveTargetType,
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
-    PAST_MEETING_STATE_TYPE,
-    OPEN_OFFER_STATE_TYPE,
+    PAST_MEETING_STATE,
+    OPEN_OFFER_STATE,
     USER_INTENT_SOURCE_TYPE,
     UNCLAIMED_BROADCAST_STATE,
     CLAIMED_BROADCAST_STATE,
@@ -36,7 +36,7 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
         const createdMeetings = await getCreatedMeetings({userFromId: userId});
         const activeBroadcast = createdMeetings.find(m => {
             const isBroadcast = getEffectiveTimeType(m) === IMMEDIATE_TIME_TYPE && getEffectiveTargetType(m) === OPEN_TARGET_TYPE;
-            return isBroadcast && m.meetingState !== PAST_MEETING_STATE_TYPE;
+            return isBroadcast && m.meetingState !== PAST_MEETING_STATE;
         });
 
         if (activeBroadcast) {
@@ -127,7 +127,7 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
         const { offer, meeting } = validation;
 
             // Check if the offer is still open
-        if (offer.offerState !== OPEN_OFFER_STATE_TYPE) {
+        if (offer.offerState !== OPEN_OFFER_STATE) {
             return {
                 valid: false,
                 error: "Offer is no longer available",
@@ -183,7 +183,7 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
         const { offer, meeting } = validation;
 
             // Check if the offer is still open
-        if (offer.offerState !== OPEN_OFFER_STATE_TYPE) {
+        if (offer.offerState !== OPEN_OFFER_STATE) {
             return {
                 valid: false,
                 error: "Offer is no longer available",

@@ -6,7 +6,7 @@
  */
 
 import type { Meeting, TimeType, TargetType, SourceType } from "../types.js";
-import { DRAFT_MEETING_STATE_TYPE } from "../types.js";
+import { DRAFT_MEETING_STATE } from "../types.js";
 import { createMeeting } from "./update/meeting-update.js";
 
 export interface CreateDraftMeetingParams {
@@ -55,7 +55,7 @@ export async function createDraftMeeting(params: CreateDraftMeetingParams): Prom
         scheduledEnd,
         scheduledFor,
         title,
-        meetingState: DRAFT_MEETING_STATE_TYPE,
+        meetingState: DRAFT_MEETING_STATE,
         // New field system
         timeType,
         targetType,
@@ -88,7 +88,7 @@ export function validateDraftMeetingOwnership(meeting: Meeting, userId: string):
         throw new Error("You can only modify your own draft meetings");
     }
 
-    if (meeting.meetingState !== DRAFT_MEETING_STATE_TYPE) {
+    if (meeting.meetingState !== DRAFT_MEETING_STATE) {
         throw new Error(`Meeting is not in DRAFT state (current: ${meeting.meetingState})`);
     }
 }

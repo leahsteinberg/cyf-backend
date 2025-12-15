@@ -2,11 +2,11 @@ import type { Meeting, MeetingState, MeetingType, TimeType, TargetType, SourceTy
 import {
     meetingTypeToNew,
     newToMeetingType,
-    ACCEPTED_MEETING_STATE_TYPE,
-    SEARCHING_MEETING_STATE_TYPE,
+    ACCEPTED_MEETING_STATE,
+    SEARCHING_MEETING_STATE,
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
-    DISMISSED_MEETING_STATE_TYPE,
+    DISMISSED_SUGGESTION_MEETING_STATE,
     UNCLAIMED_BROADCAST_STATE
 } from "../../types.js";
 import { prisma } from "../auth.js";
@@ -117,7 +117,7 @@ export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string
             id: meetingId,
         },
         data: {
-            meetingState: ACCEPTED_MEETING_STATE_TYPE,
+            meetingState: ACCEPTED_MEETING_STATE,
             acceptedUserId: userId,
         }
     })
@@ -130,7 +130,7 @@ export const setMeetingOpen = async ({meetingId}: {meetingId: string}): Promise<
             id: meetingId,
         },
         data: {
-            meetingState: SEARCHING_MEETING_STATE_TYPE,
+            meetingState: SEARCHING_MEETING_STATE,
             acceptedUserId: null,
         }
     })
@@ -143,7 +143,7 @@ export const setMeetingDismissed = async ({meetingId}: {meetingId: string}): Pro
             id: meetingId,
         },
         data: {
-            meetingState: DISMISSED_MEETING_STATE_TYPE,
+            meetingState: DISMISSED_SUGGESTION_MEETING_STATE,
         }
     })
     return updatedMeeting;
@@ -157,7 +157,7 @@ export const unclaimBroadcastMeeting = async ({meetingId}: {meetingId: string}):
             id: meetingId,
         },
         data: {
-            meetingState: SEARCHING_MEETING_STATE_TYPE,
+            meetingState: SEARCHING_MEETING_STATE,
             acceptedUserId: null,
             broadcastMetadata: {
                 update: {

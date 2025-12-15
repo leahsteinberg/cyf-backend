@@ -2,7 +2,7 @@ import { createMeeting, deleteMeetingAndOffers } from "../backend/update/meeting
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
-import { DISMISSED_MEETING_STATE_TYPE } from "../types.js";
+import { DISMISSED_SUGGESTION_MEETING_STATE } from "../types.js";
 import { unacceptMeetingByAcceptor } from "../backend/meeting.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
 
@@ -102,7 +102,7 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
   const acceptedMeetings = await getAcceptedMeetings({acceptedUserId: userFromId});
 
   const allMeetings = [...meetings, ...acceptedMeetings]
-      .filter(m => m.meetingState !== DISMISSED_MEETING_STATE_TYPE);
+      .filter(m => m.meetingState !== DISMISSED_SUGGESTION_MEETING_STATE);
 
   res.json(allMeetings)
 }

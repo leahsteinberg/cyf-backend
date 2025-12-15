@@ -1,6 +1,6 @@
 
 export type OfferState = "OPEN" | "ACCEPTED" | "REJECTED" | "EXPIRED";
-export type MeetingState = "DRAFT" | "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST" | "EXPIRED" | "DISMISSED";
+export type MeetingState = "DRAFT" | "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST" | "EXPIRED" | "DISMISSED_SUGGESTION" | "CANCELED";
 export type MeetingType = "ADVANCE" | "BROADCAST";
 export type BroadcastSubState = "PENDING_CLAIMED" | "UNCLAIMED" | "CLAIMED";
 
@@ -9,20 +9,25 @@ export type TimeType = "IMMEDIATE" | "FUTURE" | "UNKNOWN";
 export type TargetType = "OPEN" | "FRIEND_SPECIFIC" | "GROUP";
 export type SourceType = "USER_INTENT" | "SYSTEM_PATTERN" | "SYSTEM_REAL_TIME";
 
+// HELPER TYPE 
+export type MeetingActorRole = "INITIATOR" | "ACCEPTOR" | "SPECIFIC_TARGET" | "OPEN_TARGET";
+
 // Offer State Constants (type-safe with assertions)
-export const OPEN_OFFER_STATE_TYPE: OfferState = 'OPEN' as const;
-export const ACCEPTED_OFFER_STATE_TYPE: OfferState = 'ACCEPTED' as const;
-export const REJECTED_OFFER_STATE_TYPE: OfferState = 'REJECTED' as const;
-export const EXPIRED_OFFER_STATE_TYPE: OfferState = 'EXPIRED' as const;
+export const OPEN_OFFER_STATE: OfferState = 'OPEN' as const;
+export const ACCEPTED_OFFER_STATE: OfferState = 'ACCEPTED' as const;
+export const REJECTED_OFFER_STATE: OfferState = 'REJECTED' as const;
+export const EXPIRED_OFFER_STATE: OfferState = 'EXPIRED' as const;
 
 // Meeting State Constants (type-safe with assertions)
-export const DRAFT_MEETING_STATE_TYPE: MeetingState = 'DRAFT' as const;
-export const SEARCHING_MEETING_STATE_TYPE: MeetingState = 'SEARCHING' as const;
-export const ACCEPTED_MEETING_STATE_TYPE: MeetingState = 'ACCEPTED' as const;
-export const REJECTED_MEETING_STATE_TYPE: MeetingState = 'REJECTED' as const;
-export const PAST_MEETING_STATE_TYPE: MeetingState = 'PAST' as const;
-export const DISMISSED_MEETING_STATE_TYPE: MeetingState = 'DISMISSED' as const;
-export const EXPIRED_MEETING_STATE_TYPE: MeetingState = 'EXPIRED' as const;
+export const DRAFT_MEETING_STATE: MeetingState = 'DRAFT' as const;
+export const SEARCHING_MEETING_STATE: MeetingState = 'SEARCHING' as const;
+export const ACCEPTED_MEETING_STATE: MeetingState = 'ACCEPTED' as const;
+export const REJECTED_MEETING_STATE: MeetingState = 'REJECTED' as const;
+export const PAST_MEETING_STATE: MeetingState = 'PAST' as const;
+export const DISMISSED_SUGGESTION_MEETING_STATE: MeetingState = 'DISMISSED_SUGGESTION' as const;
+export const EXPIRED_MEETING_STATE: MeetingState = 'EXPIRED' as const;
+export const CANCELED_MEETING_STATE: MeetingState = 'CANCELED' as const;
+
 
 // Time Type Constants (type-safe with assertions)
 export const IMMEDIATE_TIME_TYPE: TimeType = 'IMMEDIATE' as const;
@@ -44,7 +49,10 @@ export const PENDING_CLAIMED_BROADCAST_STATE: BroadcastSubState = 'PENDING_CLAIM
 export const UNCLAIMED_BROADCAST_STATE: BroadcastSubState = 'UNCLAIMED' as const;
 export const CLAIMED_BROADCAST_STATE: BroadcastSubState = 'CLAIMED' as const;
 
-
+export const INITIATOR_ACTOR_ROLE: MeetingActorRole = "INITIATOR" as const;
+export const ACCEPTOR_ACTOR_ROLE: MeetingActorRole = "ACCEPTOR" as const;
+export const SPECIFIC_TARGET_ACTOR_ROLE: MeetingActorRole = "SPECIFIC_TARGET" as const;
+export const OPEN_TARGET_ACTOR_ROLE: MeetingActorRole = "OPEN_TARGET" as const;
 
 
 

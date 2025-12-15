@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { acceptOffer, getMeetingOffers, getOfferById, getOffersForUser, setOffersExpired } from '../backend/offer.js';
 import { getMeetingById } from '../backend/query/meeting-lookup.js';
 import { setOfferRejected } from '../backend/update/offer-update.js';
-import { ACCEPTED_MEETING_STATE_TYPE, ACCEPTED_OFFER_STATE_TYPE, DRAFT_MEETING_STATE_TYPE, OPEN_OFFER_STATE_TYPE, REJECTED_MEETING_STATE_TYPE, SEARCHING_MEETING_STATE_TYPE } from '../types.js';
+import { ACCEPTED_MEETING_STATE, ACCEPTED_OFFER_STATE, DRAFT_MEETING_STATE, OPEN_OFFER_STATE, REJECTED_MEETING_STATE, SEARCHING_MEETING_STATE } from '../types.js';
 import { setMeetingState } from '../backend/update/meeting-update.js';
 
 
@@ -36,7 +36,7 @@ export const handleAcceptOffer = async (req: Request, res: Response) => {
     if (!offer) {
       throw new Error("Cannot find offer")
     }
-    if (offer.offerState !== OPEN_OFFER_STATE_TYPE ) {
+    if (offer.offerState !== OPEN_OFFER_STATE ) {
       throw new Error("Cannot accept an offer that is not open")
     }
     const meetingId = offer.meetingId;
@@ -44,7 +44,7 @@ export const handleAcceptOffer = async (req: Request, res: Response) => {
     if (!meeting) {
       throw new Error("Cannot find meeting to accept")
     }
-    if (meeting.meetingState !== SEARCHING_MEETING_STATE_TYPE) {
+    if (meeting.meetingState !== SEARCHING_MEETING_STATE) {
       throw new Error(`Cannot accept an offer for a meeting that is not open. Meeting State: ${meeting.meetingState}`);
     }
 
@@ -73,7 +73,7 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
     if (!offer) {
       throw new Error("Cannot find offer")
     }
-    if (offer.offerState !== ACCEPTED_OFFER_STATE_TYPE ) {
+    if (offer.offerState !== ACCEPTED_OFFER_STATE ) {
       throw new Error("Cannot reject an offer that is not open")
     }
     const meetingId = offer.meetingId;
@@ -81,7 +81,7 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
     if (!meeting) {
       throw new Error("Cannot find meeting to accept")
     }
-    if (meeting.meetingState !== ACCEPTED_MEETING_STATE_TYPE) {
+    if (meeting.meetingState !== ACCEPTED_MEETING_STATE) {
       throw new Error(`Cannot reject an offer for a meeting that is not open. Meeting State: ${meeting.meetingState}`);
     }
 
@@ -90,9 +90,9 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
     
     // TODO - check and see what I need to do here - if there's no more friends,
     // then set the meeting as fully rejected
-    const openOffers = offers.filter(o => o.offerState === OPEN_OFFER_STATE_TYPE);
+    const openOffers = offers.filter(o => o.offerState === OPEN_OFFER_STATE);
     if (openOffers.length === 0) {
-      await setMeetingState({meetingId, meetingState: REJECTED_MEETING_STATE_TYPE});
+      await setMeetingState({meetingId, meetingState: REJECTED_MEETING_STATE});
     }
     res.json(rejectedOffer);
 

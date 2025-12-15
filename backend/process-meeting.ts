@@ -11,14 +11,14 @@ import {
     UNKNOWN_TIME_TYPE,
     OPEN_TARGET_TYPE,
     FRIEND_SPECIFIC_TARGET_TYPE,
-    DISMISSED_MEETING_STATE_TYPE,
-    ACCEPTED_MEETING_STATE_TYPE,
-    PAST_MEETING_STATE_TYPE,
-    REJECTED_MEETING_STATE_TYPE,
-    ACCEPTED_OFFER_STATE_TYPE,
-    OPEN_OFFER_STATE_TYPE,
-    REJECTED_OFFER_STATE_TYPE,
-    EXPIRED_OFFER_STATE_TYPE
+    DISMISSED_SUGGESTION_MEETING_STATE,
+    ACCEPTED_MEETING_STATE,
+    PAST_MEETING_STATE,
+    REJECTED_MEETING_STATE,
+    ACCEPTED_OFFER_STATE,
+    OPEN_OFFER_STATE,
+    REJECTED_OFFER_STATE,
+    EXPIRED_OFFER_STATE
 } from '../types.js';
 import { createAndSendOfferPush } from './create-push.js';
 import { setIsNotBroadcasting } from './update/user-update.js';
@@ -202,7 +202,7 @@ const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
         const offers = await getMeetingOffers({meetingId})
         await setOffersExpired(offers);
         await setIsNotBroadcasting({userId: meeting.userFromId});
-        return await setMeetingState({meetingId, meetingState: PAST_MEETING_STATE_TYPE});
+        return await setMeetingState({meetingId, meetingState: PAST_MEETING_STATE});
     }
     return meeting;
 }
@@ -219,7 +219,7 @@ const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
  */
 export const processOffersForMeeting = async (meeting: Meeting) => {
     // Skip processing DISMISSED meetings (they're kept for analytics only)
-    if (meeting.meetingState === DISMISSED_MEETING_STATE_TYPE) {
+    if (meeting.meetingState === DISMISSED_SUGGESTION_MEETING_STATE) {
         console.log(`Skipping DISMISSED meeting ${meeting.id}`);
         return meeting;
     }
@@ -261,25 +261,25 @@ async function processOffersForParallelMeeting(meeting: Meeting): Promise<Meetin
     const meetingInPast = await isTimePast({ eventTime: meeting.scheduledFor });
     if (meetingInPast) {
         await setOffersExpired(offers);
-        return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE_TYPE });
+        return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE });
     }
 
     // Check if any offer was accepted
-    const acceptedOffer = offers.find(o => o.offerState === ACCEPTED_OFFER_STATE_TYPE);
+    const acceptedOffer = offers.find(o => o.offerState === ACCEPTED_OFFER_STATE);
     if (acceptedOffer) {
         // Clear all other offers and mark meeting as accepted
         await setOffersExpired(offers.filter(o => o.id !== acceptedOffer.id));
-        await setMeetingState({ meetingId, meetingState: ACCEPTED_MEETING_STATE_TYPE });
+        await setMeetingState({ meetingId, meetingState: ACCEPTED_MEETING_STATE });
         return meeting;
     }
 
     // Check if all offers are rejected or expired
     const allRejectedOrExpired = offers.every(
-        o => o.offerState === REJECTED_OFFER_STATE_TYPE || o.offerState === EXPIRED_OFFER_STATE_TYPE
+        o => o.offerState === REJECTED_OFFER_STATE || o.offerState === EXPIRED_OFFER_STATE
     );
 
     if (allRejectedOrExpired && offers.length > 0) {
-        await setMeetingState({ meetingId, meetingState: REJECTED_MEETING_STATE_TYPE });
+        await setMeetingState({ meetingId, meetingState: REJECTED_MEETING_STATE });
     }
 
     return meeting;
@@ -296,7 +296,7 @@ async function processOffersForFriendSpecificMeeting(meeting: Meeting): Promise<
     const meetingInPast = await isTimePast({ eventTime: meeting.scheduledFor });
     if (meetingInPast) {
         await setOffersExpired(offers);
-        return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE_TYPE });
+        return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE });
     }
 
     // Should only have one offer
@@ -307,10 +307,10 @@ async function processOffersForFriendSpecificMeeting(meeting: Meeting): Promise<
     }
 
     // Update meeting state based on offer state
-    if (offer.offerState === ACCEPTED_OFFER_STATE_TYPE) {
-        await setMeetingState({ meetingId, meetingState: ACCEPTED_MEETING_STATE_TYPE });
-    } else if (offer.offerState === REJECTED_OFFER_STATE_TYPE || offer.offerState === EXPIRED_OFFER_STATE_TYPE) {
-        await setMeetingState({ meetingId, meetingState: REJECTED_MEETING_STATE_TYPE });
+    if (offer.offerState === ACCEPTED_OFFER_STATE) {
+        await setMeetingState({ meetingId, meetingState: ACCEPTED_MEETING_STATE });
+    } else if (offer.offerState === REJECTED_OFFER_STATE || offer.offerState === EXPIRED_OFFER_STATE) {
+        await setMeetingState({ meetingId, meetingState: REJECTED_MEETING_STATE });
     }
 
     return meeting;
@@ -331,7 +331,7 @@ async function processOffersForAdvanceMeeting(meeting: Meeting): Promise<Meeting
     const meetingInPast = await isTimePast({ eventTime: meeting.scheduledFor });
     if (meetingInPast) {
         await setOffersExpired(offers);  // Clear ALL offers for past meetings
-        return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE_TYPE });
+        return await setMeetingState({ meetingId, meetingState: PAST_MEETING_STATE });
     }
 
     // For active meetings, only clear older offers
@@ -348,7 +348,7 @@ async function processOffersForAdvanceMeeting(meeting: Meeting): Promise<Meeting
         return meeting;
     }
 
-    if (recentOffer.offerState === OPEN_OFFER_STATE_TYPE) {
+    if (recentOffer.offerState === OPEN_OFFER_STATE) {
         const isOfferExpirationPast = await getIsOfferExpired({ offer: recentOffer });
         if (isOfferExpirationPast) {
             await makeOfferAfterExpired({
@@ -358,23 +358,23 @@ async function processOffersForAdvanceMeeting(meeting: Meeting): Promise<Meeting
                 remainingFriendsCount: unOfferedCount
             });
         }
-    } else if (recentOffer.offerState === REJECTED_OFFER_STATE_TYPE) {
+    } else if (recentOffer.offerState === REJECTED_OFFER_STATE) {
         if (!friendToOfferId) {
             // No more friends to offer to, set meeting state to REJECTED
             console.log("No more friends to offer to, setting meeting to REJECTED");
             await setMeetingState({
                 meetingId,
-                meetingState: REJECTED_MEETING_STATE_TYPE
+                meetingState: REJECTED_MEETING_STATE
             });
         } else {
             await makeAdvanceOffer({ meeting, userOfferedId: friendToOfferId, remainingFriendsCount: unOfferedCount });
         }
-    } else if (recentOffer.offerState === ACCEPTED_OFFER_STATE_TYPE) {
+    } else if (recentOffer.offerState === ACCEPTED_OFFER_STATE) {
         await setMeetingState({
             meetingId,
-            meetingState: ACCEPTED_MEETING_STATE_TYPE
+            meetingState: ACCEPTED_MEETING_STATE
         });
-    } else if (recentOffer.offerState === EXPIRED_OFFER_STATE_TYPE) {
+    } else if (recentOffer.offerState === EXPIRED_OFFER_STATE) {
         await makeOfferAfterExpired({
             meeting,
             recentOfferId: recentOffer.id,

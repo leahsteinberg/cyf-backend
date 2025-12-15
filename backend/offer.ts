@@ -1,6 +1,6 @@
 import { pickFriendIdToOffer } from './friendship.js';
 import { isTimePast } from './utils.js';
-import { OPEN_OFFER_STATE_TYPE, type Offer } from '../types.js';
+import { OPEN_OFFER_STATE, type Offer } from '../types.js';
 import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
 import { setOfferAccepted, setOfferExpired, setOfferRejected } from './update/offer-update.js';
 import { setMeetingAccepted } from './update/meeting-update.js';

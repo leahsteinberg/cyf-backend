@@ -5,9 +5,9 @@ import { processOffersForNewMeeting } from '../backend/process-meeting.js';
 import {
     getEffectiveTimeType,
     getEffectiveTargetType,
-    DRAFT_MEETING_STATE_TYPE,
-    SEARCHING_MEETING_STATE_TYPE,
-    DISMISSED_MEETING_STATE_TYPE,
+    DRAFT_MEETING_STATE,
+    SEARCHING_MEETING_STATE,
+    DISMISSED_SUGGESTION_MEETING_STATE,
     UNKNOWN_TIME_TYPE
 } from '../types.js';
 import { findMeetingTimeConflict } from '../backend/meeting-conflict.js';
@@ -51,7 +51,7 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
         }
 
         // 3. Verify it's in DRAFT state
-        if (suggestion.meetingState !== DRAFT_MEETING_STATE_TYPE) {
+        if (suggestion.meetingState !== DRAFT_MEETING_STATE) {
             return res.status(400).json({
                 error: "Only DRAFT suggestions can be accepted",
                 currentState: suggestion.meetingState
@@ -91,7 +91,7 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
         }
 
         // 6. Activate the suggestion: DRAFT → SEARCHING
-        await setMeetingState({ meetingId, meetingState: SEARCHING_MEETING_STATE_TYPE });
+        await setMeetingState({ meetingId, meetingState: SEARCHING_MEETING_STATE });
 
         // 7. Refresh meeting data
         const activatedMeeting = await getMeetingById({ meetingId });
@@ -175,7 +175,7 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         }
 
         // 3. Verify it's in DRAFT state
-        if (suggestion.meetingState !== DRAFT_MEETING_STATE_TYPE) {
+        if (suggestion.meetingState !== DRAFT_MEETING_STATE) {
             return res.status(400).json({
                 error: "Only DRAFT suggestions can be dismissed",
                 currentState: suggestion.meetingState
@@ -183,7 +183,7 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         }
 
         // 4. Mark as DISMISSED (instead of deleting)
-        await setMeetingState({ meetingId, meetingState: DISMISSED_MEETING_STATE_TYPE });
+        await setMeetingState({ meetingId, meetingState: DISMISSED_SUGGESTION_MEETING_STATE });
 
         // 5. Refresh to get updated meeting
         const dismissedSuggestion = await getMeetingById({ meetingId });
