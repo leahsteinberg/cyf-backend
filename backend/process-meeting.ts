@@ -191,7 +191,7 @@ export const clearOutOffers = async (offers: Offer[]) => {
     }
 }
 
-
+/// TO BE DEPRECATED
 const determineOfferExpiration = async ({meetingTime, userToOfferId, remainingFriendsCount}:
     {meetingTime: Date; userToOfferId: string, remainingFriendsCount: number}): Promise<Date> => {
 
@@ -289,7 +289,8 @@ export const makeBroadcastOffer = async({meeting, userOfferedId}:
 
 export const makeAdvanceOffer = async ({meeting, userOfferedId, remainingFriendsCount}:
     {meeting: Meeting; userOfferedId: string; remainingFriendsCount: number}): Promise<Offer | undefined> => {
-    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, userToOfferId: userOfferedId, remainingFriendsCount})
+    //const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, userToOfferId: userOfferedId, remainingFriendsCount})
+    const expiresAt = meeting.scheduledFor;
     console.log("expires at-", expiresAt)
     const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'ADVANCE'});
     return offer;
@@ -299,7 +300,8 @@ export const makeAdvanceOffer = async ({meeting, userOfferedId, remainingFriends
 const makeOfferAfterExpired = async ({meeting, recentOfferId, newUserOfferId, remainingFriendsCount}:
     {meeting: Meeting; recentOfferId: string; newUserOfferId: string; remainingFriendsCount: number}) => {
     const expiredOffer = await setOfferExpired({offerId: recentOfferId});
-    const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, userToOfferId: newUserOfferId, remainingFriendsCount})
+    // const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, userToOfferId: newUserOfferId, remainingFriendsCount})
+    const expiresAt = meeting.scheduledFor;
     const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, expiresAt, offerType: 'ADVANCE'})
     return [expiredOffer, newOffer];
 };
