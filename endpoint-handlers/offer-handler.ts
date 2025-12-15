@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { acceptOffer, getMeetingOffers, getOfferById, getOffersForUser, rejectOffer, rejectOfferWithMeeting, setOffersExpired } from '../backend/offer.js';
+import { acceptOffer, getMeetingOffers, getOfferById, getOffersForUser, setOffersExpired } from '../backend/offer.js';
 import { getMeetingById } from '../backend/query/meeting-lookup.js';
 import { setOfferRejected } from '../backend/update/offer-update.js';
 

@@ -2,8 +2,8 @@ import { pickFriendIdToOffer } from './friendship.js';
 import { isTimePast } from './utils.js';
 import { OPEN_OFFER_STATE_TYPE, type Offer } from '../types.js';
 import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
-import { setOfferAccepted, setOfferExpired, setOfferOpen, setOfferRejected } from './update/offer-update.js';
-import { setMeetingAccepted, setMeetingState } from './update/meeting-update.js';
+import { setOfferAccepted, setOfferExpired, setOfferRejected } from './update/offer-update.js';
+import { setMeetingAccepted } from './update/meeting-update.js';
 import { getMeetingById, getUserFromMeetingId } from './query/meeting-lookup.js';
 
 // Re-export pure Prisma functions for backward compatibility
@@ -26,7 +26,7 @@ export const acceptOffer = async ({ userId, offerId }
     }
 
     const acceptedOffer = await setOfferAccepted({ offerId });
-    const acceptedMeeting = await setMeetingAccepted({ meetingId, userId });
+    await setMeetingAccepted({ meetingId, userId });
     // const otherOffers = await getMeetingOffers({ meetingId });
     // const expiredOffers = await setOffersExpired(otherOffers);
     const offers = await getMeetingOffers({ meetingId });
@@ -50,33 +50,6 @@ export const rejectOffer = async ({ offerId }
     console.log("rejected offer --- ", rejectedOffer)
     return rejectedOffer;
 };
-
-export const rejectOfferWithMeeting = async ({offerId}: {offerId: string}) => {
-    const offer = await getOfferById({offerId});
-
-    if (!offer) {
-        throw new Error("Cannot find offer to reject");
-    }
-
-    const meetingId = offer.meetingId;
-    const meeting = await getMeetingById({ meetingId });
-
-    if (!meeting) {
-        throw new Error("Cannot find meeting for offer")
-    }
-
-    const rejectedOffer = await rejectOffer({ offerId });
-
-    if (!rejectedOffer) {
-        throw new Error('Error rejecting offer');
-    }
-    
-    //await processOffersForMeeting(meeting)
-    console.log("New offer,", rejectedOffer);
-    return rejectedOffer;
-
-
-}
 
 
 export const findFriendIdToOffer = async ({offers, meetingId, allFriendIds}:
