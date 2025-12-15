@@ -1,6 +1,6 @@
-import { createMeeting, deleteMeeting, deleteMeetingAndOffers, setMeetingDismissed, setMeetingState } from "../backend/update/meeting-update.js";
+import { createMeeting, deleteMeetingAndOffers } from "../backend/update/meeting-update.js";
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
-import { processOfferForNewMeeting } from "../backend/process-meeting.js";
+import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
 import { DISMISSED_MEETING_STATE_TYPE } from "../types.js";
 import { unacceptMeetingByAcceptor } from "../backend/meeting.js";
@@ -88,7 +88,7 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
       return res.status(500).json({ error: "Failed to create meeting" });
     }
 
-    await processOfferForNewMeeting(meeting);// TODO - Can I remove this and reuse code instead?
+    await processOffersForNewMeeting(meeting);// TODO - Can I remove this and reuse code instead?
     res.json(meeting)
   } catch (error) {
     console.error("Error creating meeting:", error);
@@ -132,7 +132,7 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
       await unacceptMeetingByAcceptor({meetingId});
       return res.json(meeting);
     }
-    
+
     const deletedMeeting = await deleteMeetingAndOffers({ meetingId });
     res.json(deletedMeeting);
   } catch (error) {

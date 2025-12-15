@@ -1,7 +1,7 @@
 import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired, createOffer, getIsOfferExpired, setOffersExpired } from './offer.js';
 import { setMeetingState } from './update/meeting-update.js';
-import { addHour, isTimePast, minutesBetween, minutesSince, minutesUntil } from './utils.js';
-import { findUnofferedFriends, getFriendIds, getUnofferedFriendsFromMeeting } from './friendship.js';
+import { addHour, isTimePast } from './utils.js';
+import { getFriendIds } from './friendship.js';
 import type { Meeting, MeetingType, Offer } from '../types.js';
 import {
     getEffectiveTimeType,
@@ -21,17 +21,14 @@ import {
     EXPIRED_OFFER_STATE_TYPE
 } from '../types.js';
 import { createAndSendOfferPush } from './create-push.js';
-import { getUserTimezone } from './query/user-lookup.js';
-import { setIsBroadcasting, setIsNotBroadcasting } from './update/user-update.js';
-
-
+import { setIsNotBroadcasting } from './update/user-update.js';
 
 
 /**
  * Creates initial offers for a new meeting based on its type
  * Routes to appropriate offer creation logic using new flexible type system
  */
-export const processOfferForNewMeeting = async (meeting: Meeting): Promise<Meeting> => {
+export const processOffersForNewMeeting = async (meeting: Meeting): Promise<Meeting> => {
     // Validate meeting exists and has required fields
     if (!meeting || !meeting.id || !meeting.userFromId) {
         throw new Error("Invalid meeting: missing required fields");
@@ -168,7 +165,7 @@ async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meetin
     if (timeType === IMMEDIATE_TIME_TYPE) {
         // Immediate 1-on-1: use broadcast-style expiration (1 hour)
         await makeBroadcastOffer({ meeting, userOfferedId: targetUserId });
-    } else {
+    } else if (timeType === FUTURE_TIME_TYPE){
         // Future 1-on-1: use meeting time as expiration
         const expiresAt = meeting.scheduledFor;
         await makeOffer({
@@ -177,6 +174,8 @@ async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meetin
             expiresAt,
             offerType: 'ADVANCE'
         });
+    } else if (timeType === UNKNOWN_TIME_TYPE) {
+        
     }
 
     console.log(`Created friend-specific offer for meeting ${meeting.id} to user ${targetUserId}`);

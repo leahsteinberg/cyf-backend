@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { getMeetingById, getCreatedMeetings, getAcceptedMeetings } from '../backend/query/meeting-lookup.js';
 import { setMeetingState } from '../backend/update/meeting-update.js';
-import { processOfferForNewMeeting } from '../backend/process-meeting.js';
+import { processOffersForNewMeeting } from '../backend/process-meeting.js';
 import {
     getEffectiveTimeType,
     getEffectiveTargetType,
@@ -106,7 +106,7 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
         // - FUTURE + OPEN → processNewFutureOpenMeeting (parallel offers to all friends)
         // - FRIEND_SPECIFIC → processNewFriendSpecificMeeting (single offer to target)
         // - UNKNOWN → No offers created yet (will be created when time is set)
-        await processOfferForNewMeeting(activatedMeeting);
+        await processOffersForNewMeeting(activatedMeeting);
 
         console.log("Suggestion accepted and converted to active meeting:", {
             meetingId,
