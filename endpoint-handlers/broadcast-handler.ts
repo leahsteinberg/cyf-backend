@@ -2,14 +2,14 @@ import type { Request, Response } from 'express';
 import { createMeeting, unclaimBroadcastMeeting } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
 import { processNewBroadcastMeeting, tryAcceptUnclaimedBroadcast, validateBroadcastRequest } from '../backend/process-broadcast.js';
-import { acceptOffer } from '../backend/offer.js';
+import { acceptOffer, setOffersExpired } from '../backend/offer.js';
 import { getCreatedMeetings, getMeetingById } from '../backend/query/meeting-lookup.js';
 import { deleteBroadcastedMeeting, findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
 import { setBroadcastClaimed, setBroadcastUnclaimed } from '../backend/update/broadcast-update.js';
 import { setOfferOpen } from '../backend/update/offer-update.js';
-import { getAcceptedOfferByMeetingId } from '../backend/query/offer-lookup.js';
+import { getAcceptedOfferByMeetingId, getMeetingOffers } from '../backend/query/offer-lookup.js';
 import {
     getEffectiveTimeType,
     getEffectiveTargetType,
@@ -20,8 +20,11 @@ import {
     USER_INTENT_SOURCE_TYPE,
     UNCLAIMED_BROADCAST_STATE,
     CLAIMED_BROADCAST_STATE,
-    PENDING_CLAIMED_BROADCAST_STATE
+    PENDING_CLAIMED_BROADCAST_STATE,
+    EXPIRED_MEETING_STATE,
+    SEARCHING_MEETING_STATE
 } from '../types.js';
+import { transitionMeeting } from '../backend/transition-meeting.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -58,6 +61,7 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             scheduledFor,
             scheduledEnd,
             title: 'This is a broadcast meeting',
+            meetingState: SEARCHING_MEETING_STATE,
             meetingType: 'BROADCAST', // TODO: Migrate to timeType/targetType in Phase 6
             timeType: IMMEDIATE_TIME_TYPE,
             targetType: OPEN_TARGET_TYPE,
@@ -96,7 +100,13 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
         // should be just one meeting, but want to account for error state
         // where there are somehow two broadcast meetings.
         for (let broadcastMeeting of broadcastMeetings) {
-            await deleteBroadcastedMeeting(broadcastMeeting);
+            const {meeting, events} = await transitionMeeting({
+                meetingId: broadcastMeeting.id,
+                toState: EXPIRED_MEETING_STATE,
+                actorId: userId,
+            });
+            const offers = await getMeetingOffers({meetingId: meeting.id});
+            await setOffersExpired(offers);
         }
 
         // Set user as not broadcasting
