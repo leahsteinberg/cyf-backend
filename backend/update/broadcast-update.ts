@@ -1,4 +1,4 @@
-import type { BroadcastMetadata, BroadcastSubState } from "../../types.js";
+import { CLAIMED_BROADCAST_STATE, PENDING_CLAIMED_BROADCAST_STATE, UNCLAIMED_BROADCAST_STATE, type BroadcastMetadata, type BroadcastSubState } from "../../types.js";
 import { prisma } from "../auth.js";
 
 export const setBroadcastPending = async ({meetingId, offerClaimedId}: {meetingId: string, offerClaimedId: string}) => {
@@ -7,7 +7,7 @@ export const setBroadcastPending = async ({meetingId, offerClaimedId}: {meetingI
             meetingId: meetingId,
         },
         data: {
-            subState: "PENDING_CLAIMED",
+            subState: PENDING_CLAIMED_BROADCAST_STATE,
             pendingAt: new Date(),
             offerClaimedId,
         }
@@ -22,7 +22,7 @@ export const setBroadcastClaimed = async ({meetingId, offerClaimedId}: {meetingI
             meetingId: meetingId,
         },
         data: {
-            subState: "CLAIMED",
+            subState: CLAIMED_BROADCAST_STATE,
             pendingAt: null,
             offerClaimedId,
         }
@@ -37,7 +37,7 @@ export const setBroadcastUnclaimed = async ({meetingId}: {meetingId: string}) =>
             meetingId: meetingId,
         },
         data: {
-            subState: "UNCLAIMED",
+            subState: UNCLAIMED_BROADCAST_STATE,
             pendingAt: null,
             offerClaimedId: null,
         }

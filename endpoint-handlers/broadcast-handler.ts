@@ -17,7 +17,10 @@ import {
     OPEN_TARGET_TYPE,
     PAST_MEETING_STATE_TYPE,
     OPEN_OFFER_STATE_TYPE,
-    USER_INTENT_SOURCE_TYPE
+    USER_INTENT_SOURCE_TYPE,
+    UNCLAIMED_BROADCAST_STATE,
+    CLAIMED_BROADCAST_STATE,
+    PENDING_CLAIMED_BROADCAST_STATE
 } from '../types.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
@@ -135,13 +138,13 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
         const broadcastSubState = meeting.broadcastMetadata?.subState;
         let canAccept = false;
 
-        if (broadcastSubState === 'UNCLAIMED') {
+        if (broadcastSubState === UNCLAIMED_BROADCAST_STATE) {
             await tryAcceptUnclaimedBroadcast({meeting: meeting, offerId: offer.id})
 
             
-        } else if (broadcastSubState === 'CLAIMED') {
+        } else if (broadcastSubState === CLAIMED_BROADCAST_STATE) {
             canAccept = false;
-        } else if (broadcastSubState === 'PENDING_CLAIMED') {
+        } else if (broadcastSubState === PENDING_CLAIMED_BROADCAST_STATE) {
             // Check if this user has the pending claim
             if (meeting.broadcastMetadata?.offerClaimedId === offerId) {
                 canAccept = true;
@@ -191,11 +194,11 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
         // Check broadcast state and update if needed
         const broadcastSubState = meeting.broadcastMetadata?.subState;
 
-        if (broadcastSubState === 'UNCLAIMED') {
+        if (broadcastSubState === UNCLAIMED_BROADCAST_STATE) {
             return res.status(400).json({
                 error: "This broadcast must be pending-claimed before it can be claimed."
             });
-        } else if (broadcastSubState === 'PENDING_CLAIMED') {
+        } else if (broadcastSubState === PENDING_CLAIMED_BROADCAST_STATE) {
             // Verify this user has the pending claim
             if (meeting.broadcastMetadata?.offerClaimedId !== offerId) {
                 return res.status(403).json({
@@ -203,7 +206,7 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
                 });
             }
 
-        } else if (broadcastSubState === 'CLAIMED') {
+        } else if (broadcastSubState === CLAIMED_BROADCAST_STATE) {
             return res.status(400).json({
                 error: "This broadcast has already been claimed"
             });
@@ -305,7 +308,7 @@ export const handleCancelBroadcastAcceptance = async (req: Request, res: Respons
             return res.status(404).json({ error: "No accepted offer found for this meeting" });
         }
 
-        // Unclaim the broadcast - sets meeting back to SEARCHING, clears acceptedUserId, sets broadcast to UNCLAIMED
+        // Unclaim the broadcast - sets meeting back to SEARCHING, clears acceptedUserId, sets broadcast to UN
         const unclaimedMeeting = await unclaimBroadcastMeeting({ meetingId });
         const openOffer = await setOfferOpen({ offerId: acceptedOffer.id });
 

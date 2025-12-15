@@ -6,7 +6,8 @@ import {
     SEARCHING_MEETING_STATE_TYPE,
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
-    DISMISSED_MEETING_STATE_TYPE
+    DISMISSED_MEETING_STATE_TYPE,
+    UNCLAIMED_BROADCAST_STATE
 } from "../../types.js";
 import { prisma } from "../auth.js";
 
@@ -84,7 +85,7 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             ...(needsBroadcastMetadata && {
                 broadcastMetadata: {
                     create: {
-                        subState: 'UNCLAIMED'
+                        subState: UNCLAIMED_BROADCAST_STATE
                     }
                 }
             })
@@ -160,7 +161,7 @@ export const unclaimBroadcastMeeting = async ({meetingId}: {meetingId: string}):
             acceptedUserId: null,
             broadcastMetadata: {
                 update: {
-                    subState: 'UNCLAIMED',
+                    subState: UNCLAIMED_BROADCAST_STATE,
                     pendingAt: null,
                     offerClaimedId: null
                 }
