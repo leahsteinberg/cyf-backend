@@ -24,26 +24,7 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
   } = req.body;
 
   try {
-    // DEPRECATION WARNING: Log usage of old API
-    if (meetingType && !timeType && !targetType) {
-      console.warn('⚠️ DEPRECATED: meetingType parameter is deprecated. Use timeType + targetType instead.', {
-        userFromId,
-        meetingType,
-        endpoint: 'handleCreateMeeting'
-      });
-      // Add deprecation header
-      res.setHeader('X-Deprecated-API', 'meetingType will be removed in v2.0. Use timeType and targetType instead.');
-    }
 
-    // USAGE TRACKING: Track old vs new API usage
-    if (meetingType && !timeType && !targetType) {
-      console.log('[METRICS] api.create_meeting.old_format', { userFromId, meetingType });
-    } else if (timeType && targetType) {
-      console.log('[METRICS] api.create_meeting.new_format', { userFromId, timeType, targetType });
-    } else if (!meetingType && !timeType && !targetType) {
-      // Default behavior (no params provided)
-      console.log('[METRICS] api.create_meeting.default_format', { userFromId });
-    }
 
     // Check if user already has any active meetings (created or accepted) that overlap with the requested time
     const createdMeetings = await getCreatedMeetings({userFromId});
