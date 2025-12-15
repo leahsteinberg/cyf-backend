@@ -2,9 +2,11 @@ import { createMeeting, deleteMeetingAndOffers } from "../backend/update/meeting
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
-import { DISMISSED_DRAFT_MEETING_STATE } from "../types.js";
+import { CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE } from "../types.js";
 import { unacceptMeetingByAcceptor } from "../backend/meeting.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
+import { transitionMeeting } from "../backend/transition-meeting.js";
+import { getMeetingOffers, setOffersExpired } from "../backend/offer.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -120,3 +122,24 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 }
+
+
+export const handleCancelMeeting = async (req: Request, res: Response) => {
+  const { meetingId, userId } = req.body;
+  console.log("handle delete meeting ---", meetingId);
+
+  if (!meetingId) {
+    return res.status(400).json({ error: "meetingId is required" });
+  }
+  try {
+    const {meeting, events} = await transitionMeeting({meetingId, toState: CANCELED_MEETING_STATE, actorId: userId});
+    if (meeting) {
+      const offers = await getMeetingOffers({meetingId});
+      await setOffersExpired(offers);
+    }
+  } catch (error) {
+    console.error("Error canceling meeting:", error);
+    res.status(500).json({ error: "Internal server error while canceling meeting" });
+
+  }
+};
