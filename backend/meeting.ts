@@ -25,7 +25,7 @@ export const deleteBroadcastedMeeting = async (meeting: Meeting) => {
 }
 
 
-export const deleteAcceptedMeetingByAcceptor = async ({meetingId}: {meetingId: string}):Promise<Offer> => {
+export const unacceptMeetingByAcceptor = async ({meetingId}: {meetingId: string}):Promise<Offer> => {
 
     const offer = await getAcceptedOfferByMeetingId({ meetingId });
     

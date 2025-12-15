@@ -2,8 +2,8 @@ import { createMeeting, deleteMeeting, setMeetingDismissed, setMeetingState } fr
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
 import { processOfferForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
-import { DISMISSED_MEETING_STATE_TYPE, DRAFT_MEETING_STATE_TYPE, SEARCHING_MEETING_STATE_TYPE } from "../types.js";
-import { deleteAcceptedMeetingByAcceptor } from "../backend/meeting.js";
+import { DISMISSED_MEETING_STATE_TYPE } from "../types.js";
+import { unacceptMeetingByAcceptor } from "../backend/meeting.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
 
 
@@ -116,15 +116,19 @@ export const handleDeleteMeeting = async (req: Request, res: Response) => {
   }
 
   try {
-    // if the user is the receiver of the meeting, not the creator,
-    // then just undo the accept and reset the meeting as searching
+
     const meeting = await getMeetingById({ meetingId });
     if (!meeting) {
       return res.status(404).json({ error: "Meeting not found" });
     }
     
-    if (userId !== meeting?.userFromId) {
-      const rejectedOffer = await deleteAcceptedMeetingByAcceptor({meetingId});
+      // if the user is the receiver of the meeting, not the creator,
+      // then just undo the accept and reset the meeting as searching
+    if (userId !== meeting.userFromId) {
+      if (userId !== meeting.acceptedUserId) {
+        return res.status(404).json({ error: "User not creator or acceptor of meeting" });
+      }
+      await unacceptMeetingByAcceptor({meetingId});
       return res.json(meeting);
     }
 
