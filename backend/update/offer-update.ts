@@ -1,7 +1,12 @@
 
 import { prisma } from "../auth.js";
 import type { MeetingType, Offer } from '../../types.js';
-import { OPEN_OFFER_STATE } from "../utils.js";
+import {
+    OPEN_OFFER_STATE_TYPE,
+    ACCEPTED_OFFER_STATE_TYPE,
+    REJECTED_OFFER_STATE_TYPE,
+    EXPIRED_OFFER_STATE_TYPE
+} from '../../types.js';
 
 
 export const createOffer = async ({meetingId, userOfferedId, expiresAt, offerType}
@@ -10,7 +15,7 @@ export const createOffer = async ({meetingId, userOfferedId, expiresAt, offerTyp
         data: {
             meetingId,
             userOfferedId,
-            offerState: OPEN_OFFER_STATE,
+            offerState: OPEN_OFFER_STATE_TYPE,
             expiresAt,
             offerType
         }
@@ -25,7 +30,7 @@ export const setOfferExpired = async ({ offerId }: { offerId: string }): Promise
             id: offerId,
         },
         data: {
-            offerState: 'EXPIRED',
+            offerState: EXPIRED_OFFER_STATE_TYPE,
         }
 
     })
@@ -39,7 +44,7 @@ export const setOfferAccepted = async ({ offerId }: { offerId: string }): Promis
             id: offerId,
         },
         data: {
-            offerState: 'ACCEPTED',
+            offerState: ACCEPTED_OFFER_STATE_TYPE,
         }
 
     })
@@ -52,7 +57,7 @@ export const setOfferOpen = async ({ offerId }: { offerId: string }): Promise<Of
             id: offerId,
         },
         data: {
-            offerState: 'OPEN',
+            offerState: OPEN_OFFER_STATE_TYPE,
         }
 
     })
@@ -65,7 +70,7 @@ export const setOfferRejected = async ({ offerId }: { offerId: string }): Promis
             id: offerId,
         },
         data: {
-            offerState: 'REJECTED',
+            offerState: REJECTED_OFFER_STATE_TYPE,
         }
     })
     return rejectedOffer;

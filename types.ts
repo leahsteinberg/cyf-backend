@@ -9,29 +9,40 @@ export type TimeType = "IMMEDIATE" | "FUTURE" | "UNKNOWN";
 export type TargetType = "OPEN" | "FRIEND_SPECIFIC" | "GROUP";
 export type SourceType = "USER_INTENT" | "SYSTEM_PATTERN" | "SYSTEM_REAL_TIME";
 
-export const OPEN_OFFER_STATE_TYPE = 'OPEN';
-export const ACCEPTED_OFFER_STATE_TYPE = 'ACCEPTED';
-export const REJECTED_OFFER_STATE_TYPE = 'REJECTED';
-export const EXPIRED_OFFER_STATE_TYPE = 'EXPIRED';
+// Offer State Constants (type-safe with assertions)
+export const OPEN_OFFER_STATE_TYPE: OfferState = 'OPEN' as const;
+export const ACCEPTED_OFFER_STATE_TYPE: OfferState = 'ACCEPTED' as const;
+export const REJECTED_OFFER_STATE_TYPE: OfferState = 'REJECTED' as const;
+export const EXPIRED_OFFER_STATE_TYPE: OfferState = 'EXPIRED' as const;
 
-export const DRAFT_MEETING_STATE_TYPE = 'DRAFT';
-export const SEARCHING_MEETING_STATE_TYPE = 'SEARCHING';
-export const ACCEPTED_MEETING_STATE_TYPE = 'ACCEPTED';
-export const REJECTED_MEETING_STATE_TYPE = 'REJECTED';
-export const PAST_MEETING_STATE_TYPE = 'PAST';
+// Meeting State Constants (type-safe with assertions)
+export const DRAFT_MEETING_STATE_TYPE: MeetingState = 'DRAFT' as const;
+export const SEARCHING_MEETING_STATE_TYPE: MeetingState = 'SEARCHING' as const;
+export const ACCEPTED_MEETING_STATE_TYPE: MeetingState = 'ACCEPTED' as const;
+export const REJECTED_MEETING_STATE_TYPE: MeetingState = 'REJECTED' as const;
+export const PAST_MEETING_STATE_TYPE: MeetingState = 'PAST' as const;
+export const DISMISSED_MEETING_STATE_TYPE: MeetingState = 'DISMISSED' as const;
+export const EXPIRED_MEETING_STATE_TYPE: MeetingState = 'EXPIRED' as const;
 
+// Time Type Constants (type-safe with assertions)
+export const IMMEDIATE_TIME_TYPE: TimeType = 'IMMEDIATE' as const;
+export const FUTURE_TIME_TYPE: TimeType = 'FUTURE' as const;
+export const UNKNOWN_TIME_TYPE: TimeType = 'UNKNOWN' as const;
 
-export const IMMEDIATE_TIME_TYPE = 'IMMEDIATE';
-export const FUTURE_TIME_TYPE = 'FUTURE';
-export const UNKNOWN_TIME_TYPE = 'UNKNOWN';
+// Target Type Constants (type-safe with assertions)
+export const OPEN_TARGET_TYPE: TargetType = 'OPEN' as const;
+export const FRIEND_SPECIFIC_TARGET_TYPE: TargetType = 'FRIEND_SPECIFIC' as const;
+export const GROUP_TARGET_TYPE: TargetType = 'GROUP' as const;
 
-export const OPEN_TARGET_TYPE = 'OPEN';
-export const FRIEND_SPECIFIC_TARGET_TYPE = 'FRIEND_SPECIFIC';
-export const GROUP_TARGET_TYPE = 'GROUP';
+// Source Type Constants (type-safe with assertions)
+export const USER_INTENT_SOURCE_TYPE: SourceType = 'USER_INTENT' as const;
+export const SYSTEM_PATTERN_SOURCE_TYPE: SourceType = 'SYSTEM_PATTERN' as const;
+export const SYSTEM_REAL_TIME_SOURCE_TYPE: SourceType = 'SYSTEM_REAL_TIME' as const;
 
-export const USER_INTENT_SOURCE_TYPE = 'USER_INTENT';
-export const SYSTEM_PATTERN_SOURCE_TYPE = 'SYSTEM_PATTERN';
-export const SYSTEM_REAL_TIME_SOURCE_TYPE = 'SYSTEM_REAL_TIME';
+// Broadcast Sub-State Constants (type-safe with assertions)
+export const PENDING_CLAIMED_BROADCAST_STATE: BroadcastSubState = 'PENDING_CLAIMED' as const;
+export const UNCLAIMED_BROADCAST_STATE: BroadcastSubState = 'UNCLAIMED' as const;
+export const CLAIMED_BROADCAST_STATE: BroadcastSubState = 'CLAIMED' as const;
 
 
 

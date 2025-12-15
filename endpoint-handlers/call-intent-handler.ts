@@ -23,9 +23,9 @@ export const handleCallIntent = async (req: Request, res: Response) => {
         const existingCallIntent = createdMeetings.find(m => {
             const timeType = getEffectiveTimeType(m);
             const targetType = getEffectiveTargetType(m);
-            return m.meetingState === 'DRAFT' &&
-                   timeType === 'UNKNOWN' &&
-                   targetType === 'FRIEND_SPECIFIC' &&
+            return m.meetingState === DRAFT_MEETING_STATE_TYPE &&
+                   timeType === UNKNOWN_TIME_TYPE &&
+                   targetType === FRIEND_SPECIFIC_TARGET_TYPE &&
                    m.targetUserId === userToId;
         });
 

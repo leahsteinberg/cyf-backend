@@ -2,7 +2,14 @@ import type { Request, Response } from 'express';
 import { getMeetingById, getCreatedMeetings, getAcceptedMeetings } from '../backend/query/meeting-lookup.js';
 import { setMeetingState } from '../backend/update/meeting-update.js';
 import { processOfferForNewMeeting } from '../backend/process-meeting.js';
-import { getEffectiveTimeType, getEffectiveTargetType } from '../types.js';
+import {
+    getEffectiveTimeType,
+    getEffectiveTargetType,
+    DRAFT_MEETING_STATE_TYPE,
+    SEARCHING_MEETING_STATE_TYPE,
+    DISMISSED_MEETING_STATE_TYPE,
+    UNKNOWN_TIME_TYPE
+} from '../types.js';
 import { findMeetingTimeConflict } from '../backend/meeting-conflict.js';
 
 /**
@@ -44,7 +51,7 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
         }
 
         // 3. Verify it's in DRAFT state
-        if (suggestion.meetingState !== 'DRAFT') {
+        if (suggestion.meetingState !== DRAFT_MEETING_STATE_TYPE) {
             return res.status(400).json({
                 error: "Only DRAFT suggestions can be accepted",
                 currentState: suggestion.meetingState
@@ -59,7 +66,7 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
 
         // 5. Check for time conflicts (only if time is known)
         // UNKNOWN timeType meetings don't conflict since they have no set time yet
-        if (timeType !== 'UNKNOWN') {
+        if (timeType !== UNKNOWN_TIME_TYPE) {
             const createdMeetings = await getCreatedMeetings({ userFromId: userId });
             const acceptedMeetings = await getAcceptedMeetings({ acceptedUserId: userId });
 
@@ -84,7 +91,7 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
         }
 
         // 6. Activate the suggestion: DRAFT → SEARCHING
-        await setMeetingState({ meetingId, meetingState: 'SEARCHING' });
+        await setMeetingState({ meetingId, meetingState: SEARCHING_MEETING_STATE_TYPE });
 
         // 7. Refresh meeting data
         const activatedMeeting = await getMeetingById({ meetingId });
@@ -105,7 +112,7 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             meetingId,
             timeType,
             targetType,
-            offersCreated: timeType !== 'UNKNOWN'
+            offersCreated: timeType !== UNKNOWN_TIME_TYPE
         });
 
         res.json({
@@ -115,9 +122,9 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             metadata: {
                 timeType,
                 targetType,
-                offersCreated: timeType !== 'UNKNOWN',
+                offersCreated: timeType !== UNKNOWN_TIME_TYPE,
                 // If UNKNOWN time, client should prompt user to set a time
-                requiresTimeSelection: timeType === 'UNKNOWN'
+                requiresTimeSelection: timeType === UNKNOWN_TIME_TYPE
             }
         });
     } catch (error) {
@@ -168,7 +175,7 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         }
 
         // 3. Verify it's in DRAFT state
-        if (suggestion.meetingState !== 'DRAFT') {
+        if (suggestion.meetingState !== DRAFT_MEETING_STATE_TYPE) {
             return res.status(400).json({
                 error: "Only DRAFT suggestions can be dismissed",
                 currentState: suggestion.meetingState
@@ -176,7 +183,7 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         }
 
         // 4. Mark as DISMISSED (instead of deleting)
-        await setMeetingState({ meetingId, meetingState: 'DISMISSED' });
+        await setMeetingState({ meetingId, meetingState: DISMISSED_MEETING_STATE_TYPE });
 
         // 5. Refresh to get updated meeting
         const dismissedSuggestion = await getMeetingById({ meetingId });

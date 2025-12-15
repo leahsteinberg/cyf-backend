@@ -4,7 +4,7 @@ import { processOfferForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
 import { getAcceptedOfferByMeetingId } from "../backend/query/offer-lookup.js";
 import { setOfferRejected } from "../backend/update/offer-update.js";
-import { SEARCHING_MEETING_STATE } from "../backend/utils.js";
+import { DRAFT_MEETING_STATE_TYPE, SEARCHING_MEETING_STATE_TYPE } from "../types.js";
 import { handleRejectOffer } from "./offer-handler.js";
 import { rejectOffer, rejectOfferWithMeeting } from "../backend/offer.js";
 import { deleteAcceptedMeetingByAcceptor } from "../backend/meeting.js";
@@ -171,7 +171,7 @@ export const handleAcceptDraftMeeting = async (req: Request, res: Response) => {
     }
 
     // Verify it's in DRAFT state
-    if (meeting.meetingState !== 'DRAFT') {
+    if (meeting.meetingState !== DRAFT_MEETING_STATE_TYPE) {
       return res.status(400).json({
         error: "Only DRAFT meetings can be accepted",
         currentState: meeting.meetingState
@@ -202,7 +202,7 @@ export const handleAcceptDraftMeeting = async (req: Request, res: Response) => {
     }
 
     // Activate the meeting: move to SEARCHING state
-    await setMeetingState({ meetingId, meetingState: 'SEARCHING' });
+    await setMeetingState({ meetingId, meetingState: SEARCHING_MEETING_STATE_TYPE });
 
     // Refresh meeting data
     const activatedMeeting = await getMeetingById({ meetingId });
@@ -254,7 +254,7 @@ export const handleRejectDraftMeeting = async (req: Request, res: Response) => {
     }
 
     // Verify it's in DRAFT state
-    if (meeting.meetingState !== 'DRAFT') {
+    if (meeting.meetingState !== DRAFT_MEETING_STATE_TYPE) {
       return res.status(400).json({
         error: "Only DRAFT meetings can be rejected",
         currentState: meeting.meetingState

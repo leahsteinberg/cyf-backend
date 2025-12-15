@@ -1,5 +1,5 @@
 import { getFriendIds, pickFriendIdToOffer } from './friendship.js';
-import { addHour, isTimePast, REJECTED_MEETING_STATE } from './utils.js';
+import { addHour, isTimePast } from './utils.js';
 import type { Offer } from '../types.js';
 import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
 import { createOffer, setOfferAccepted, setOfferExpired, setOfferOpen, setOfferRejected } from './update/offer-update.js';

@@ -10,7 +10,15 @@ import { getIsBroadcasting } from '../backend/query/user-lookup.js';
 import { setBroadcastClaimed, setBroadcastUnclaimed } from '../backend/update/broadcast-update.js';
 import { setOfferOpen } from '../backend/update/offer-update.js';
 import { getAcceptedOfferByMeetingId } from '../backend/query/offer-lookup.js';
-import { getEffectiveTimeType, getEffectiveTargetType } from '../types.js';
+import {
+    getEffectiveTimeType,
+    getEffectiveTargetType,
+    IMMEDIATE_TIME_TYPE,
+    OPEN_TARGET_TYPE,
+    PAST_MEETING_STATE_TYPE,
+    OPEN_OFFER_STATE_TYPE,
+    USER_INTENT_SOURCE_TYPE
+} from '../types.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId } = req.body;
@@ -24,8 +32,8 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
         // Check if user already has an active broadcast (IMMEDIATE + OPEN)
         const createdMeetings = await getCreatedMeetings({userFromId: userId});
         const activeBroadcast = createdMeetings.find(m => {
-            const isBroadcast = getEffectiveTimeType(m) === 'IMMEDIATE' && getEffectiveTargetType(m) === 'OPEN';
-            return isBroadcast && m.meetingState !== 'PAST';
+            const isBroadcast = getEffectiveTimeType(m) === IMMEDIATE_TIME_TYPE && getEffectiveTargetType(m) === OPEN_TARGET_TYPE;
+            return isBroadcast && m.meetingState !== PAST_MEETING_STATE_TYPE;
         });
 
         if (activeBroadcast) {
@@ -48,9 +56,9 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             scheduledEnd,
             title: 'This is a broadcast meeting',
             meetingType: 'BROADCAST', // TODO: Migrate to timeType/targetType in Phase 6
-            timeType: 'IMMEDIATE',
-            targetType: 'OPEN',
-            sourceType: 'USER_INTENT',
+            timeType: IMMEDIATE_TIME_TYPE,
+            targetType: OPEN_TARGET_TYPE,
+            sourceType: USER_INTENT_SOURCE_TYPE,
         });
 
         // Validate meeting was created successfully before creating offers
@@ -116,7 +124,7 @@ export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
         const { offer, meeting } = validation;
 
             // Check if the offer is still open
-        if (offer.offerState !== 'OPEN') {
+        if (offer.offerState !== OPEN_OFFER_STATE_TYPE) {
             return {
                 valid: false,
                 error: "Offer is no longer available",
@@ -172,7 +180,7 @@ export const handleAcceptBroadcast = async (req: Request, res: Response) => {
         const { offer, meeting } = validation;
 
             // Check if the offer is still open
-        if (offer.offerState !== 'OPEN') {
+        if (offer.offerState !== OPEN_OFFER_STATE_TYPE) {
             return {
                 valid: false,
                 error: "Offer is no longer available",
@@ -280,7 +288,7 @@ export const handleCancelBroadcastAcceptance = async (req: Request, res: Respons
         }
 
         // Verify it's a broadcast meeting (IMMEDIATE + OPEN)
-        const isBroadcast = getEffectiveTimeType(meeting) === 'IMMEDIATE' && getEffectiveTargetType(meeting) === 'OPEN';
+        const isBroadcast = getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE && getEffectiveTargetType(meeting) === OPEN_TARGET_TYPE;
         if (!isBroadcast) {
             return res.status(400).json({ error: "This operation is only valid for broadcast meetings" });
         }

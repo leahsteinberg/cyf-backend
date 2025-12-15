@@ -1,7 +1,13 @@
 import type { Meeting, MeetingState, MeetingType, TimeType, TargetType, SourceType } from "../../types.js";
-import { meetingTypeToNew, newToMeetingType } from "../../types.js";
+import {
+    meetingTypeToNew,
+    newToMeetingType,
+    ACCEPTED_MEETING_STATE_TYPE,
+    SEARCHING_MEETING_STATE_TYPE,
+    IMMEDIATE_TIME_TYPE,
+    OPEN_TARGET_TYPE
+} from "../../types.js";
 import { prisma } from "../auth.js";
-import { ACCEPTED_MEETING_STATE, SEARCHING_MEETING_STATE } from "../utils.js";
 
 // Phase 2: Dual-write parameters - support both old and new
 type CreateMeetingParams = {
@@ -47,12 +53,12 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
         // FALLBACK: Default to ADVANCE behavior
         finalMeetingType = 'ADVANCE';
         finalTimeType = 'FUTURE';
-        finalTargetType = 'OPEN';
+        finalTargetType = OPEN_TARGET_TYPE;
     }
 
     // Determine if broadcast metadata should be created
     // Broadcast metadata needed when: timeType is IMMEDIATE and targetType is OPEN
-    const needsBroadcastMetadata = finalTimeType === 'IMMEDIATE' && finalTargetType === 'OPEN';
+    const needsBroadcastMetadata = finalTimeType === IMMEDIATE_TIME_TYPE && finalTargetType === OPEN_TARGET_TYPE;
 
     // Create meeting with dual-write to both old and new fields
     const meeting = await prisma.meeting.create({
@@ -109,7 +115,7 @@ export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string
             id: meetingId,
         },
         data: {
-            meetingState: ACCEPTED_MEETING_STATE,
+            meetingState: ACCEPTED_MEETING_STATE_TYPE,
             acceptedUserId: userId,
         }
     })
@@ -122,7 +128,7 @@ export const setMeetingOpen = async ({meetingId}: {meetingId: string}): Promise<
             id: meetingId,
         },
         data: {
-            meetingState: SEARCHING_MEETING_STATE,
+            meetingState: SEARCHING_MEETING_STATE_TYPE,
             acceptedUserId: null,
         }
     })
@@ -137,7 +143,7 @@ export const unclaimBroadcastMeeting = async ({meetingId}: {meetingId: string}):
             id: meetingId,
         },
         data: {
-            meetingState: SEARCHING_MEETING_STATE,
+            meetingState: SEARCHING_MEETING_STATE_TYPE,
             acceptedUserId: null,
             broadcastMetadata: {
                 update: {

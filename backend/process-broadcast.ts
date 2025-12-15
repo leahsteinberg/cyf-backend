@@ -1,5 +1,5 @@
 import type { Meeting, Offer } from "../types.js";
-import { getEffectiveTimeType, getEffectiveTargetType } from "../types.js";
+import { getEffectiveTimeType, getEffectiveTargetType, IMMEDIATE_TIME_TYPE, OPEN_TARGET_TYPE } from "../types.js";
 import { getFriendIds } from "./friendship.js";
 import { makeBroadcastOffer } from "./process-meeting.js";
 import { setBroadcastPending, setBroadcastUnclaimed } from "./update/broadcast-update.js";
@@ -54,7 +54,7 @@ export const validateBroadcastRequest = async (
     // Check if meeting is BROADCAST type (IMMEDIATE + OPEN)
     const timeType = getEffectiveTimeType(meeting);
     const targetType = getEffectiveTargetType(meeting);
-    const isBroadcast = timeType === 'IMMEDIATE' && targetType === 'OPEN';
+    const isBroadcast = timeType === IMMEDIATE_TIME_TYPE && targetType === OPEN_TARGET_TYPE;
 
     if (!isBroadcast) {
         return {
