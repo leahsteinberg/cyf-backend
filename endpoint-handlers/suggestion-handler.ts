@@ -8,10 +8,13 @@ import {
     DRAFT_MEETING_STATE,
     SEARCHING_MEETING_STATE,
     DISMISSED_DRAFT_MEETING_STATE,
-    UNKNOWN_TIME_TYPE
+    UNKNOWN_TIME_TYPE,
+    IMMEDIATE_TIME_TYPE,
+    OPEN_TARGET_TYPE
 } from '../types.js';
 import { findMeetingTimeConflict } from '../backend/meeting-conflict.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
+import { setIsBroadcasting } from '../backend/update/user-update.js';
 
 
 export const handleAcceptSuggestion = async (req: Request, res: Response) => {
@@ -29,7 +32,6 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
         if (!suggestion) {
             return res.status(404).json({ error: "Suggestion not found" });
         }
-
 
         const timeType = getEffectiveTimeType(suggestion);
         const targetType = getEffectiveTargetType(suggestion);
@@ -59,9 +61,14 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             }
         }
 
-        await transitionMeeting({meetingId, toState: SEARCHING_MEETING_STATE, actorId: userId})
+        const {meeting, events} = await transitionMeeting({meetingId, toState: SEARCHING_MEETING_STATE, actorId: userId})
+        
+        // if the activated suggestion is a current broadcast, need to set broadcast to true
 
         const activatedMeeting = await getMeetingById({ meetingId });
+        if (activatedMeeting?.timeType === IMMEDIATE_TIME_TYPE && activatedMeeting.targetType === OPEN_TARGET_TYPE) {
+            await setIsBroadcasting({userId});
+        }
 
         if (!activatedMeeting) {
             return res.status(500).json({ error: "Failed to retrieve activated meeting" });
@@ -112,7 +119,7 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         if (!suggestion) {
             return res.status(404).json({ error: "Suggestion not found" });
         }
-        await transitionMeeting({meetingId, toState: DISMISSED_DRAFT_MEETING_STATE, actorId: userId});
+        const {meeting, events} = await transitionMeeting({meetingId, toState: DISMISSED_DRAFT_MEETING_STATE, actorId: userId});
 
         // 5. Refresh to get updated meeting
         const dismissedSuggestion = await getMeetingById({ meetingId });
