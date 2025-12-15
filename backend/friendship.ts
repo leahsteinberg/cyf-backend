@@ -2,9 +2,6 @@ import type { Meeting, User, Offer, Friendship } from '../types.js';
 import { getFriendshipsUser1Side, getFriendshipsUser2Side } from './query/friendship-lookup.js';
 import { getUsersFromIds } from './query/user-lookup.js';
 
-
-
-
 export const getFriends = async (id: string): Promise<User[]> => {
     const friendIds = await getFriendIds(id);
     const friends = await getUsersFromIds(friendIds);

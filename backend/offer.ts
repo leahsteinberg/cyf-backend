@@ -85,15 +85,6 @@ export const findRecentOffer = (offers: Offer[]):
 
 }
 
-export const determineNeedNewOffer = async ({remainingFriendCount, minutesUntilMeeting}
-    : {remainingFriendCount: number, minutesUntilMeeting: number}): Promise<boolean> => {
-    if (minutesUntilMeeting <= 60) {
-        return false;
-    }
-
-    return false;
-};
-
 
 export const getIsOfferExpired = async({offer}: {offer: Offer}): Promise<Boolean> => {
     return isTimePast({eventTime: offer.expiresAt});
@@ -108,10 +99,3 @@ export const setOffersExpired = async (offers: Offer[]): Promise<Offer[]> => {
     return expiredOffers
 }
 
-export const clearOutOffers = async (offers: Offer[]) => {
-    for (let offer of offers) {
-        if (offer.offerState === OPEN_OFFER_STATE_TYPE) {
-            await setOfferExpired({offerId: offer.id})
-        }
-    }
-}
