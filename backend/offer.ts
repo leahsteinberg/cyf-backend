@@ -80,9 +80,6 @@ export const findRecentOffer = (offers: Offer[]):
 
     }
     return {recentOffer: undefined, olderOffers: []}
-
-
-
 }
 
 
