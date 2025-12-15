@@ -5,7 +5,8 @@ import {
     ACCEPTED_MEETING_STATE_TYPE,
     SEARCHING_MEETING_STATE_TYPE,
     IMMEDIATE_TIME_TYPE,
-    OPEN_TARGET_TYPE
+    OPEN_TARGET_TYPE,
+    DISMISSED_MEETING_STATE_TYPE
 } from "../../types.js";
 import { prisma } from "../auth.js";
 
@@ -130,6 +131,18 @@ export const setMeetingOpen = async ({meetingId}: {meetingId: string}): Promise<
         data: {
             meetingState: SEARCHING_MEETING_STATE_TYPE,
             acceptedUserId: null,
+        }
+    })
+    return updatedMeeting;
+};
+
+export const setMeetingDismissed = async ({meetingId}: {meetingId: string}): Promise<Meeting> => {
+    const updatedMeeting = prisma.meeting.update({
+        where: {
+            id: meetingId,
+        },
+        data: {
+            meetingState: DISMISSED_MEETING_STATE_TYPE,
         }
     })
     return updatedMeeting;

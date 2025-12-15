@@ -32,15 +32,14 @@ export const deleteAcceptedMeetingByAcceptor = async ({meetingId}: {meetingId: s
     if (!offer) {
       throw new Error("No valid offer for user found.");
     }
-    const rejectedOffer = await setOfferRejected({offerId: offer.id})
-    //res.json(rejectedOffer);
+    const reOpenedOffer = await setOfferOpen({offerId: offer.id});
     const offers = await getMeetingOffers({ meetingId });
-    const otherOffers = offers.filter(o => o.id != rejectedOffer.id);
+    const otherOffers = offers.filter(o => o.id != reOpenedOffer.id);
     for (let otherOffer of otherOffers) {
         await setOfferOpen( {offerId: otherOffer.id});
     }
     const openMeeting = await setMeetingOpen({ meetingId })
 
-  return rejectedOffer;
+  return reOpenedOffer;
 
 }

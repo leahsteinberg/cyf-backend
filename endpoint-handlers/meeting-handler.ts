@@ -1,14 +1,9 @@
-import { createMeeting, deleteMeeting, setMeetingState } from "../backend/update/meeting-update.js";
+import { createMeeting, deleteMeeting, setMeetingDismissed, setMeetingState } from "../backend/update/meeting-update.js";
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
 import { processOfferForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
-import { getAcceptedOfferByMeetingId } from "../backend/query/offer-lookup.js";
-import { setOfferRejected } from "../backend/update/offer-update.js";
-import { DRAFT_MEETING_STATE_TYPE, SEARCHING_MEETING_STATE_TYPE } from "../types.js";
-import { handleRejectOffer } from "./offer-handler.js";
-import { rejectOffer, rejectOfferWithMeeting } from "../backend/offer.js";
+import { DISMISSED_MEETING_STATE_TYPE, DRAFT_MEETING_STATE_TYPE, SEARCHING_MEETING_STATE_TYPE } from "../types.js";
 import { deleteAcceptedMeetingByAcceptor } from "../backend/meeting.js";
-import { getEffectiveTimeType, getEffectiveTargetType } from "../types.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
 
 
@@ -106,12 +101,10 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
   const meetings = await getCreatedMeetings({userFromId});
   const acceptedMeetings = await getAcceptedMeetings({acceptedUserId: userFromId});
 
-  // TODO: Filter out DISMISSED meetings from the response
-  // DISMISSED meetings should not appear in user's active meeting list
-  // They're kept in DB for analytics but hidden from UI
-  // Add: .filter(m => m.meetingState !== 'DISMISSED')
+  const allMeetings = [...meetings, ...acceptedMeetings]
+      .filter(m => m.meetingState !== DISMISSED_MEETING_STATE_TYPE);
 
-  res.json([...meetings, ...acceptedMeetings])
+  res.json(allMeetings)
 }
 
 export const handleDeleteMeeting = async (req: Request, res: Response) => {
@@ -229,7 +222,7 @@ export const handleAcceptDraftMeeting = async (req: Request, res: Response) => {
 
 /**
  * User rejects a DRAFT meeting suggestion
- * Deletes the draft meeting
+ * Sets the draft meeting as DISMISSED
  */
 export const handleRejectDraftMeeting = async (req: Request, res: Response) => {
   const { meetingId, userId } = req.body;
@@ -261,13 +254,13 @@ export const handleRejectDraftMeeting = async (req: Request, res: Response) => {
       });
     }
 
-    // Delete the draft meeting
-    const deletedMeeting = await deleteMeeting({ meetingId });
+    // Set the meeting as dismissed
+    const dismissedMeeting = await setMeetingDismissed({meetingId});
 
-    console.log("Draft meeting rejected and deleted:", meetingId);
+    console.log("Draft meeting rejected and marked dismissed:", meetingId);
     res.json({
       success: true,
-      meeting: deletedMeeting
+      meeting: dismissedMeeting
     });
   } catch (error) {
     console.error("Error rejecting draft meeting:", error);
