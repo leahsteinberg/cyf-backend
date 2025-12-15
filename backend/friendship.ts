@@ -1,5 +1,4 @@
 import type { Meeting, User, Offer, Friendship } from '../types.js';
-import {prisma } from './auth.js';  
 import { getFriendshipsUser1Side, getFriendshipsUser2Side } from './query/friendship-lookup.js';
 import { getUsersFromIds } from './query/user-lookup.js';
 

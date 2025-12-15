@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { createMeeting, unclaimBroadcastMeeting } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
 import { processNewBroadcastMeeting, tryAcceptUnclaimedBroadcast, validateBroadcastRequest } from '../backend/process-broadcast.js';
-import { acceptOffer, rejectOffer } from '../backend/offer.js';
+import { acceptOffer } from '../backend/offer.js';
 import { getCreatedMeetings, getMeetingById } from '../backend/query/meeting-lookup.js';
 import { deleteBroadcastedMeeting, findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';

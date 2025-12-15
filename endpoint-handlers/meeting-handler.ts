@@ -5,7 +5,6 @@ import type { Request, Response } from 'express';
 import { DISMISSED_MEETING_STATE_TYPE } from "../types.js";
 import { unacceptMeetingByAcceptor } from "../backend/meeting.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
-import { getMeetingOffers } from "../backend/offer.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {

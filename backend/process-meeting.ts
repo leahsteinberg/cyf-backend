@@ -2,7 +2,7 @@ import { getMeetingOffers, findFriendIdToOffer, findRecentOffer, setOfferExpired
 import { setMeetingState } from './update/meeting-update.js';
 import { addHour, isTimePast } from './utils.js';
 import { getFriendIds } from './friendship.js';
-import type { Meeting, MeetingType, Offer } from '../types.js';
+import type { Meeting, Offer } from '../types.js';
 import {
     getEffectiveTimeType,
     getEffectiveTargetType,
@@ -153,14 +153,6 @@ async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meetin
 
     console.log(`Created friend-specific offer for meeting ${meeting.id} to user ${targetUserId}`);
     return meeting;
-}
-
-export const clearOutOffers = async (offers: Offer[]) => {
-    for (let offer of offers) {
-        if (offer.offerState === OPEN_OFFER_STATE_TYPE) {
-            await setOfferExpired({offerId: offer.id})
-        }
-    }
 }
 
 export const makeBroadcastOffer = async({meeting, userOfferedId}:

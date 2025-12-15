@@ -1,6 +1,6 @@
 
 import { prisma } from "../auth.js";
-import type { MeetingType, Offer } from '../../types.js';
+import type { Offer } from '../../types.js';
 import {
     OPEN_OFFER_STATE_TYPE,
     ACCEPTED_OFFER_STATE_TYPE,

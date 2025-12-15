@@ -1,10 +1,10 @@
 
 import type { Meeting, Offer } from '../types.js';
 import { getEffectiveTimeType, getEffectiveTargetType, IMMEDIATE_TIME_TYPE, OPEN_TARGET_TYPE } from '../types.js';
-import { getMeetingOffers, rejectOfferWithMeeting } from './offer.js';
+import { getMeetingOffers } from './offer.js';
 import { getAcceptedOfferByMeetingId } from './query/offer-lookup.js';
 import { deleteMeetingAndOffers, setMeetingOpen } from './update/meeting-update.js';
-import { setOfferOpen, setOfferRejected } from './update/offer-update.js';
+import { setOfferOpen } from './update/offer-update.js';
 
 
 export const findBroadcastedMeetings = (meetings: Meeting[]): Meeting[] => {
