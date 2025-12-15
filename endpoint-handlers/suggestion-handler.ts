@@ -7,7 +7,7 @@ import {
     getEffectiveTargetType,
     DRAFT_MEETING_STATE,
     SEARCHING_MEETING_STATE,
-    DISMISSED_SUGGESTION_MEETING_STATE,
+    DISMISSED_DRAFT_MEETING_STATE,
     UNKNOWN_TIME_TYPE
 } from '../types.js';
 import { findMeetingTimeConflict } from '../backend/meeting-conflict.js';
@@ -183,7 +183,7 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         }
 
         // 4. Mark as DISMISSED (instead of deleting)
-        await setMeetingState({ meetingId, meetingState: DISMISSED_SUGGESTION_MEETING_STATE });
+        await setMeetingState({ meetingId, meetingState: DISMISSED_DRAFT_MEETING_STATE });
 
         // 5. Refresh to get updated meeting
         const dismissedSuggestion = await getMeetingById({ meetingId });

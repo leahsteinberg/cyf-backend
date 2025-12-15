@@ -4,7 +4,7 @@ import {
     getEffectiveTargetType,
     PAST_MEETING_STATE,
     DRAFT_MEETING_STATE,
-    DISMISSED_SUGGESTION_MEETING_STATE,
+    DISMISSED_DRAFT_MEETING_STATE,
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
     UNKNOWN_TIME_TYPE
@@ -59,7 +59,7 @@ export const findMeetingTimeConflict = ({
         // Exclude PAST, DRAFT, and DISMISSED meetings
         if (meeting.meetingState === PAST_MEETING_STATE ||
             meeting.meetingState === DRAFT_MEETING_STATE ||
-            meeting.meetingState === DISMISSED_SUGGESTION_MEETING_STATE) {
+            meeting.meetingState === DISMISSED_DRAFT_MEETING_STATE) {
             return true;
         }
 

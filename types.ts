@@ -1,6 +1,6 @@
 
 export type OfferState = "OPEN" | "ACCEPTED" | "REJECTED" | "EXPIRED";
-export type MeetingState = "DRAFT" | "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST" | "EXPIRED" | "DISMISSED_SUGGESTION" | "CANCELED";
+export type MeetingState = "DRAFT" | "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST" | "EXPIRED" | "DISMISSED_DRAFT" | "CANCELED";
 export type MeetingType = "ADVANCE" | "BROADCAST";
 export type BroadcastSubState = "PENDING_CLAIMED" | "UNCLAIMED" | "CLAIMED";
 
@@ -24,7 +24,7 @@ export const SEARCHING_MEETING_STATE: MeetingState = 'SEARCHING' as const;
 export const ACCEPTED_MEETING_STATE: MeetingState = 'ACCEPTED' as const;
 export const REJECTED_MEETING_STATE: MeetingState = 'REJECTED' as const;
 export const PAST_MEETING_STATE: MeetingState = 'PAST' as const;
-export const DISMISSED_SUGGESTION_MEETING_STATE: MeetingState = 'DISMISSED_SUGGESTION' as const;
+export const DISMISSED_DRAFT_MEETING_STATE: MeetingState = 'DISMISSED_DRAFT' as const;
 export const EXPIRED_MEETING_STATE: MeetingState = 'EXPIRED' as const;
 export const CANCELED_MEETING_STATE: MeetingState = 'CANCELED' as const;
 
@@ -63,7 +63,7 @@ export type DomainEvent =
   | { type: 'MEETING_REJECTED'; meetingId: string }
   | { type: 'MEETING_CANCELLED'; meetingId: string }
   | { type: 'MEETING_EXPIRED'; meetingId: string }
-  | { type: 'MEETING_PAST'; meetingId: string }e
+  | { type: 'MEETING_PAST'; meetingId: string }
 
 export interface BaseEntity {
     id: string;

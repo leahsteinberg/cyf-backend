@@ -6,7 +6,7 @@ import {
     SEARCHING_MEETING_STATE,
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
-    DISMISSED_SUGGESTION_MEETING_STATE,
+    DISMISSED_DRAFT_MEETING_STATE,
     UNCLAIMED_BROADCAST_STATE
 } from "../../types.js";
 import { prisma } from "../auth.js";
@@ -143,7 +143,7 @@ export const setMeetingDismissed = async ({meetingId}: {meetingId: string}): Pro
             id: meetingId,
         },
         data: {
-            meetingState: DISMISSED_SUGGESTION_MEETING_STATE,
+            meetingState: DISMISSED_DRAFT_MEETING_STATE,
         }
     })
     return updatedMeeting;
@@ -193,3 +193,22 @@ export const deleteMeetingAndOffers = async ({meetingId}: {meetingId: string}): 
     console.log("Deleted meeting:", deletedMeeting);
     return deletedMeeting;
 };
+
+
+
+// const updateMeetingState = async (meeting: Meeting, toState: MeetingState) => {
+//     const result = await prisma.meeting.updateMany({
+//         where: {
+//           id: meeting.id,
+//           meetingState: meeting.meetingState, // ensures the meeting is still in the state we expect
+//         },
+//         data: {
+//           meetingState: toState,
+//           acceptedUserId: context?.acceptedUserId ?? meeting.acceptedUserId,
+//         },
+//       });
+      
+//       if (result.count === 0) {
+//         throw new ConflictError("Meeting state has changed, please retry");
+//       }
+// }

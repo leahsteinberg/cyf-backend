@@ -11,7 +11,7 @@ import {
     UNKNOWN_TIME_TYPE,
     OPEN_TARGET_TYPE,
     FRIEND_SPECIFIC_TARGET_TYPE,
-    DISMISSED_SUGGESTION_MEETING_STATE,
+    DISMISSED_DRAFT_MEETING_STATE,
     ACCEPTED_MEETING_STATE,
     PAST_MEETING_STATE,
     REJECTED_MEETING_STATE,
@@ -219,7 +219,7 @@ const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
  */
 export const processOffersForMeeting = async (meeting: Meeting) => {
     // Skip processing DISMISSED meetings (they're kept for analytics only)
-    if (meeting.meetingState === DISMISSED_SUGGESTION_MEETING_STATE) {
+    if (meeting.meetingState === DISMISSED_DRAFT_MEETING_STATE) {
         console.log(`Skipping DISMISSED meeting ${meeting.id}`);
         return meeting;
     }
