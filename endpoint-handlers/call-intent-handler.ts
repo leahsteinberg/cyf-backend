@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { createDraftMeeting } from '../backend/draft-meeting.js';
 import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
-import { deleteMeeting } from '../backend/update/meeting-update.js';
+import { deleteMeetingAndOffers } from '../backend/update/meeting-update.js';
 import { getEffectiveTimeType, getEffectiveTargetType, UNKNOWN_TIME_TYPE, FRIEND_SPECIFIC_TARGET_TYPE, USER_INTENT_SOURCE_TYPE, DRAFT_MEETING_STATE_TYPE } from '../types.js';
 
 /**
@@ -116,7 +116,7 @@ export const handleUndoCallIntent = async (req: Request, res: Response) => {
         }
 
         // Delete the draft meeting
-        const deletedMeeting = await deleteMeeting({ meetingId: callIntent.id });
+        const deletedMeeting = await deleteMeetingAndOffers({ meetingId: callIntent.id });
 
         console.log("Call intent removed:", {
             meetingId: callIntent.id,

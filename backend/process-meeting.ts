@@ -147,7 +147,8 @@ async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meetin
             expiresAt,
         });
     } else if (timeType === UNKNOWN_TIME_TYPE) {
-        
+        console.log('Meeting has UNKNOWN time type, skipping offer creation');
+        return meeting;
     }
 
     console.log(`Created friend-specific offer for meeting ${meeting.id} to user ${targetUserId}`);

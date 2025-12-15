@@ -1,6 +1,6 @@
 import { getFriendIds, pickFriendIdToOffer } from './friendship.js';
 import { addHour, isTimePast } from './utils.js';
-import type { Offer } from '../types.js';
+import { OPEN_OFFER_STATE_TYPE, type Offer } from '../types.js';
 import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
 import { createOffer, setOfferAccepted, setOfferExpired, setOfferOpen, setOfferRejected } from './update/offer-update.js';
 import { setMeetingAccepted, setMeetingState } from './update/meeting-update.js';
@@ -135,4 +135,12 @@ export const setOffersExpired = async (offers: Offer[]): Promise<Offer[]> => {
         const expiredOffer = await setOfferExpired({offerId: offer.id})
     }
     return expiredOffers
+}
+
+export const clearOutOffers = async (offers: Offer[]) => {
+    for (let offer of offers) {
+        if (offer.offerState === OPEN_OFFER_STATE_TYPE) {
+            await setOfferExpired({offerId: offer.id})
+        }
+    }
 }
