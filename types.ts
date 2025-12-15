@@ -10,7 +10,7 @@ export type TargetType = "OPEN" | "FRIEND_SPECIFIC" | "GROUP";
 export type SourceType = "USER_INTENT" | "SYSTEM_PATTERN" | "SYSTEM_REAL_TIME";
 
 // HELPER TYPE 
-export type MeetingActorRole = "INITIATOR" | "ACCEPTOR" | "SPECIFIC_TARGET" | "OPEN_TARGET";
+export type MeetingActorRole = "INITIATOR" | "ACCEPTOR" | "SPECIFIC_TARGET" | "OPEN_TARGET" | "SYSTEM";
 
 // Offer State Constants (type-safe with assertions)
 export const OPEN_OFFER_STATE: OfferState = 'OPEN' as const;
@@ -53,11 +53,17 @@ export const INITIATOR_ACTOR_ROLE: MeetingActorRole = "INITIATOR" as const;
 export const ACCEPTOR_ACTOR_ROLE: MeetingActorRole = "ACCEPTOR" as const;
 export const SPECIFIC_TARGET_ACTOR_ROLE: MeetingActorRole = "SPECIFIC_TARGET" as const;
 export const OPEN_TARGET_ACTOR_ROLE: MeetingActorRole = "OPEN_TARGET" as const;
+export const SYSTEM_ACTOR_ROLE: MeetingActorRole = "SYSTEM" as const;
 
 
-
-
-
+export type DomainEvent =
+  | { type: 'MEETING_SUGGESTED'; meetingId: string }
+  | { type: 'MEETING_SEARCHING_STARTED'; meetingId: string }
+  | { type: 'MEETING_ACCEPTED'; meetingId: string; acceptedUserId: string }
+  | { type: 'MEETING_REJECTED'; meetingId: string }
+  | { type: 'MEETING_CANCELLED'; meetingId: string }
+  | { type: 'MEETING_EXPIRED'; meetingId: string }
+  | { type: 'MEETING_PAST'; meetingId: string }e
 
 export interface BaseEntity {
     id: string;
