@@ -116,32 +116,6 @@ async function processNewFutureOpenMeeting(meeting: Meeting): Promise<Meeting> {
 }
 
 /**
- * DEPRECATED: Old sequential offer behavior for ADVANCE meetings
- * Kept for backwards compatibility, but new FUTURE+OPEN meetings use processNewFutureOpenMeeting instead
- */
-async function processNewAdvanceMeeting(meeting: Meeting): Promise<Meeting> {
-    const allFriendIds = await getFriendIds(meeting.userFromId);
-    const { friendToOfferId, unOfferedCount } = await findFriendIdToOffer({
-        offers: [],
-        meetingId: meeting.id,
-        allFriendIds
-    });
-
-    if (friendToOfferId) {
-        await makeAdvanceOffer({
-            meeting,
-            userOfferedId: friendToOfferId,
-            remainingFriendsCount: unOfferedCount
-        });
-        console.log(`Created sequential offer for meeting ${meeting.id}`);
-    } else {
-        console.log(`No friends available for meeting ${meeting.id}`);
-    }
-
-    return meeting;
-}
-
-/**
  * Process new FRIEND_SPECIFIC meeting
  * Creates single offer to the specified friend
  */
