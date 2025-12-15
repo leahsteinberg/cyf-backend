@@ -106,7 +106,6 @@ async function processNewFutureOpenMeeting(meeting: Meeting): Promise<Meeting> {
             meeting,
             userOfferedId: friendId,
             expiresAt,
-            offerType: 'ADVANCE' // Keep as ADVANCE for backwards compatibility
         });
     });
 
@@ -172,7 +171,6 @@ async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meetin
             meeting,
             userOfferedId: targetUserId,
             expiresAt,
-            offerType: 'ADVANCE'
         });
     } else if (timeType === UNKNOWN_TIME_TYPE) {
         
@@ -194,7 +192,7 @@ export const makeBroadcastOffer = async({meeting, userOfferedId}:
     {meeting: Meeting; userOfferedId: string
     }): Promise<Offer | undefined> => {
         const expiresAt = addHour(new Date());
-        const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'BROADCAST'});
+        const offer = await makeOffer({meeting, userOfferedId, expiresAt});
         return offer;
     }
 
@@ -204,7 +202,7 @@ export const makeAdvanceOffer = async ({meeting, userOfferedId, remainingFriends
     //const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, userToOfferId: userOfferedId, remainingFriendsCount})
     const expiresAt = meeting.scheduledFor;
     console.log("expires at-", expiresAt)
-    const offer = await makeOffer({meeting, userOfferedId, expiresAt, offerType: 'ADVANCE'});
+    const offer = await makeOffer({meeting, userOfferedId, expiresAt});
     return offer;
 }
 
@@ -214,15 +212,15 @@ const makeOfferAfterExpired = async ({meeting, recentOfferId, newUserOfferId, re
     const expiredOffer = await setOfferExpired({offerId: recentOfferId});
     // const expiresAt = await determineOfferExpiration({meetingTime: meeting.scheduledFor, userToOfferId: newUserOfferId, remainingFriendsCount})
     const expiresAt = meeting.scheduledFor;
-    const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, expiresAt, offerType: 'ADVANCE'})
+    const newOffer = await makeOffer({meeting, userOfferedId: newUserOfferId, expiresAt})
     return [expiredOffer, newOffer];
 };
 
-export const makeOffer = async ({meeting, userOfferedId, expiresAt, offerType}:
-    {meeting: Meeting; userOfferedId: string, expiresAt: Date, offerType: MeetingType
+export const makeOffer = async ({meeting, userOfferedId, expiresAt }:
+    {meeting: Meeting; userOfferedId: string, expiresAt: Date
     }): Promise<Offer | undefined> => {
     const meetingId = meeting.id
-    const offer = await createOffer({meetingId, userOfferedId, expiresAt, offerType});
+    const offer = await createOffer({meetingId, userOfferedId, expiresAt});
     console.log("New Offer", offer)
     if (offer) {
         createAndSendOfferPush({ offer });
