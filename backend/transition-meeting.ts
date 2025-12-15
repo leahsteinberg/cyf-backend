@@ -1,5 +1,6 @@
 import { ACCEPTED_MEETING_STATE, ACCEPTOR_ACTOR_ROLE, CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE, DRAFT_MEETING_STATE, EXPIRED_MEETING_STATE, FRIEND_SPECIFIC_TARGET_TYPE, INITIATOR_ACTOR_ROLE, OPEN_TARGET_ACTOR_ROLE, OPEN_TARGET_TYPE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, SEARCHING_MEETING_STATE, SPECIFIC_TARGET_ACTOR_ROLE, SYSTEM_ACTOR_ROLE, type DomainEvent, type Meeting, type MeetingActorRole, type MeetingState } from "../types.js";
 import { getMeetingById } from "./query/meeting-lookup.js";
+import { updateMeetingState } from "./update/meeting-update.js";
 import { isTimePast } from "./utils.js";
 
 
@@ -102,7 +103,13 @@ export const transitionMeeting = async ({meetingId, toState, actorId}: {meetingI
     if (!timeConstraintsValid) {
         throw new Error(`Incorrect time status for transition from ${meetingState} to ${toState}.`);
     }
+    let acceptedUserId: string|null = null;
 
+    if (toState === ACCEPTED_MEETING_STATE && [OPEN_TARGET_ACTOR_ROLE, SPECIFIC_TARGET_ACTOR_ROLE].includes(getMeetingActorRole({meeting, actorId}))) {
+        acceptedUserId = actorId;
+    }
+
+    const updatedMeeting = updateMeetingState(meeting, toState, acceptedUserId)
     return {meeting, events: []}
 };
 

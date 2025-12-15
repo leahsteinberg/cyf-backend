@@ -11,23 +11,9 @@ import {
     UNKNOWN_TIME_TYPE
 } from '../types.js';
 import { findMeetingTimeConflict } from '../backend/meeting-conflict.js';
+import { transitionMeeting } from '../backend/transition-meeting.js';
 
-/**
- * Accepts a suggestion (DRAFT meeting) and converts it to an active meeting
- *
- * Flow:
- * 1. Verify the suggestion exists and is in DRAFT state
- * 2. Check for time conflicts (if time is known)
- * 3. Update state: DRAFT → SEARCHING
- * 4. Create offers based on timeType + targetType:
- *    - IMMEDIATE + OPEN → Broadcast offers to all friends
- *    - FUTURE + OPEN → Parallel offers to all friends
- *    - UNKNOWN + FRIEND_SPECIFIC → No offers yet (waiting for time)
- *    - FUTURE + FRIEND_SPECIFIC → Single offer to target friend
- *
- * NOTE: For UNKNOWN timeType, we don't create offers yet. User will need to
- * set a time first, then offers will be created.
- */
+
 export const handleAcceptSuggestion = async (req: Request, res: Response) => {
     const { meetingId, userId } = req.body;
 
@@ -38,45 +24,28 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
     }
 
     try {
-        // 1. Get the suggestion (DRAFT meeting)
         const suggestion = await getMeetingById({ meetingId });
 
         if (!suggestion) {
             return res.status(404).json({ error: "Suggestion not found" });
         }
 
-        // 2. Verify ownership
-        if (suggestion.userFromId !== userId) {
-            return res.status(403).json({ error: "You can only accept your own suggestions" });
-        }
 
-        // 3. Verify it's in DRAFT state
-        if (suggestion.meetingState !== DRAFT_MEETING_STATE) {
-            return res.status(400).json({
-                error: "Only DRAFT suggestions can be accepted",
-                currentState: suggestion.meetingState
-            });
-        }
-
-        // 4. Get effective types to understand what kind of meeting this will become
         const timeType = getEffectiveTimeType(suggestion);
         const targetType = getEffectiveTargetType(suggestion);
 
         console.log(`Converting suggestion to active meeting: timeType=${timeType}, targetType=${targetType}`);
 
-        // 5. Check for time conflicts (only if time is known)
-        // UNKNOWN timeType meetings don't conflict since they have no set time yet
         if (timeType !== UNKNOWN_TIME_TYPE) {
             const createdMeetings = await getCreatedMeetings({ userFromId: userId });
             const acceptedMeetings = await getAcceptedMeetings({ acceptedUserId: userId });
 
-            // Use centralized conflict checking logic (excludes this suggestion)
             const conflict = findMeetingTimeConflict({
                 userCreatedMeetings: createdMeetings,
                 userAcceptedMeetings: acceptedMeetings,
                 scheduledFor: new Date(suggestion.scheduledFor),
                 scheduledEnd: new Date(suggestion.scheduledEnd),
-                excludeMeetingId: meetingId // Don't check against itself
+                excludeMeetingId: meetingId 
             });
 
             if (conflict) {
@@ -90,22 +59,14 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             }
         }
 
-        // 6. Activate the suggestion: DRAFT → SEARCHING
-        await setMeetingState({ meetingId, meetingState: SEARCHING_MEETING_STATE });
+        await transitionMeeting({meetingId, toState: SEARCHING_MEETING_STATE, actorId: userId})
 
-        // 7. Refresh meeting data
         const activatedMeeting = await getMeetingById({ meetingId });
 
         if (!activatedMeeting) {
             return res.status(500).json({ error: "Failed to retrieve activated meeting" });
         }
 
-        // 8. Create offers based on timeType and targetType
-        // This will route to the correct offer creation logic:
-        // - IMMEDIATE + OPEN → processNewBroadcastMeeting (parallel broadcast offers)
-        // - FUTURE + OPEN → processNewFutureOpenMeeting (parallel offers to all friends)
-        // - FRIEND_SPECIFIC → processNewFriendSpecificMeeting (single offer to target)
-        // - UNKNOWN → No offers created yet (will be created when time is set)
         await processOffersForNewMeeting(activatedMeeting);
 
         console.log("Suggestion accepted and converted to active meeting:", {
@@ -118,12 +79,10 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
         res.json({
             success: true,
             meeting: activatedMeeting,
-            // Helpful info for client
             metadata: {
                 timeType,
                 targetType,
                 offersCreated: timeType !== UNKNOWN_TIME_TYPE,
-                // If UNKNOWN time, client should prompt user to set a time
                 requiresTimeSelection: timeType === UNKNOWN_TIME_TYPE
             }
         });
@@ -137,21 +96,6 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
     }
 };
 
-/**
- * Dismisses a suggestion (DRAFT meeting) by marking it as DISMISSED
- *
- * Benefits of DISMISSED state:
- * - Tracking which suggestions users dismissed (for ML/learning)
- * - Analytics on suggestion acceptance rate
- * - Potentially un-dismissing a suggestion later
- * - Auditing and debugging suggestion systems
- *
- * DISMISSED meetings should be:
- * - Excluded from handleGetMeetings (user's active meeting list)
- * - Excluded from time conflict checks
- * - Cleaned up by cron job after 30+ days (for analytics retention)
- * - Available for analytics queries to improve suggestion algorithms
- */
 export const handleDismissSuggestion = async (req: Request, res: Response) => {
     const { meetingId, userId } = req.body;
 
@@ -168,22 +112,7 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         if (!suggestion) {
             return res.status(404).json({ error: "Suggestion not found" });
         }
-
-        // 2. Verify ownership
-        if (suggestion.userFromId !== userId) {
-            return res.status(403).json({ error: "You can only dismiss your own suggestions" });
-        }
-
-        // 3. Verify it's in DRAFT state
-        if (suggestion.meetingState !== DRAFT_MEETING_STATE) {
-            return res.status(400).json({
-                error: "Only DRAFT suggestions can be dismissed",
-                currentState: suggestion.meetingState
-            });
-        }
-
-        // 4. Mark as DISMISSED (instead of deleting)
-        await setMeetingState({ meetingId, meetingState: DISMISSED_DRAFT_MEETING_STATE });
+        await transitionMeeting({meetingId, toState: DISMISSED_DRAFT_MEETING_STATE, actorId: userId});
 
         // 5. Refresh to get updated meeting
         const dismissedSuggestion = await getMeetingById({ meetingId });
@@ -208,25 +137,3 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         });
     }
 };
-
-/**
- * TODO: Future endpoint - Set time for UNKNOWN time suggestions
- *
- * This would convert:
- * - DRAFT + UNKNOWN time → DRAFT + FUTURE time (still a suggestion, but with a time now)
- * OR
- * - DRAFT + UNKNOWN time → SEARCHING + FUTURE time (if we want to auto-activate)
- *
- * Then create offers based on the newly set time.
- *
- * export const handleSetSuggestionTime = async (req: Request, res: Response) => {
- *   const { meetingId, userId, scheduledFor, scheduledEnd } = req.body;
- *
- *   // 1. Get suggestion
- *   // 2. Verify DRAFT + UNKNOWN time
- *   // 3. Update scheduledFor and scheduledEnd
- *   // 4. Update timeType: UNKNOWN → FUTURE
- *   // 5. Optionally activate (DRAFT → SEARCHING)
- *   // 6. Create offers
- * }
- */

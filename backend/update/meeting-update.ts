@@ -195,20 +195,23 @@ export const deleteMeetingAndOffers = async ({meetingId}: {meetingId: string}): 
 };
 
 
-
-// const updateMeetingState = async (meeting: Meeting, toState: MeetingState) => {
-//     const result = await prisma.meeting.updateMany({
-//         where: {
-//           id: meeting.id,
-//           meetingState: meeting.meetingState, // ensures the meeting is still in the state we expect
-//         },
-//         data: {
-//           meetingState: toState,
-//           acceptedUserId: context?.acceptedUserId ?? meeting.acceptedUserId,
-//         },
-//       });
-      
-//       if (result.count === 0) {
-//         throw new ConflictError("Meeting state has changed, please retry");
-//       }
-// }
+export const updateMeetingState = async (
+    meeting: Meeting, 
+    toState: MeetingState,
+    acceptedUserId?: string | null
+) => {
+    const result = await prisma.meeting.updateMany({
+        where: {
+            id: meeting.id,
+            meetingState: meeting.meetingState,
+        },
+        data: {
+            meetingState: toState,
+            ...(acceptedUserId !== undefined && { acceptedUserId }),
+        },
+    });
+    
+    if (result.count === 0) {
+        throw new Error("Meeting state has changed since it was read. Please retry.");
+    }
+};
