@@ -243,7 +243,8 @@ exports.MeetingState = exports.$Enums.MeetingState = {
   REJECTED: 'REJECTED',
   PAST: 'PAST',
   EXPIRED: 'EXPIRED',
-  DISMISSED: 'DISMISSED'
+  DISMISSED_DRAFT: 'DISMISSED_DRAFT',
+  CANCELED: 'CANCELED'
 };
 
 exports.MeetingType = exports.$Enums.MeetingType = {

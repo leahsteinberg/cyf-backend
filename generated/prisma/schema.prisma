@@ -175,7 +175,8 @@ enum MeetingState {
   REJECTED
   PAST
   EXPIRED // NEW: For time-bounded suggestions
-  DISMISSED // NEW: For suggestions the user dismisses
+  DISMISSED_DRAFT // NEW: For suggestions the user dismisses
+  CANCELED //A searching or accepted meeting the initiator cancels
 }
 
 enum MeetingType {
