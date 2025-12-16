@@ -103,7 +103,7 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
   }
   try {
     const {meeting, events} = await transitionMeeting({meetingId, toState: CANCELED_MEETING_STATE, actorId: userId});
-    
+    console.log("did transition- ", meeting);
     if (meeting) {
       const offers = await getMeetingOffers({meetingId});
       await setOffersExpired(offers);
@@ -118,6 +118,7 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
     // this is a special case that I should consider refactoring in the fugture.
     if (isBroadcastMeeting && isInitiatorBroadcasting ) {
       if (isAcceptor) {
+        console.log("acceptor is canceling broadcast meeting");
         // the canceling party is NOT the broadcaster
         // therefore they should not affect the broadcast
         await createMeeting({
@@ -134,6 +135,7 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
       } else {
         // the canceling party in this case is the person who started the broadcast
         // therefore, they are opting to end the broadcast
+        console.log("they are opting to end the broadcast");
         await setIsNotBroadcasting({userId: meeting.userFromId});
     }
   }
