@@ -1,14 +1,13 @@
 import type { Request, Response } from 'express';
-import { createMeeting, unclaimBroadcastMeeting } from '../backend/update/meeting-update.js';
+import { createMeeting } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
 import { processNewBroadcastMeeting } from '../backend/process-broadcast.js';
 import { setOffersExpired } from '../backend/offer.js';
-import { getCreatedMeetings, getMeetingById } from '../backend/query/meeting-lookup.js';
+import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
-import { setOfferOpen } from '../backend/update/offer-update.js';
-import { getAcceptedOfferByMeetingId, getMeetingOffers } from '../backend/query/offer-lookup.js';
+import { getMeetingOffers } from '../backend/query/offer-lookup.js';
 import {
     getEffectiveTimeType,
     getEffectiveTargetType,
@@ -128,56 +127,6 @@ export const handleIsUserBroadcasting = async (req: Request, res: Response) => {
         res.json({ success: true, userId, isBroadcasting });
     } catch (error) {
         console.error("Error checking if user is broadcasting:", error);
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        return res.status(500).json({ error: "Internal server error", details: errorMessage });
-    }
-};
-
-export const handleCancelBroadcastAcceptance = async (req: Request, res: Response) => {
-    const { userId, meetingId } = req.body;
-    console.log("cancel broadcast acceptance --", { userId, meetingId });
-
-    if (!userId || !meetingId) {
-        return res.status(400).json({ error: "userId and meetingId are required" });
-    }
-
-    try {
-        // Get the meeting
-        const meeting = await getMeetingById({ meetingId });
-
-        if (!meeting) {
-            return res.status(404).json({ error: "Meeting not found" });
-        }
-
-        // Verify it's a broadcast meeting (IMMEDIATE + OPEN)
-        const isBroadcast = getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE && getEffectiveTargetType(meeting) === OPEN_TARGET_TYPE;
-        if (!isBroadcast) {
-            return res.status(400).json({ error: "This operation is only valid for broadcast meetings" });
-        }
-
-        // Verify the user is the one who accepted
-        if (meeting.acceptedUserId !== userId) {
-            return res.status(403).json({ error: "You are not the user who accepted this broadcast" });
-        }
-
-        // Get the accepted offer for this meeting
-        const acceptedOffer = await getAcceptedOfferByMeetingId({ meetingId });
-
-        if (!acceptedOffer) {
-            return res.status(404).json({ error: "No accepted offer found for this meeting" });
-        }
-
-        // Unclaim the broadcast - sets meeting back to SEARCHING, clears acceptedUserId, sets broadcast to UN
-        const unclaimedMeeting = await unclaimBroadcastMeeting({ meetingId });
-        const openOffer = await setOfferOpen({ offerId: acceptedOffer.id });
-
-        res.json({
-            success: true,
-            meeting: unclaimedMeeting,
-            offer: openOffer
-        });
-    } catch (error) {
-        console.error("Error canceling broadcast acceptance:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);
         return res.status(500).json({ error: "Internal server error", details: errorMessage });
     }

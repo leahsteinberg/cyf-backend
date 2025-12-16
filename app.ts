@@ -1,4 +1,4 @@
-import {auth, prisma} from './backend/auth.js';  
+import {auth } from './backend/auth.js';  
 import express from 'express';
 import { toNodeHandler } from "better-auth/node"; 
 import cors from 'cors';
@@ -9,9 +9,8 @@ import { handleGetFriends } from './endpoint-handlers/friend-handler.js';
 import { handleCreateMeeting, handleGetMeetings, handleCancelMeeting } from './endpoint-handlers/meeting-handler.js';
 import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoint-handlers/offer-handler.js';
 import { handleCronRound } from './endpoint-handlers/cron-handler.js';
-import cron from 'node-cron';
 import { handlePush } from './endpoint-handlers/push-handler.js';
-import { handleBroadcastNow, handleBroadcastEnd, handleTryAcceptBroadcast, handleAcceptBroadcast, handleRejectBroadcast, handleIsUserBroadcasting, handleCancelBroadcastAcceptance } from './endpoint-handlers/broadcast-handler.js';
+import { handleBroadcastNow, handleBroadcastEnd, handleIsUserBroadcasting } from './endpoint-handlers/broadcast-handler.js';
 import { handleCallIntent, handleUndoCallIntent } from './endpoint-handlers/call-intent-handler.js';
 import { handleAcceptSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
 
@@ -69,10 +68,6 @@ app.post('/api/reject-offer', handleRejectOffer);
 app.post('/api/broadcast-now', handleBroadcastNow);
 app.post('/api/broadcast-end', handleBroadcastEnd);
 app.post('/api/is-user-broadcasting', handleIsUserBroadcasting);
-app.post('/api/try-accept-broadcast', handleTryAcceptBroadcast);
-app.post('/api/accept-broadcast', handleAcceptBroadcast);
-app.post('/api/reject-broadcast', handleRejectBroadcast);
-app.post('/api/cancel-broadcast-acceptance', handleCancelBroadcastAcceptance);
 
 //CALL INTENT ENDPOINTS
 app.post('/api/call-intent', handleCallIntent);
