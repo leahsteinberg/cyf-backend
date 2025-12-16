@@ -109,8 +109,8 @@ export const transitionMeeting = async ({meetingId, toState, actorId}: {meetingI
         acceptedUserId = actorId;
     }
 
-    const updatedMeeting = updateMeetingState(meeting, toState, acceptedUserId)
-    return {meeting, events: []}
+    const updatedMeeting = await updateMeetingState(meeting, toState, acceptedUserId)
+    return {meeting: updatedMeeting, events: []}
 };
 
 
