@@ -15,8 +15,8 @@ import {
     OPEN_TARGET_TYPE,
     PAST_MEETING_STATE,
     USER_INTENT_SOURCE_TYPE,
-    EXPIRED_MEETING_STATE,
-    SEARCHING_MEETING_STATE
+    SEARCHING_MEETING_STATE,
+    CANCELED_MEETING_STATE
 } from '../types.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
 
@@ -96,7 +96,7 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
         for (let broadcastMeeting of broadcastMeetings) {
             const {meeting, events} = await transitionMeeting({
                 meetingId: broadcastMeeting.id,
-                toState: EXPIRED_MEETING_STATE,
+                toState: CANCELED_MEETING_STATE,
                 actorId: userId,
             });
             const offers = await getMeetingOffers({meetingId: meeting.id});
