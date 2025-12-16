@@ -96,7 +96,7 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
 
 export const handleCancelMeeting = async (req: Request, res: Response) => {
   const { meetingId, userId } = req.body;
-  console.log("handle delete meeting ---", meetingId);
+  console.log("handle cancel meeting ---", meetingId);
 
   if (!meetingId) {
     return res.status(400).json({ error: "meetingId is required" });
@@ -108,16 +108,15 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
       const offers = await getMeetingOffers({meetingId});
       await setOffersExpired(offers);
     }
-    
-    
-    const isBroadcast = getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE && getEffectiveTargetType(meeting) === OPEN_TARGET_TYPE;
+
+    const isBroadcastMeeting = getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE && getEffectiveTargetType(meeting) === OPEN_TARGET_TYPE;
     const isAcceptor = userId === meeting.acceptedUserId
     const isInitiatorBroadcasting = await getIsBroadcasting({ userId: meeting.userFromId });
     /// if someone accepts a broadcast meeting then cancels it,
     // need to re-spawn 
     // a broadcast meeting for the original user so they stay broadcasting
     // this is a special case that I should consider refactoring in the fugture.
-    if (isBroadcast && isInitiatorBroadcasting ) {
+    if (isBroadcastMeeting && isInitiatorBroadcasting ) {
       if (isAcceptor) {
         // the canceling party is NOT the broadcaster
         // therefore they should not affect the broadcast
@@ -138,6 +137,8 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
         await setIsNotBroadcasting({userId: meeting.userFromId});
     }
   }
+  res.json(meeting)
+
 
   } catch (error) {
     console.error("Error canceling meeting:", error);
