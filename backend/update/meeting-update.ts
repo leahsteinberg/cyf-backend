@@ -11,23 +11,20 @@ import {
 } from "../../types.js";
 import { prisma } from "../auth.js";
 
-// Phase 2: Dual-write parameters - support both old and new
 type CreateMeetingParams = {
     userFromId: string;
     scheduledFor: Date;
     scheduledEnd: Date;
     title: string;
 
-    // OLD PARAMETERS - for backwards compatibility
     meetingType?: MeetingType;
 
-    // NEW PARAMETERS - optional during migration
     timeType?: TimeType;
     targetType?: TargetType;
     sourceType?: SourceType;
     intentLabel?: string;
     targetUserId?: string;
-    meetingState?: MeetingState;  // Allow setting initial state (e.g., DRAFT)
+    meetingState?: MeetingState;
 };
 
 export const createMeeting = async (params: CreateMeetingParams): Promise<Meeting> => {

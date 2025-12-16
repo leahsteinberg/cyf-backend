@@ -62,9 +62,9 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
         }
 
         const {meeting, events} = await transitionMeeting({meetingId, toState: SEARCHING_MEETING_STATE, actorId: userId})
-        
-        // if the activated suggestion is a current broadcast, need to set broadcast to true
 
+        // if the activated suggestion is a current broadcast, need to set broadcast to true
+        
         const activatedMeeting = await getMeetingById({ meetingId });
         if (activatedMeeting?.timeType === IMMEDIATE_TIME_TYPE && activatedMeeting.targetType === OPEN_TARGET_TYPE) {
             await setIsBroadcasting({userId});

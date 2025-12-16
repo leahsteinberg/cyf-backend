@@ -2,11 +2,13 @@ import { createMeeting, deleteMeetingAndOffers } from "../backend/update/meeting
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
-import { CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE } from "../types.js";
+import { CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE, getEffectiveTargetType, getEffectiveTimeType, IMMEDIATE_TIME_TYPE, OPEN_TARGET_TYPE, SEARCHING_MEETING_STATE, SYSTEM_ACTOR_ROLE, SYSTEM_REAL_TIME_SOURCE_TYPE } from "../types.js";
 import { unacceptMeetingByAcceptor } from "../backend/meeting.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
 import { transitionMeeting } from "../backend/transition-meeting.js";
 import { getMeetingOffers, setOffersExpired } from "../backend/offer.js";
+import { getIsBroadcasting } from "../backend/query/user-lookup.js";
+import { setIsBroadcasting, setIsNotBroadcasting } from "../backend/update/user-update.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -101,10 +103,42 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
   }
   try {
     const {meeting, events} = await transitionMeeting({meetingId, toState: CANCELED_MEETING_STATE, actorId: userId});
+    
     if (meeting) {
       const offers = await getMeetingOffers({meetingId});
       await setOffersExpired(offers);
     }
+    
+    
+    const isBroadcast = getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE && getEffectiveTargetType(meeting) === OPEN_TARGET_TYPE;
+    const isAcceptor = userId === meeting.acceptedUserId
+    const isInitiatorBroadcasting = await getIsBroadcasting({ userId: meeting.userFromId });
+    /// if someone accepts a broadcast meeting then cancels it,
+    // need to re-spawn 
+    // a broadcast meeting for the original user so they stay broadcasting
+    // this is a special case that I should consider refactoring in the fugture.
+    if (isBroadcast && isInitiatorBroadcasting ) {
+      if (isAcceptor) {
+        // the canceling party is NOT the broadcaster
+        // therefore they should not affect the broadcast
+        await createMeeting({
+          userFromId: meeting.userFromId,
+          scheduledEnd: meeting.scheduledEnd,
+          scheduledFor: meeting.scheduledFor,
+          title: meeting.title || '',
+          meetingType: 'BROADCAST',
+          meetingState: SEARCHING_MEETING_STATE,
+          timeType: IMMEDIATE_TIME_TYPE,
+          targetType: OPEN_TARGET_TYPE,
+          sourceType: SYSTEM_REAL_TIME_SOURCE_TYPE,
+        });
+      } else {
+        // the canceling party in this case is the person who started the broadcast
+        // therefore, they are opting to end the broadcast
+        await setIsNotBroadcasting({userId: meeting.userFromId});
+    }
+  }
+
   } catch (error) {
     console.error("Error canceling meeting:", error);
     res.status(500).json({ error: "Internal server error while canceling meeting" });
