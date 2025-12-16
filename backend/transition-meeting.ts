@@ -109,7 +109,12 @@ export const transitionMeeting = async ({meetingId, toState, actorId}: {meetingI
         acceptedUserId = actorId;
     }
 
-    const updatedMeeting = await updateMeetingState(meeting, toState, acceptedUserId)
+    await updateMeetingState(meeting, toState, acceptedUserId);
+
+    const updatedMeeting = await getMeetingById({meetingId})
+    if (!updatedMeeting) {
+        throw new Error(`Cannot fetch meeting after transition: ${meetingId}`);
+    }
     return {meeting: updatedMeeting, events: []}
 };
 
