@@ -1,13 +1,12 @@
 import type { Request, Response } from 'express';
 import { createMeeting, unclaimBroadcastMeeting } from '../backend/update/meeting-update.js';
 import { addHour } from '../backend/utils.js';
-import { processNewBroadcastMeeting, tryAcceptUnclaimedBroadcast, validateBroadcastRequest } from '../backend/process-broadcast.js';
-import { acceptOffer, setOffersExpired } from '../backend/offer.js';
+import { processNewBroadcastMeeting } from '../backend/process-broadcast.js';
+import { setOffersExpired } from '../backend/offer.js';
 import { getCreatedMeetings, getMeetingById } from '../backend/query/meeting-lookup.js';
 import { findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
-import { setBroadcastClaimed, setBroadcastUnclaimed } from '../backend/update/broadcast-update.js';
 import { setOfferOpen } from '../backend/update/offer-update.js';
 import { getAcceptedOfferByMeetingId, getMeetingOffers } from '../backend/query/offer-lookup.js';
 import {
@@ -16,11 +15,7 @@ import {
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
     PAST_MEETING_STATE,
-    OPEN_OFFER_STATE,
     USER_INTENT_SOURCE_TYPE,
-    UNCLAIMED_BROADCAST_STATE,
-    CLAIMED_BROADCAST_STATE,
-    PENDING_CLAIMED_BROADCAST_STATE,
     EXPIRED_MEETING_STATE,
     SEARCHING_MEETING_STATE
 } from '../types.js';
@@ -115,152 +110,6 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
         res.json({ success: true, userId });
     } catch (error) {
         console.error("Error in broadcast end:", error);
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        return res.status(500).json({ error: "Internal server error", details: errorMessage });
-    }
-};
-
-export const handleTryAcceptBroadcast = async (req: Request, res: Response) => {
-    const { userId, offerId } = req.body;
-    console.log("try accept broadcast --", { userId, offerId });
-
-    try {
-        // Validate broadcast request
-        const validation = await validateBroadcastRequest({ userId, offerId });
-        if (!validation.valid) {
-            return res.status(validation.statusCode).json({
-                error: validation.error,
-                canAccept: false
-            });
-        }
-
-        const { offer, meeting } = validation;
-
-            // Check if the offer is still open
-        if (offer.offerState !== OPEN_OFFER_STATE) {
-            return {
-                valid: false,
-                error: "Offer is no longer available",
-                statusCode: 403
-            };
-        }
-
-        const broadcastSubState = meeting.broadcastMetadata?.subState;
-        let canAccept = false;
-
-        if (broadcastSubState === UNCLAIMED_BROADCAST_STATE) {
-            await tryAcceptUnclaimedBroadcast({meeting: meeting, offerId: offer.id})
-
-            
-        } else if (broadcastSubState === CLAIMED_BROADCAST_STATE) {
-            canAccept = false;
-        } else if (broadcastSubState === PENDING_CLAIMED_BROADCAST_STATE) {
-            // Check if this user has the pending claim
-            if (meeting.broadcastMetadata?.offerClaimedId === offerId) {
-                canAccept = true;
-            } else {
-                canAccept = false;
-                return res.status(403).json({
-                    error: "This broadcast is pending acceptance by another user"
-                });
-            }
-        }
-
-        res.json({
-            success: true,
-            canAccept,
-            offer,
-            broadcastSubState
-        });
-    } catch (error) {
-        console.error("Error in try accept broadcast:", error);
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        return res.status(500).json({ error: "Internal server error", details: errorMessage });
-    }
-};
-
-export const handleAcceptBroadcast = async (req: Request, res: Response) => {
-    const { userId, offerId } = req.body;
-    console.log("accept broadcast --", { userId, offerId });
-
-    try {
-        // Validate broadcast request
-        const validation = await validateBroadcastRequest({ userId, offerId });
-        if (!validation.valid) {
-            return res.status(validation.statusCode).json({ error: validation.error });
-        }
-
-        const { offer, meeting } = validation;
-
-            // Check if the offer is still open
-        if (offer.offerState !== OPEN_OFFER_STATE) {
-            return {
-                valid: false,
-                error: "Offer is no longer available",
-                statusCode: 403
-            };
-        }
-
-        // Check broadcast state and update if needed
-        const broadcastSubState = meeting.broadcastMetadata?.subState;
-
-        if (broadcastSubState === UNCLAIMED_BROADCAST_STATE) {
-            return res.status(400).json({
-                error: "This broadcast must be pending-claimed before it can be claimed."
-            });
-        } else if (broadcastSubState === PENDING_CLAIMED_BROADCAST_STATE) {
-            // Verify this user has the pending claim
-            if (meeting.broadcastMetadata?.offerClaimedId !== offerId) {
-                return res.status(403).json({
-                    error: "This broadcast is pending acceptance by another user"
-                });
-            }
-
-        } else if (broadcastSubState === CLAIMED_BROADCAST_STATE) {
-            return res.status(400).json({
-                error: "This broadcast has already been claimed"
-            });
-        }
-
-        // Use the existing acceptOffer logic
-        await setBroadcastClaimed({meetingId: meeting.id, offerClaimedId: offer.id})
-        const acceptedOffer = await acceptOffer({ userId, offerId });
-
-        res.json({
-            success: true,
-            offer: acceptedOffer
-        });
-    } catch (error) {
-        console.error("Error accepting broadcast:", error);
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        return res.status(500).json({ error: "Internal server error", details: errorMessage });
-    }
-};
-
-export const handleRejectBroadcast = async (req: Request, res: Response) => {
-    const { userId, offerId } = req.body;
-    console.log("reject broadcast --", { userId, offerId });
-
-    try {
-        // Validate broadcast request
-        const validation = await validateBroadcastRequest({ userId, offerId });
-        if (!validation.valid) {
-            return res.status(validation.statusCode).json({ error: validation.error });
-        }
-        const { meeting, offer } = validation;
-
-        // Reject the broadcast offer
-        await setBroadcastUnclaimed({meetingId: meeting.id});
-        // TODO - figure out what this should do/...
-        //const rejectedOffer = await rejectOffer({ offerId });
-
-
-        res.json({
-            success: true,
-            offer: offer
-        });
-    } catch (error) {
-        console.error("Error rejecting broadcast:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);
         return res.status(500).json({ error: "Internal server error", details: errorMessage });
     }
