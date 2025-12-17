@@ -1,6 +1,8 @@
 import type { Request, Response } from 'express';
 import { getUserSignalsForUser } from '../backend/query/signal-lookup.js';
 import { addSignalForUser, removeSignalForUser } from '../backend/update/signal-update.js';
+import { CALL_INTENT_SIGNAL_TYPE } from '../types.js';
+import { prisma } from '../backend/auth.js';
 
 
 export const handleGetUserSignals = async (req: Request, res: Response) => {
@@ -25,10 +27,31 @@ export const handleGetUserSignals = async (req: Request, res: Response) => {
 export const handleAddUserSignal = async (req: Request, res: Response) => {
     const { userId, payload, type  } = req.body;
     console.log("Add user signal from ",userId, type);
-    
-    try {
-        const signal = await addSignalForUser({userId, signalType: type, payload});
 
+    try {
+        // Check for duplicate CALL_INTENT with same targetUserId
+        if (type === CALL_INTENT_SIGNAL_TYPE) {
+            const targetUserId = payload?.targetUserId;
+            if (targetUserId) {
+                const existingSignals = await prisma.userSignal.findMany({
+                    where: {
+                        userId,
+                        type: CALL_INTENT_SIGNAL_TYPE,
+                    }
+                });
+
+                const duplicate = existingSignals.find(
+                    (signal: any) => signal.payload?.targetUserId === targetUserId
+                );
+
+                if (duplicate) {
+                    console.log("Duplicate CALL_INTENT found, returning existing signal");
+                    return res.json([duplicate]);
+                }
+            }
+        }
+
+        const signal = await addSignalForUser({userId, signalType: type, payload});
 
         res.json(signal);
     } catch (error) {
