@@ -7,7 +7,7 @@ export const addSignalForUser = async <T extends SignalType>(
     const userSignals = await prisma.userSignal.create({
         data: {
             userId,
-            type: WALK_PATTERN_SIGNAL_TYPE,
+            type: signalType,
             payload: payload,
         }
     })

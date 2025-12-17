@@ -24,7 +24,7 @@ export const handleGetUserSignals = async (req: Request, res: Response) => {
 
 export const handleAddUserSignal = async (req: Request, res: Response) => {
     const { userId, payload, type  } = req.body;
-    console.log("Add user signal");
+    console.log("Add user signal from ",userId, type);
     
     try {
         const signal = await addSignalForUser({userId, signalType: type, payload});
