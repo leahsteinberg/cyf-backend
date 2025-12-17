@@ -170,6 +170,8 @@ model UserSignal {
   startsAt  DateTime?
   endsAt    DateTime?
   createdAt DateTime   @default(now())
+
+  @@map("userSignal")
 }
 
 enum OfferState {

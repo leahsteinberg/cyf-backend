@@ -103,7 +103,6 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
                     toState: CANCELED_MEETING_STATE,
                     actorId: userId,
                 });
-
             }
             const offers = await getMeetingOffers({meetingId: broadcastMeeting.id});
             await setOffersExpired(offers);
