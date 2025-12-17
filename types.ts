@@ -125,9 +125,18 @@ export interface Friendship extends BaseEntity {
     userId2: string;
 }
 
-export interface UserSignal extends BaseEntity {
+
+type WalkPatternPayload = {};
+type CallIntentPayload = {};
+
+type SignalPayloadMap = {
+    WALK_PATTERN: WalkPatternPayload;
+    CALL_INTENT: CallIntentPayload;
+}
+
+export interface UserSignal<T extends SignalType> extends BaseEntity {
     userId: string;
-    type: SignalType;
+    type: T;
     payload: JsonValue;
     startsAt: Date | null;
     endsAt: Date | null;
