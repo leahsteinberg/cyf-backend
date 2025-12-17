@@ -97,12 +97,15 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
         // should be just one meeting, but want to account for error state
         // where there are somehow two broadcast meetings.
         for (let broadcastMeeting of broadcastMeetings) {
-            const {meeting, events} = await transitionMeeting({
-                meetingId: broadcastMeeting.id,
-                toState: CANCELED_MEETING_STATE,
-                actorId: userId,
-            });
-            const offers = await getMeetingOffers({meetingId: meeting.id});
+            if (broadcastMeeting.meetingState !== PAST_MEETING_STATE) {
+                const {meeting, events} = await transitionMeeting({
+                    meetingId: broadcastMeeting.id,
+                    toState: CANCELED_MEETING_STATE,
+                    actorId: userId,
+                });
+
+            }
+            const offers = await getMeetingOffers({meetingId: broadcastMeeting.id});
             await setOffersExpired(offers);
         }
 
