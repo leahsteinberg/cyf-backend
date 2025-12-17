@@ -14,3 +14,25 @@ export const addSignalForUser = async <T extends SignalType>(
     return [userSignals as UserSignal<T>,];
 
 }
+
+export const removeSignalForUser = async (
+    {userId, signalId}: {userId: string, signalId: string})
+: Promise<UserSignal<SignalType> | null> => {
+    const signal = await prisma.userSignal.findUnique({
+        where: { id: signalId }
+    });
+
+    if (!signal) {
+        return null;
+    }
+
+    if (signal.userId !== userId) {
+        throw new Error('Unauthorized: Signal does not belong to user');
+    }
+
+    const deletedSignal = await prisma.userSignal.delete({
+        where: { id: signalId }
+    });
+
+    return deletedSignal as UserSignal<SignalType>;
+}
