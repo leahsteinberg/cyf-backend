@@ -61,6 +61,15 @@ export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Pr
                     displayUsername: true
                 },
             },
+            targetUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                },
+            },
             broadcastMetadata: {
                 include: {
                     offerClaimed: {
