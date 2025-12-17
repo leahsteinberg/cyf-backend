@@ -1,6 +1,3 @@
-import type { Prisma } from "@prisma/client";
-import type { JsonValue } from "@prisma/client/runtime/library";
-
 export type OfferState = "OPEN" | "ACCEPTED" | "REJECTED" | "EXPIRED";
 export type MeetingState = "DRAFT" | "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST" | "EXPIRED" | "DISMISSED_DRAFT" | "CANCELED";
 export type MeetingType = "ADVANCE" | "BROADCAST";
@@ -125,11 +122,11 @@ export interface Friendship extends BaseEntity {
     userId2: string;
 }
 
-
 type WalkPatternPayload = {};
+
 type CallIntentPayload = {};
 
-type SignalPayloadMap = {
+export type SignalPayloadMap = {
     WALK_PATTERN: WalkPatternPayload;
     CALL_INTENT: CallIntentPayload;
 }
@@ -137,7 +134,7 @@ type SignalPayloadMap = {
 export interface UserSignal<T extends SignalType> extends BaseEntity {
     userId: string;
     type: T;
-    payload: JsonValue;
+    payload: SignalPayloadMap[];
     startsAt: Date | null;
     endsAt: Date | null;
     createdAt: Date | null;
