@@ -222,9 +222,23 @@ exports.Prisma.OfferScalarFieldEnum = {
   expiresAt: 'expiresAt'
 };
 
+exports.Prisma.UserSignalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  payload: 'payload',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -235,6 +249,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.MeetingState = exports.$Enums.MeetingState = {
   DRAFT: 'DRAFT',
@@ -283,6 +303,11 @@ exports.OfferState = exports.$Enums.OfferState = {
   EXPIRED: 'EXPIRED'
 };
 
+exports.SignalType = exports.$Enums.SignalType = {
+  CALL_INTENT: 'CALL_INTENT',
+  WALK_PATTERN: 'WALK_PATTERN'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -292,7 +317,8 @@ exports.Prisma.ModelName = {
   Invitation: 'Invitation',
   Meeting: 'Meeting',
   BroadcastMetadata: 'BroadcastMetadata',
-  Offer: 'Offer'
+  Offer: 'Offer',
+  UserSignal: 'UserSignal'
 };
 
 /**

@@ -58,6 +58,11 @@ export type BroadcastMetadata = $Result.DefaultSelection<Prisma.$BroadcastMetada
  * 
  */
 export type Offer = $Result.DefaultSelection<Prisma.$OfferPayload>
+/**
+ * Model UserSignal
+ * 
+ */
+export type UserSignal = $Result.DefaultSelection<Prisma.$UserSignalPayload>
 
 /**
  * Enums
@@ -130,6 +135,14 @@ export const SourceType: {
 
 export type SourceType = (typeof SourceType)[keyof typeof SourceType]
 
+
+export const SignalType: {
+  CALL_INTENT: 'CALL_INTENT',
+  WALK_PATTERN: 'WALK_PATTERN'
+};
+
+export type SignalType = (typeof SignalType)[keyof typeof SignalType]
+
 }
 
 export type OfferState = $Enums.OfferState
@@ -159,6 +172,10 @@ export const TargetType: typeof $Enums.TargetType
 export type SourceType = $Enums.SourceType
 
 export const SourceType: typeof $Enums.SourceType
+
+export type SignalType = $Enums.SignalType
+
+export const SignalType: typeof $Enums.SignalType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -367,6 +384,16 @@ export class PrismaClient<
     * ```
     */
   get offer(): Prisma.OfferDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userSignal`: Exposes CRUD operations for the **UserSignal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserSignals
+    * const userSignals = await prisma.userSignal.findMany()
+    * ```
+    */
+  get userSignal(): Prisma.UserSignalDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -815,7 +842,8 @@ export namespace Prisma {
     Invitation: 'Invitation',
     Meeting: 'Meeting',
     BroadcastMetadata: 'BroadcastMetadata',
-    Offer: 'Offer'
+    Offer: 'Offer',
+    UserSignal: 'UserSignal'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -834,7 +862,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "friendship" | "invitation" | "meeting" | "broadcastMetadata" | "offer"
+      modelProps: "user" | "session" | "account" | "verification" | "friendship" | "invitation" | "meeting" | "broadcastMetadata" | "offer" | "userSignal"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1504,6 +1532,80 @@ export namespace Prisma {
           }
         }
       }
+      UserSignal: {
+        payload: Prisma.$UserSignalPayload<ExtArgs>
+        fields: Prisma.UserSignalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserSignalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserSignalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload>
+          }
+          findFirst: {
+            args: Prisma.UserSignalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserSignalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload>
+          }
+          findMany: {
+            args: Prisma.UserSignalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload>[]
+          }
+          create: {
+            args: Prisma.UserSignalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload>
+          }
+          createMany: {
+            args: Prisma.UserSignalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserSignalCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload>[]
+          }
+          delete: {
+            args: Prisma.UserSignalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload>
+          }
+          update: {
+            args: Prisma.UserSignalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserSignalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserSignalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserSignalUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserSignalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSignalPayload>
+          }
+          aggregate: {
+            args: Prisma.UserSignalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserSignal>
+          }
+          groupBy: {
+            args: Prisma.UserSignalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserSignalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserSignalCountArgs<ExtArgs>
+            result: $Utils.Optional<UserSignalCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1609,6 +1711,7 @@ export namespace Prisma {
     meeting?: MeetingOmit
     broadcastMetadata?: BroadcastMetadataOmit
     offer?: OfferOmit
+    userSignal?: UserSignalOmit
   }
 
   /* Types for Logging */
@@ -1697,6 +1800,7 @@ export namespace Prisma {
     meetingsCreated: number
     offersReceived: number
     meetingsAccepted: number
+    userSignals: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1708,6 +1812,7 @@ export namespace Prisma {
     meetingsCreated?: boolean | UserCountOutputTypeCountMeetingsCreatedArgs
     offersReceived?: boolean | UserCountOutputTypeCountOffersReceivedArgs
     meetingsAccepted?: boolean | UserCountOutputTypeCountMeetingsAcceptedArgs
+    userSignals?: boolean | UserCountOutputTypeCountUserSignalsArgs
   }
 
   // Custom InputTypes
@@ -1775,6 +1880,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountMeetingsAcceptedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MeetingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountUserSignalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserSignalWhereInput
   }
 
 
@@ -2088,6 +2200,7 @@ export namespace Prisma {
     meetingsCreated?: boolean | User$meetingsCreatedArgs<ExtArgs>
     offersReceived?: boolean | User$offersReceivedArgs<ExtArgs>
     meetingsAccepted?: boolean | User$meetingsAcceptedArgs<ExtArgs>
+    userSignals?: boolean | User$userSignalsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2152,6 +2265,7 @@ export namespace Prisma {
     meetingsCreated?: boolean | User$meetingsCreatedArgs<ExtArgs>
     offersReceived?: boolean | User$offersReceivedArgs<ExtArgs>
     meetingsAccepted?: boolean | User$meetingsAcceptedArgs<ExtArgs>
+    userSignals?: boolean | User$userSignalsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2168,6 +2282,7 @@ export namespace Prisma {
       meetingsCreated: Prisma.$MeetingPayload<ExtArgs>[]
       offersReceived: Prisma.$OfferPayload<ExtArgs>[]
       meetingsAccepted: Prisma.$MeetingPayload<ExtArgs>[]
+      userSignals: Prisma.$UserSignalPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2586,6 +2701,7 @@ export namespace Prisma {
     meetingsCreated<T extends User$meetingsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$meetingsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     offersReceived<T extends User$offersReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$offersReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     meetingsAccepted<T extends User$meetingsAcceptedArgs<ExtArgs> = {}>(args?: Subset<T, User$meetingsAcceptedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    userSignals<T extends User$userSignalsArgs<ExtArgs> = {}>(args?: Subset<T, User$userSignalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3206,6 +3322,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MeetingScalarFieldEnum | MeetingScalarFieldEnum[]
+  }
+
+  /**
+   * User.userSignals
+   */
+  export type User$userSignalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    where?: UserSignalWhereInput
+    orderBy?: UserSignalOrderByWithRelationInput | UserSignalOrderByWithRelationInput[]
+    cursor?: UserSignalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserSignalScalarFieldEnum | UserSignalScalarFieldEnum[]
   }
 
   /**
@@ -12055,6 +12195,1086 @@ export namespace Prisma {
 
 
   /**
+   * Model UserSignal
+   */
+
+  export type AggregateUserSignal = {
+    _count: UserSignalCountAggregateOutputType | null
+    _min: UserSignalMinAggregateOutputType | null
+    _max: UserSignalMaxAggregateOutputType | null
+  }
+
+  export type UserSignalMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.SignalType | null
+    startsAt: Date | null
+    endsAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type UserSignalMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.SignalType | null
+    startsAt: Date | null
+    endsAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type UserSignalCountAggregateOutputType = {
+    id: number
+    userId: number
+    type: number
+    payload: number
+    startsAt: number
+    endsAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type UserSignalMinAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    startsAt?: true
+    endsAt?: true
+    createdAt?: true
+  }
+
+  export type UserSignalMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    startsAt?: true
+    endsAt?: true
+    createdAt?: true
+  }
+
+  export type UserSignalCountAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    payload?: true
+    startsAt?: true
+    endsAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type UserSignalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserSignal to aggregate.
+     */
+    where?: UserSignalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSignals to fetch.
+     */
+    orderBy?: UserSignalOrderByWithRelationInput | UserSignalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserSignalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSignals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSignals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserSignals
+    **/
+    _count?: true | UserSignalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserSignalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserSignalMaxAggregateInputType
+  }
+
+  export type GetUserSignalAggregateType<T extends UserSignalAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserSignal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserSignal[P]>
+      : GetScalarType<T[P], AggregateUserSignal[P]>
+  }
+
+
+
+
+  export type UserSignalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserSignalWhereInput
+    orderBy?: UserSignalOrderByWithAggregationInput | UserSignalOrderByWithAggregationInput[]
+    by: UserSignalScalarFieldEnum[] | UserSignalScalarFieldEnum
+    having?: UserSignalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserSignalCountAggregateInputType | true
+    _min?: UserSignalMinAggregateInputType
+    _max?: UserSignalMaxAggregateInputType
+  }
+
+  export type UserSignalGroupByOutputType = {
+    id: string
+    userId: string
+    type: $Enums.SignalType
+    payload: JsonValue
+    startsAt: Date | null
+    endsAt: Date | null
+    createdAt: Date
+    _count: UserSignalCountAggregateOutputType | null
+    _min: UserSignalMinAggregateOutputType | null
+    _max: UserSignalMaxAggregateOutputType | null
+  }
+
+  type GetUserSignalGroupByPayload<T extends UserSignalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserSignalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserSignalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserSignalGroupByOutputType[P]>
+            : GetScalarType<T[P], UserSignalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserSignalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    payload?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userSignal"]>
+
+  export type UserSignalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    payload?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userSignal"]>
+
+  export type UserSignalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    payload?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userSignal"]>
+
+  export type UserSignalSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    payload?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type UserSignalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "type" | "payload" | "startsAt" | "endsAt" | "createdAt", ExtArgs["result"]["userSignal"]>
+  export type UserSignalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserSignalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserSignalIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserSignalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserSignal"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      type: $Enums.SignalType
+      payload: Prisma.JsonValue
+      startsAt: Date | null
+      endsAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["userSignal"]>
+    composites: {}
+  }
+
+  type UserSignalGetPayload<S extends boolean | null | undefined | UserSignalDefaultArgs> = $Result.GetResult<Prisma.$UserSignalPayload, S>
+
+  type UserSignalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserSignalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserSignalCountAggregateInputType | true
+    }
+
+  export interface UserSignalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserSignal'], meta: { name: 'UserSignal' } }
+    /**
+     * Find zero or one UserSignal that matches the filter.
+     * @param {UserSignalFindUniqueArgs} args - Arguments to find a UserSignal
+     * @example
+     * // Get one UserSignal
+     * const userSignal = await prisma.userSignal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserSignalFindUniqueArgs>(args: SelectSubset<T, UserSignalFindUniqueArgs<ExtArgs>>): Prisma__UserSignalClient<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserSignal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserSignalFindUniqueOrThrowArgs} args - Arguments to find a UserSignal
+     * @example
+     * // Get one UserSignal
+     * const userSignal = await prisma.userSignal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserSignalFindUniqueOrThrowArgs>(args: SelectSubset<T, UserSignalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserSignalClient<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserSignal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSignalFindFirstArgs} args - Arguments to find a UserSignal
+     * @example
+     * // Get one UserSignal
+     * const userSignal = await prisma.userSignal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserSignalFindFirstArgs>(args?: SelectSubset<T, UserSignalFindFirstArgs<ExtArgs>>): Prisma__UserSignalClient<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserSignal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSignalFindFirstOrThrowArgs} args - Arguments to find a UserSignal
+     * @example
+     * // Get one UserSignal
+     * const userSignal = await prisma.userSignal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserSignalFindFirstOrThrowArgs>(args?: SelectSubset<T, UserSignalFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserSignalClient<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserSignals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSignalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserSignals
+     * const userSignals = await prisma.userSignal.findMany()
+     * 
+     * // Get first 10 UserSignals
+     * const userSignals = await prisma.userSignal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userSignalWithIdOnly = await prisma.userSignal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserSignalFindManyArgs>(args?: SelectSubset<T, UserSignalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserSignal.
+     * @param {UserSignalCreateArgs} args - Arguments to create a UserSignal.
+     * @example
+     * // Create one UserSignal
+     * const UserSignal = await prisma.userSignal.create({
+     *   data: {
+     *     // ... data to create a UserSignal
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserSignalCreateArgs>(args: SelectSubset<T, UserSignalCreateArgs<ExtArgs>>): Prisma__UserSignalClient<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserSignals.
+     * @param {UserSignalCreateManyArgs} args - Arguments to create many UserSignals.
+     * @example
+     * // Create many UserSignals
+     * const userSignal = await prisma.userSignal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserSignalCreateManyArgs>(args?: SelectSubset<T, UserSignalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserSignals and returns the data saved in the database.
+     * @param {UserSignalCreateManyAndReturnArgs} args - Arguments to create many UserSignals.
+     * @example
+     * // Create many UserSignals
+     * const userSignal = await prisma.userSignal.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserSignals and only return the `id`
+     * const userSignalWithIdOnly = await prisma.userSignal.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserSignalCreateManyAndReturnArgs>(args?: SelectSubset<T, UserSignalCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserSignal.
+     * @param {UserSignalDeleteArgs} args - Arguments to delete one UserSignal.
+     * @example
+     * // Delete one UserSignal
+     * const UserSignal = await prisma.userSignal.delete({
+     *   where: {
+     *     // ... filter to delete one UserSignal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserSignalDeleteArgs>(args: SelectSubset<T, UserSignalDeleteArgs<ExtArgs>>): Prisma__UserSignalClient<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserSignal.
+     * @param {UserSignalUpdateArgs} args - Arguments to update one UserSignal.
+     * @example
+     * // Update one UserSignal
+     * const userSignal = await prisma.userSignal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserSignalUpdateArgs>(args: SelectSubset<T, UserSignalUpdateArgs<ExtArgs>>): Prisma__UserSignalClient<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserSignals.
+     * @param {UserSignalDeleteManyArgs} args - Arguments to filter UserSignals to delete.
+     * @example
+     * // Delete a few UserSignals
+     * const { count } = await prisma.userSignal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserSignalDeleteManyArgs>(args?: SelectSubset<T, UserSignalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserSignals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSignalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserSignals
+     * const userSignal = await prisma.userSignal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserSignalUpdateManyArgs>(args: SelectSubset<T, UserSignalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserSignals and returns the data updated in the database.
+     * @param {UserSignalUpdateManyAndReturnArgs} args - Arguments to update many UserSignals.
+     * @example
+     * // Update many UserSignals
+     * const userSignal = await prisma.userSignal.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserSignals and only return the `id`
+     * const userSignalWithIdOnly = await prisma.userSignal.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserSignalUpdateManyAndReturnArgs>(args: SelectSubset<T, UserSignalUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserSignal.
+     * @param {UserSignalUpsertArgs} args - Arguments to update or create a UserSignal.
+     * @example
+     * // Update or create a UserSignal
+     * const userSignal = await prisma.userSignal.upsert({
+     *   create: {
+     *     // ... data to create a UserSignal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserSignal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserSignalUpsertArgs>(args: SelectSubset<T, UserSignalUpsertArgs<ExtArgs>>): Prisma__UserSignalClient<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserSignals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSignalCountArgs} args - Arguments to filter UserSignals to count.
+     * @example
+     * // Count the number of UserSignals
+     * const count = await prisma.userSignal.count({
+     *   where: {
+     *     // ... the filter for the UserSignals we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserSignalCountArgs>(
+      args?: Subset<T, UserSignalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserSignalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserSignal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSignalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserSignalAggregateArgs>(args: Subset<T, UserSignalAggregateArgs>): Prisma.PrismaPromise<GetUserSignalAggregateType<T>>
+
+    /**
+     * Group by UserSignal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSignalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserSignalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserSignalGroupByArgs['orderBy'] }
+        : { orderBy?: UserSignalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserSignalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserSignalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserSignal model
+   */
+  readonly fields: UserSignalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserSignal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserSignalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserSignal model
+   */
+  interface UserSignalFieldRefs {
+    readonly id: FieldRef<"UserSignal", 'String'>
+    readonly userId: FieldRef<"UserSignal", 'String'>
+    readonly type: FieldRef<"UserSignal", 'SignalType'>
+    readonly payload: FieldRef<"UserSignal", 'Json'>
+    readonly startsAt: FieldRef<"UserSignal", 'DateTime'>
+    readonly endsAt: FieldRef<"UserSignal", 'DateTime'>
+    readonly createdAt: FieldRef<"UserSignal", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserSignal findUnique
+   */
+  export type UserSignalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSignal to fetch.
+     */
+    where: UserSignalWhereUniqueInput
+  }
+
+  /**
+   * UserSignal findUniqueOrThrow
+   */
+  export type UserSignalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSignal to fetch.
+     */
+    where: UserSignalWhereUniqueInput
+  }
+
+  /**
+   * UserSignal findFirst
+   */
+  export type UserSignalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSignal to fetch.
+     */
+    where?: UserSignalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSignals to fetch.
+     */
+    orderBy?: UserSignalOrderByWithRelationInput | UserSignalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserSignals.
+     */
+    cursor?: UserSignalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSignals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSignals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserSignals.
+     */
+    distinct?: UserSignalScalarFieldEnum | UserSignalScalarFieldEnum[]
+  }
+
+  /**
+   * UserSignal findFirstOrThrow
+   */
+  export type UserSignalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSignal to fetch.
+     */
+    where?: UserSignalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSignals to fetch.
+     */
+    orderBy?: UserSignalOrderByWithRelationInput | UserSignalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserSignals.
+     */
+    cursor?: UserSignalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSignals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSignals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserSignals.
+     */
+    distinct?: UserSignalScalarFieldEnum | UserSignalScalarFieldEnum[]
+  }
+
+  /**
+   * UserSignal findMany
+   */
+  export type UserSignalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSignals to fetch.
+     */
+    where?: UserSignalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSignals to fetch.
+     */
+    orderBy?: UserSignalOrderByWithRelationInput | UserSignalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserSignals.
+     */
+    cursor?: UserSignalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSignals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSignals.
+     */
+    skip?: number
+    distinct?: UserSignalScalarFieldEnum | UserSignalScalarFieldEnum[]
+  }
+
+  /**
+   * UserSignal create
+   */
+  export type UserSignalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserSignal.
+     */
+    data: XOR<UserSignalCreateInput, UserSignalUncheckedCreateInput>
+  }
+
+  /**
+   * UserSignal createMany
+   */
+  export type UserSignalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserSignals.
+     */
+    data: UserSignalCreateManyInput | UserSignalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserSignal createManyAndReturn
+   */
+  export type UserSignalCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserSignals.
+     */
+    data: UserSignalCreateManyInput | UserSignalCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserSignal update
+   */
+  export type UserSignalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserSignal.
+     */
+    data: XOR<UserSignalUpdateInput, UserSignalUncheckedUpdateInput>
+    /**
+     * Choose, which UserSignal to update.
+     */
+    where: UserSignalWhereUniqueInput
+  }
+
+  /**
+   * UserSignal updateMany
+   */
+  export type UserSignalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserSignals.
+     */
+    data: XOR<UserSignalUpdateManyMutationInput, UserSignalUncheckedUpdateManyInput>
+    /**
+     * Filter which UserSignals to update
+     */
+    where?: UserSignalWhereInput
+    /**
+     * Limit how many UserSignals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserSignal updateManyAndReturn
+   */
+  export type UserSignalUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * The data used to update UserSignals.
+     */
+    data: XOR<UserSignalUpdateManyMutationInput, UserSignalUncheckedUpdateManyInput>
+    /**
+     * Filter which UserSignals to update
+     */
+    where?: UserSignalWhereInput
+    /**
+     * Limit how many UserSignals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserSignal upsert
+   */
+  export type UserSignalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserSignal to update in case it exists.
+     */
+    where: UserSignalWhereUniqueInput
+    /**
+     * In case the UserSignal found by the `where` argument doesn't exist, create a new UserSignal with this data.
+     */
+    create: XOR<UserSignalCreateInput, UserSignalUncheckedCreateInput>
+    /**
+     * In case the UserSignal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserSignalUpdateInput, UserSignalUncheckedUpdateInput>
+  }
+
+  /**
+   * UserSignal delete
+   */
+  export type UserSignalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+    /**
+     * Filter which UserSignal to delete.
+     */
+    where: UserSignalWhereUniqueInput
+  }
+
+  /**
+   * UserSignal deleteMany
+   */
+  export type UserSignalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserSignals to delete
+     */
+    where?: UserSignalWhereInput
+    /**
+     * Limit how many UserSignals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserSignal without action
+   */
+  export type UserSignalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSignal
+     */
+    select?: UserSignalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSignal
+     */
+    omit?: UserSignalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSignalInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12197,12 +13417,32 @@ export namespace Prisma {
   export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
 
 
+  export const UserSignalScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    type: 'type',
+    payload: 'payload',
+    startsAt: 'startsAt',
+    endsAt: 'endsAt',
+    createdAt: 'createdAt'
+  };
+
+  export type UserSignalScalarFieldEnum = (typeof UserSignalScalarFieldEnum)[keyof typeof UserSignalScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -12219,6 +13459,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -12360,6 +13609,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'SignalType'
+   */
+  export type EnumSignalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SignalType'>
+    
+
+
+  /**
+   * Reference to a field of type 'SignalType[]'
+   */
+  export type ListEnumSignalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SignalType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -12402,6 +13679,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingListRelationFilter
     offersReceived?: OfferListRelationFilter
     meetingsAccepted?: MeetingListRelationFilter
+    userSignals?: UserSignalListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -12427,6 +13705,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingOrderByRelationAggregateInput
     offersReceived?: OfferOrderByRelationAggregateInput
     meetingsAccepted?: MeetingOrderByRelationAggregateInput
+    userSignals?: UserSignalOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -12455,6 +13734,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingListRelationFilter
     offersReceived?: OfferListRelationFilter
     meetingsAccepted?: MeetingListRelationFilter
+    userSignals?: UserSignalListRelationFilter
   }, "id" | "email" | "phoneNumber" | "username">
 
   export type UserOrderByWithAggregationInput = {
@@ -13060,6 +14340,71 @@ export namespace Prisma {
     expiresAt?: DateTimeWithAggregatesFilter<"Offer"> | Date | string
   }
 
+  export type UserSignalWhereInput = {
+    AND?: UserSignalWhereInput | UserSignalWhereInput[]
+    OR?: UserSignalWhereInput[]
+    NOT?: UserSignalWhereInput | UserSignalWhereInput[]
+    id?: StringFilter<"UserSignal"> | string
+    userId?: StringFilter<"UserSignal"> | string
+    type?: EnumSignalTypeFilter<"UserSignal"> | $Enums.SignalType
+    payload?: JsonFilter<"UserSignal">
+    startsAt?: DateTimeNullableFilter<"UserSignal"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"UserSignal"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserSignal"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserSignalOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    payload?: SortOrder
+    startsAt?: SortOrderInput | SortOrder
+    endsAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserSignalWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UserSignalWhereInput | UserSignalWhereInput[]
+    OR?: UserSignalWhereInput[]
+    NOT?: UserSignalWhereInput | UserSignalWhereInput[]
+    userId?: StringFilter<"UserSignal"> | string
+    type?: EnumSignalTypeFilter<"UserSignal"> | $Enums.SignalType
+    payload?: JsonFilter<"UserSignal">
+    startsAt?: DateTimeNullableFilter<"UserSignal"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"UserSignal"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserSignal"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type UserSignalOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    payload?: SortOrder
+    startsAt?: SortOrderInput | SortOrder
+    endsAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: UserSignalCountOrderByAggregateInput
+    _max?: UserSignalMaxOrderByAggregateInput
+    _min?: UserSignalMinOrderByAggregateInput
+  }
+
+  export type UserSignalScalarWhereWithAggregatesInput = {
+    AND?: UserSignalScalarWhereWithAggregatesInput | UserSignalScalarWhereWithAggregatesInput[]
+    OR?: UserSignalScalarWhereWithAggregatesInput[]
+    NOT?: UserSignalScalarWhereWithAggregatesInput | UserSignalScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserSignal"> | string
+    userId?: StringWithAggregatesFilter<"UserSignal"> | string
+    type?: EnumSignalTypeWithAggregatesFilter<"UserSignal"> | $Enums.SignalType
+    payload?: JsonWithAggregatesFilter<"UserSignal">
+    startsAt?: DateTimeNullableWithAggregatesFilter<"UserSignal"> | Date | string | null
+    endsAt?: DateTimeNullableWithAggregatesFilter<"UserSignal"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserSignal"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     email: string
@@ -13083,6 +14428,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -13108,6 +14454,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -13133,6 +14480,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -13158,6 +14506,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -13807,6 +15156,75 @@ export namespace Prisma {
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserSignalCreateInput = {
+    id?: string
+    type: $Enums.SignalType
+    payload: JsonNullValueInput | InputJsonValue
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutUserSignalsInput
+  }
+
+  export type UserSignalUncheckedCreateInput = {
+    id?: string
+    userId: string
+    type: $Enums.SignalType
+    payload: JsonNullValueInput | InputJsonValue
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type UserSignalUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumSignalTypeFieldUpdateOperationsInput | $Enums.SignalType
+    payload?: JsonNullValueInput | InputJsonValue
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutUserSignalsNestedInput
+  }
+
+  export type UserSignalUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumSignalTypeFieldUpdateOperationsInput | $Enums.SignalType
+    payload?: JsonNullValueInput | InputJsonValue
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserSignalCreateManyInput = {
+    id?: string
+    userId: string
+    type: $Enums.SignalType
+    payload: JsonNullValueInput | InputJsonValue
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type UserSignalUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumSignalTypeFieldUpdateOperationsInput | $Enums.SignalType
+    payload?: JsonNullValueInput | InputJsonValue
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserSignalUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumSignalTypeFieldUpdateOperationsInput | $Enums.SignalType
+    payload?: JsonNullValueInput | InputJsonValue
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -13894,6 +15312,12 @@ export namespace Prisma {
     none?: OfferWhereInput
   }
 
+  export type UserSignalListRelationFilter = {
+    every?: UserSignalWhereInput
+    some?: UserSignalWhereInput
+    none?: UserSignalWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -13920,6 +15344,10 @@ export namespace Prisma {
   }
 
   export type OfferOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserSignalOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -14474,6 +15902,100 @@ export namespace Prisma {
     _max?: NestedEnumOfferStateFilter<$PrismaModel>
   }
 
+  export type EnumSignalTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SignalType | EnumSignalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SignalType[] | ListEnumSignalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SignalType[] | ListEnumSignalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSignalTypeFilter<$PrismaModel> | $Enums.SignalType
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type UserSignalCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    payload?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserSignalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserSignalMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumSignalTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SignalType | EnumSignalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SignalType[] | ListEnumSignalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SignalType[] | ListEnumSignalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSignalTypeWithAggregatesFilter<$PrismaModel> | $Enums.SignalType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSignalTypeFilter<$PrismaModel>
+    _max?: NestedEnumSignalTypeFilter<$PrismaModel>
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -14530,6 +16052,13 @@ export namespace Prisma {
     connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
   }
 
+  export type UserSignalCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserSignalCreateWithoutUserInput, UserSignalUncheckedCreateWithoutUserInput> | UserSignalCreateWithoutUserInput[] | UserSignalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserSignalCreateOrConnectWithoutUserInput | UserSignalCreateOrConnectWithoutUserInput[]
+    createMany?: UserSignalCreateManyUserInputEnvelope
+    connect?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -14584,6 +16113,13 @@ export namespace Prisma {
     connectOrCreate?: MeetingCreateOrConnectWithoutAcceptedUserInput | MeetingCreateOrConnectWithoutAcceptedUserInput[]
     createMany?: MeetingCreateManyAcceptedUserInputEnvelope
     connect?: MeetingWhereUniqueInput | MeetingWhereUniqueInput[]
+  }
+
+  export type UserSignalUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserSignalCreateWithoutUserInput, UserSignalUncheckedCreateWithoutUserInput> | UserSignalCreateWithoutUserInput[] | UserSignalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserSignalCreateOrConnectWithoutUserInput | UserSignalCreateOrConnectWithoutUserInput[]
+    createMany?: UserSignalCreateManyUserInputEnvelope
+    connect?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -14718,6 +16254,20 @@ export namespace Prisma {
     deleteMany?: MeetingScalarWhereInput | MeetingScalarWhereInput[]
   }
 
+  export type UserSignalUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserSignalCreateWithoutUserInput, UserSignalUncheckedCreateWithoutUserInput> | UserSignalCreateWithoutUserInput[] | UserSignalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserSignalCreateOrConnectWithoutUserInput | UserSignalCreateOrConnectWithoutUserInput[]
+    upsert?: UserSignalUpsertWithWhereUniqueWithoutUserInput | UserSignalUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserSignalCreateManyUserInputEnvelope
+    set?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+    disconnect?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+    delete?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+    connect?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+    update?: UserSignalUpdateWithWhereUniqueWithoutUserInput | UserSignalUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserSignalUpdateManyWithWhereWithoutUserInput | UserSignalUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserSignalScalarWhereInput | UserSignalScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -14828,6 +16378,20 @@ export namespace Prisma {
     update?: MeetingUpdateWithWhereUniqueWithoutAcceptedUserInput | MeetingUpdateWithWhereUniqueWithoutAcceptedUserInput[]
     updateMany?: MeetingUpdateManyWithWhereWithoutAcceptedUserInput | MeetingUpdateManyWithWhereWithoutAcceptedUserInput[]
     deleteMany?: MeetingScalarWhereInput | MeetingScalarWhereInput[]
+  }
+
+  export type UserSignalUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserSignalCreateWithoutUserInput, UserSignalUncheckedCreateWithoutUserInput> | UserSignalCreateWithoutUserInput[] | UserSignalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserSignalCreateOrConnectWithoutUserInput | UserSignalCreateOrConnectWithoutUserInput[]
+    upsert?: UserSignalUpsertWithWhereUniqueWithoutUserInput | UserSignalUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserSignalCreateManyUserInputEnvelope
+    set?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+    disconnect?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+    delete?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+    connect?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+    update?: UserSignalUpdateWithWhereUniqueWithoutUserInput | UserSignalUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserSignalUpdateManyWithWhereWithoutUserInput | UserSignalUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserSignalScalarWhereInput | UserSignalScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -15136,6 +16700,24 @@ export namespace Prisma {
     deleteMany?: BroadcastMetadataScalarWhereInput | BroadcastMetadataScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutUserSignalsInput = {
+    create?: XOR<UserCreateWithoutUserSignalsInput, UserUncheckedCreateWithoutUserSignalsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserSignalsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumSignalTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SignalType
+  }
+
+  export type UserUpdateOneRequiredWithoutUserSignalsNestedInput = {
+    create?: XOR<UserCreateWithoutUserSignalsInput, UserUncheckedCreateWithoutUserSignalsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserSignalsInput
+    upsert?: UserUpsertWithoutUserSignalsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserSignalsInput, UserUpdateWithoutUserSignalsInput>, UserUncheckedUpdateWithoutUserSignalsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -15415,6 +16997,46 @@ export namespace Prisma {
     _max?: NestedEnumOfferStateFilter<$PrismaModel>
   }
 
+  export type NestedEnumSignalTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SignalType | EnumSignalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SignalType[] | ListEnumSignalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SignalType[] | ListEnumSignalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSignalTypeFilter<$PrismaModel> | $Enums.SignalType
+  }
+
+  export type NestedEnumSignalTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SignalType | EnumSignalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SignalType[] | ListEnumSignalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SignalType[] | ListEnumSignalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSignalTypeWithAggregatesFilter<$PrismaModel> | $Enums.SignalType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSignalTypeFilter<$PrismaModel>
+    _max?: NestedEnumSignalTypeFilter<$PrismaModel>
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
   export type SessionCreateWithoutUserInput = {
     id: string
     expiresAt: Date | string
@@ -15671,6 +17293,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserSignalCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.SignalType
+    payload: JsonNullValueInput | InputJsonValue
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type UserSignalUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.SignalType
+    payload: JsonNullValueInput | InputJsonValue
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type UserSignalCreateOrConnectWithoutUserInput = {
+    where: UserSignalWhereUniqueInput
+    create: XOR<UserSignalCreateWithoutUserInput, UserSignalUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserSignalCreateManyUserInputEnvelope = {
+    data: UserSignalCreateManyUserInput | UserSignalCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
     where: SessionWhereUniqueInput
     update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
@@ -15885,6 +17535,35 @@ export namespace Prisma {
     data: XOR<MeetingUpdateManyMutationInput, MeetingUncheckedUpdateManyWithoutAcceptedUserInput>
   }
 
+  export type UserSignalUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserSignalWhereUniqueInput
+    update: XOR<UserSignalUpdateWithoutUserInput, UserSignalUncheckedUpdateWithoutUserInput>
+    create: XOR<UserSignalCreateWithoutUserInput, UserSignalUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserSignalUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserSignalWhereUniqueInput
+    data: XOR<UserSignalUpdateWithoutUserInput, UserSignalUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserSignalUpdateManyWithWhereWithoutUserInput = {
+    where: UserSignalScalarWhereInput
+    data: XOR<UserSignalUpdateManyMutationInput, UserSignalUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserSignalScalarWhereInput = {
+    AND?: UserSignalScalarWhereInput | UserSignalScalarWhereInput[]
+    OR?: UserSignalScalarWhereInput[]
+    NOT?: UserSignalScalarWhereInput | UserSignalScalarWhereInput[]
+    id?: StringFilter<"UserSignal"> | string
+    userId?: StringFilter<"UserSignal"> | string
+    type?: EnumSignalTypeFilter<"UserSignal"> | $Enums.SignalType
+    payload?: JsonFilter<"UserSignal">
+    startsAt?: DateTimeNullableFilter<"UserSignal"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"UserSignal"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserSignal"> | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     email: string
@@ -15907,6 +17586,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -15931,6 +17611,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -15971,6 +17652,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -15995,6 +17677,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -16019,6 +17702,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -16043,6 +17727,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -16083,6 +17768,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -16107,6 +17793,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutFriendsOfInput = {
@@ -16131,6 +17818,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFriendsOfInput = {
@@ -16155,6 +17843,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFriendsOfInput = {
@@ -16184,6 +17873,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFriendsWithInput = {
@@ -16208,6 +17898,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFriendsWithInput = {
@@ -16248,6 +17939,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendsOfInput = {
@@ -16272,6 +17964,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutFriendsWithInput = {
@@ -16307,6 +18000,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendsWithInput = {
@@ -16331,6 +18025,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutInvitesSentInput = {
@@ -16355,6 +18050,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInvitesSentInput = {
@@ -16379,6 +18075,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInvitesSentInput = {
@@ -16419,6 +18116,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitesSentInput = {
@@ -16443,6 +18141,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutMeetingsCreatedInput = {
@@ -16467,6 +18166,7 @@ export namespace Prisma {
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMeetingsCreatedInput = {
@@ -16491,6 +18191,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMeetingsCreatedInput = {
@@ -16520,6 +18221,7 @@ export namespace Prisma {
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMeetingsAcceptedInput = {
@@ -16544,6 +18246,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMeetingsAcceptedInput = {
@@ -16631,6 +18334,7 @@ export namespace Prisma {
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMeetingsCreatedInput = {
@@ -16655,6 +18359,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutMeetingsAcceptedInput = {
@@ -16690,6 +18395,7 @@ export namespace Prisma {
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMeetingsAcceptedInput = {
@@ -16714,6 +18420,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OfferUpsertWithWhereUniqueWithoutMeetingInput = {
@@ -16960,6 +18667,7 @@ export namespace Prisma {
     invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOffersReceivedInput = {
@@ -16984,6 +18692,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOffersReceivedInput = {
@@ -17095,6 +18804,7 @@ export namespace Prisma {
     invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOffersReceivedInput = {
@@ -17119,6 +18829,7 @@ export namespace Prisma {
     invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BroadcastMetadataUpsertWithWhereUniqueWithoutOfferClaimedInput = {
@@ -17146,6 +18857,122 @@ export namespace Prisma {
     subState?: EnumBroadcastSubStateFilter<"BroadcastMetadata"> | $Enums.BroadcastSubState
     pendingAt?: DateTimeNullableFilter<"BroadcastMetadata"> | Date | string | null
     offerClaimedId?: StringNullableFilter<"BroadcastMetadata"> | string | null
+  }
+
+  export type UserCreateWithoutUserSignalsInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    pushToken?: string | null
+    timezone?: string | null
+    isBroadcasting?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+  }
+
+  export type UserUncheckedCreateWithoutUserSignalsInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    pushToken?: string | null
+    timezone?: string | null
+    isBroadcasting?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUserSignalsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserSignalsInput, UserUncheckedCreateWithoutUserSignalsInput>
+  }
+
+  export type UserUpsertWithoutUserSignalsInput = {
+    update: XOR<UserUpdateWithoutUserSignalsInput, UserUncheckedUpdateWithoutUserSignalsInput>
+    create: XOR<UserCreateWithoutUserSignalsInput, UserUncheckedCreateWithoutUserSignalsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUserSignalsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUserSignalsInput, UserUncheckedUpdateWithoutUserSignalsInput>
+  }
+
+  export type UserUpdateWithoutUserSignalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUserSignalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -17229,6 +19056,15 @@ export namespace Prisma {
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
     targetUserId?: string | null
+  }
+
+  export type UserSignalCreateManyUserInput = {
+    id?: string
+    type: $Enums.SignalType
+    payload: JsonNullValueInput | InputJsonValue
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -17488,6 +19324,33 @@ export namespace Prisma {
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
     targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserSignalUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumSignalTypeFieldUpdateOperationsInput | $Enums.SignalType
+    payload?: JsonNullValueInput | InputJsonValue
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserSignalUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumSignalTypeFieldUpdateOperationsInput | $Enums.SignalType
+    payload?: JsonNullValueInput | InputJsonValue
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserSignalUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumSignalTypeFieldUpdateOperationsInput | $Enums.SignalType
+    payload?: JsonNullValueInput | InputJsonValue
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OfferCreateManyMeetingInput = {

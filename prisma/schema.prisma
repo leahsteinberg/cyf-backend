@@ -29,7 +29,7 @@ model User {
   offersReceived      Offer[]       @relation("offersReceived")
   meetingsAccepted    Meeting[]     @relation("meetingsAccepted")
   isBroadcasting      Boolean       @default(false)
-  // meetingsAccepted    Meeting[]     @relation("meetingsAccepted")
+  userSignals         UserSignal[]  @relation("userSignals")
 
   username        String?
   displayUsername String?
@@ -161,6 +161,17 @@ model Offer {
   @@map("offer")
 }
 
+model UserSignal {
+  id         String       @id @default(uuid())
+  userId     String
+  user       User         @relation("userSignals", fields: [userId], references: [id])
+  type       SignalType
+  payload    Json
+  startsAt   DateTime?
+  endsAt     DateTime?
+  createdAt DateTime      @default(now())
+}
+
 enum OfferState {
   OPEN
   ACCEPTED
@@ -206,4 +217,9 @@ enum SourceType {
   USER_INTENT        // User-initiated
   SYSTEM_PATTERN     // System suggestion based on patterns
   SYSTEM_REAL_TIME   // System suggestion in real-time
+}
+
+enum SignalType {
+  CALL_INTENT
+  WALK_PATTERN
 }
