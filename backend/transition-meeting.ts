@@ -99,10 +99,10 @@ export const transitionMeeting = async ({meetingId, toState, actorId}: {meetingI
         throw new Error(`Incorrect state transition from ${meetingState} to ${toState} for this user: ${actorId}`);
     }
 
-    const timeConstraintsValid = await isTimeValid(meeting, toState);
-    if (!timeConstraintsValid) {
-        throw new Error(`Incorrect time status for transition from ${meetingState} to ${toState}.`);
-    }
+    // const timeConstraintsValid = await isTimeValid(meeting, toState);
+    // if (!timeConstraintsValid) {
+    //     throw new Error(`Incorrect time status for transition from ${meetingState} to ${toState}.`);
+    // }
     let acceptedUserId: string|null = null;
 
     if (toState === ACCEPTED_MEETING_STATE && [OPEN_TARGET_ACTOR_ROLE, SPECIFIC_TARGET_ACTOR_ROLE].includes(getMeetingActorRole({meeting, actorId}))) {

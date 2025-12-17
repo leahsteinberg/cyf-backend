@@ -89,6 +89,9 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
     }
 
     try {
+        // Set user as not broadcasting
+        await setIsNotBroadcasting({ userId });
+
         const meetings = await getCreatedMeetings({userFromId: userId});
         const broadcastMeetings = await findBroadcastedMeetings(meetings);
         // should be just one meeting, but want to account for error state
@@ -103,8 +106,6 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
             await setOffersExpired(offers);
         }
 
-        // Set user as not broadcasting
-        await setIsNotBroadcasting({ userId });
 
         res.json({ success: true, userId });
     } catch (error) {
