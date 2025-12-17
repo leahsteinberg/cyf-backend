@@ -77,7 +77,7 @@ app.post('/api/undo-call-intent', handleUndoCallIntent);
 app.post('/api/accept-suggestion', handleAcceptSuggestion);
 app.post('/api/dismiss-suggestion', handleDismissSuggestion);
 app.post('/api/create-suggestion', handleCreateSuggestion);
-app.post('/api/create-sample-suggestion', handleCreateSampleSuggestion);
+app.get('/api/create-sample-suggestion', handleCreateSampleSuggestion);
 
 app.get('/api/simulate-cron-round', handleCronRound)
 
