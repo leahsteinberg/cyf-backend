@@ -13,6 +13,7 @@ import { handlePush } from './endpoint-handlers/push-handler.js';
 import { handleBroadcastNow, handleBroadcastEnd, handleIsUserBroadcasting } from './endpoint-handlers/broadcast-handler.js';
 import { handleCallIntent, handleUndoCallIntent } from './endpoint-handlers/call-intent-handler.js';
 import { handleAcceptSuggestion, handleCreateSampleSuggestion, handleCreateSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
+import { handleAddUserSignal, handleGetUserSignals, handleRemoveUserSignal } from './endpoint-handlers/user-signal-handler.js';
 
 const app = express();
 const port = 3000;
@@ -58,7 +59,6 @@ app.post('/api/create-meeting', handleCreateMeeting);
 app.post('/api/get-meetings', handleGetMeetings);
 app.post('/api/cancel-meeting', handleCancelMeeting);
 
-
 //OFFER ENDPOINTS
 app.post('/api/get-offers', handleGetOffers);
 app.post('/api/accept-offer', handleAcceptOffer);
@@ -72,6 +72,11 @@ app.post('/api/is-user-broadcasting', handleIsUserBroadcasting);
 //CALL INTENT ENDPOINTS
 app.post('/api/call-intent', handleCallIntent);
 app.post('/api/undo-call-intent', handleUndoCallIntent);
+
+//USER SIGNAL ENDPOINTS
+app.get('/api/get-user-signals', handleGetUserSignals);
+app.post('/api/add-user-signal', handleAddUserSignal);
+app.post('/api/remove-user-signal', handleRemoveUserSignal);
 
 //SUGGESTION ENDPOINTS
 app.post('/api/accept-suggestion', handleAcceptSuggestion);
