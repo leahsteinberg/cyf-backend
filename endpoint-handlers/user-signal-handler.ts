@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import { getUserSignalsForUser } from '../backend/query/signal-lookup.js';
 
 
 export const handleGetUserSignals = async (req: Request, res: Response) => {
@@ -6,12 +7,10 @@ export const handleGetUserSignals = async (req: Request, res: Response) => {
 
     console.log("Get user signals:", { userId });
 
-
     try {
+        const userSignals = await getUserSignalsForUser({userId});
 
-        res.json({
-            success: true,
-        });
+        res.json(userSignals);
     } catch (error) {
         console.error("Error dismissing suggestion:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);
