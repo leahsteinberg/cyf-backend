@@ -127,8 +127,8 @@ type WalkPatternPayload = {};
 type CallIntentPayload = {};
 
 export type SignalPayloadMap = {
-    WALK_PATTERN_SIGNAL_TYPE: WalkPatternPayload;
-    CALL_INTENT_SIGNAL_TYPE: CallIntentPayload;
+    WALK_PATTERN: WalkPatternPayload;
+    CALL_INTENT: CallIntentPayload;
 }
 
 export interface UserSignal<T extends SignalType> extends BaseEntity {
