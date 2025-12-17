@@ -36,12 +36,12 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             return isBroadcast && m.meetingState !== PAST_MEETING_STATE;
         });
 
-        if (activeBroadcast) {
-            return res.status(409).json({
-                error: "You already have an active broadcast",
-                existingBroadcast: activeBroadcast
-            });
-        }
+        // if (activeBroadcast) {
+        //     return res.status(409).json({
+        //         error: "You already have an active broadcast",
+        //         existingBroadcast: activeBroadcast
+        //     });
+        // }
 
         const scheduledFor = new Date();
         const scheduledEnd = addHour(scheduledFor);
