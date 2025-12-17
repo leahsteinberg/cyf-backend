@@ -1,8 +1,10 @@
 import type { Request, Response } from 'express';
 import { getUserSignalsForUser } from '../backend/query/signal-lookup.js';
 import { addSignalForUser, removeSignalForUser } from '../backend/update/signal-update.js';
-import { CALL_INTENT_SIGNAL_TYPE } from '../types.js';
+import { CALL_INTENT_SIGNAL_TYPE, FRIEND_SPECIFIC_TARGET_TYPE, UNKNOWN_TIME_TYPE, USER_INTENT_SOURCE_TYPE } from '../types.js';
 import { prisma } from '../backend/auth.js';
+import { createDraftMeeting } from '../backend/draft-meeting.js';
+import { createCallIntent } from '../backend/call-intent-creator.js';
 
 
 export const handleGetUserSignals = async (req: Request, res: Response) => {
@@ -47,6 +49,9 @@ export const handleAddUserSignal = async (req: Request, res: Response) => {
                 if (duplicate) {
                     console.log("Duplicate CALL_INTENT found, returning existing signal");
                     return res.json([duplicate]);
+                } else {
+                    await createCallIntent({userId, targetUserId});
+
                 }
             }
         }
