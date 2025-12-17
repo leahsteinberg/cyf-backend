@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { getUserSignalsForUser } from '../backend/query/signal-lookup.js';
+import { addSignalForUser } from '../backend/update/signal-update.js';
 
 
 export const handleGetUserSignals = async (req: Request, res: Response) => {
@@ -22,13 +23,14 @@ export const handleGetUserSignals = async (req: Request, res: Response) => {
 };
 
 export const handleAddUserSignal = async (req: Request, res: Response) => {
-    const { userId } = req.body;
+    const { userId, payload, type  } = req.body;
     console.log("Add user signal");
     
     try {
-        
+        const signal = await addSignalForUser({userId, signalType: type, payload});
 
-        res.json({});
+
+        res.json(signal);
     } catch (error) {
         console.error("Error add user signal:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);

@@ -124,7 +124,9 @@ export interface Friendship extends BaseEntity {
 
 type WalkPatternPayload = {};
 
-type CallIntentPayload = {};
+type CallIntentPayload = {
+    targetUserId: string;
+};
 
 export type SignalPayloadMap = {
     WALK_PATTERN: WalkPatternPayload;
