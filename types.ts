@@ -1,3 +1,5 @@
+import type { Prisma } from "@prisma/client";
+import type { JsonValue } from "@prisma/client/runtime/library";
 
 export type OfferState = "OPEN" | "ACCEPTED" | "REJECTED" | "EXPIRED";
 export type MeetingState = "DRAFT" | "SEARCHING" | "ACCEPTED" | "REJECTED" | "PAST" | "EXPIRED" | "DISMISSED_DRAFT" | "CANCELED";
@@ -8,6 +10,7 @@ export type BroadcastSubState = "PENDING_CLAIMED" | "UNCLAIMED" | "CLAIMED";
 export type TimeType = "IMMEDIATE" | "FUTURE" | "UNKNOWN";
 export type TargetType = "OPEN" | "FRIEND_SPECIFIC" | "GROUP";
 export type SourceType = "USER_INTENT" | "SYSTEM_PATTERN" | "SYSTEM_REAL_TIME";
+export type SignalType = "WALK_PATTERN" | "CALL_INTENT";
 
 // HELPER TYPE 
 export type MeetingActorRole = "INITIATOR" | "ACCEPTOR" | "SPECIFIC_TARGET" | "OPEN_TARGET" | "SYSTEM";
@@ -55,6 +58,8 @@ export const SPECIFIC_TARGET_ACTOR_ROLE: MeetingActorRole = "SPECIFIC_TARGET" as
 export const OPEN_TARGET_ACTOR_ROLE: MeetingActorRole = "OPEN_TARGET" as const;
 export const SYSTEM_ACTOR_ROLE: MeetingActorRole = "SYSTEM" as const;
 
+export const WALK_PATTERN_SIGNAL_TYPE: SignalType = "WALK_PATTERN" as const;
+export const CALL_INTENT_SIGNAL_TYPE: SignalType = "CALL_INTENT" as const;
 
 export type DomainEvent =
   | { type: 'MEETING_SUGGESTED'; meetingId: string }
@@ -120,6 +125,23 @@ export interface Friendship extends BaseEntity {
     userId2: string;
 }
 
+export interface UserSignal extends BaseEntity {
+    userId: string;
+    type: SignalType;
+    payload: JsonValue;
+    startsAt: Date | null;
+    endsAt: Date | null;
+    createdAt: Date | null;
+  }
+
+export type SignalPayload = {};
+
+export type JsonPrimitive = string | number | boolean | null;
+
+export type JsonValue =
+  | JsonPrimitive
+  | JsonValue[]
+  | { [key: string]: JsonValue };
 // ============================================================================
 // MIGRATION HELPERS - Phase 1
 // Helper functions to map between old MeetingType and new TimeType/TargetType
