@@ -74,7 +74,7 @@ app.post('/api/call-intent', handleCallIntent);
 app.post('/api/undo-call-intent', handleUndoCallIntent);
 
 //USER SIGNAL ENDPOINTS
-app.get('/api/get-user-signals', handleGetUserSignals);
+app.post('/api/get-user-signals', handleGetUserSignals);
 app.post('/api/add-user-signal', handleAddUserSignal);
 app.post('/api/remove-user-signal', handleRemoveUserSignal);
 
