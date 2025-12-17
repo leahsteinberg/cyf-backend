@@ -12,10 +12,10 @@ export const handleGetUserSignals = async (req: Request, res: Response) => {
 
         res.json(userSignals);
     } catch (error) {
-        console.error("Error dismissing suggestion:", error);
+        console.error("Error getting user signals:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);
         return res.status(500).json({
-            error: "Failed to dismiss suggestion",
+            error: "Failed to get user signals",
             details: errorMessage
         });
     }
@@ -26,6 +26,7 @@ export const handleAddUserSignal = async (req: Request, res: Response) => {
     console.log("Add user signal");
     
     try {
+        
 
         res.json({});
     } catch (error) {

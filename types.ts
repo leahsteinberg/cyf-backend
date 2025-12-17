@@ -127,8 +127,8 @@ type WalkPatternPayload = {};
 type CallIntentPayload = {};
 
 export type SignalPayloadMap = {
-    WALK_PATTERN: WalkPatternPayload;
-    CALL_INTENT: CallIntentPayload;
+    WALK_PATTERN_SIGNAL_TYPE: WalkPatternPayload;
+    CALL_INTENT_SIGNAL_TYPE: CallIntentPayload;
 }
 
 export interface UserSignal<T extends SignalType> extends BaseEntity {
@@ -140,14 +140,6 @@ export interface UserSignal<T extends SignalType> extends BaseEntity {
     createdAt: Date | null;
   }
 
-export type SignalPayload = {};
-
-export type JsonPrimitive = string | number | boolean | null;
-
-export type JsonValue =
-  | JsonPrimitive
-  | JsonValue[]
-  | { [key: string]: JsonValue };
 // ============================================================================
 // MIGRATION HELPERS - Phase 1
 // Helper functions to map between old MeetingType and new TimeType/TargetType
