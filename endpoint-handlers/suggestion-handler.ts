@@ -10,11 +10,14 @@ import {
     DISMISSED_DRAFT_MEETING_STATE,
     UNKNOWN_TIME_TYPE,
     IMMEDIATE_TIME_TYPE,
-    OPEN_TARGET_TYPE
+    OPEN_TARGET_TYPE,
+    FUTURE_TIME_TYPE,
+    SYSTEM_REAL_TIME_SOURCE_TYPE
 } from '../types.js';
 import { findMeetingTimeConflict } from '../backend/meeting-conflict.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
 import { setIsBroadcasting } from '../backend/update/user-update.js';
+import { addHour } from '../backend/utils.js';
 
 
 export const handleAcceptSuggestion = async (req: Request, res: Response) => {
@@ -187,17 +190,53 @@ export const handleCreateSuggestion = async (req: Request, res: Response) => {
         }
     
         const meeting = await createMeeting({
-          userFromId,
-          scheduledEnd,
-          scheduledFor,
-          title,
+            userFromId,
+            scheduledEnd,
+            scheduledFor,
+            title,
+            meetingState: DRAFT_MEETING_STATE,
+            meetingType: meetingType || undefined,
+            timeType: timeType || undefined,
+            targetType: targetType || undefined,
+            sourceType: sourceType || undefined,
+            intentLabel: intentLabel || undefined,
+            targetUserId: targetUserId || undefined
+        });
+    
+        if (!meeting || !meeting.id) {
+          return res.status(500).json({ error: "Failed to create meeting" });
+        }
+
+        res.json({});
+    } catch (error) {
+        console.error("Error creating suggestion:", error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        return res.status(500).json({
+            error: "Failed to create suggestion",
+            details: errorMessage
+        });
+    }
+};
+
+
+export const handleCreateSampleSuggestion = async (req: Request, res: Response) => {
+    const { userId } = req.body;
+
+    console.log("Creating sample suggestion:", { userId });
+    
+      try {
+    
+        const meeting = await createMeeting({
+          userFromId: 'siYkzMa7QzO1jZi6EE0wP1bG9aqq5VKL',
+          scheduledEnd: addHour(new Date()),
+          scheduledFor: addHour(addHour(new Date())),
+          title: 'Sample suggestions',
           meetingState: DRAFT_MEETING_STATE,
-          meetingType: meetingType || undefined,
-          timeType: timeType || undefined,
-          targetType: targetType || undefined,
-          sourceType: sourceType || undefined,
-          intentLabel: intentLabel || undefined,
-          targetUserId: targetUserId || undefined
+          meetingType: 'ADVANCE',
+          timeType: FUTURE_TIME_TYPE,
+          targetType: OPEN_TARGET_TYPE,
+          sourceType: SYSTEM_REAL_TIME_SOURCE_TYPE,
+          intentLabel: 'Here is the intent label',
         });
     
         if (!meeting || !meeting.id) {

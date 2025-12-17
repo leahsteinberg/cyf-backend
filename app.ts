@@ -12,7 +12,7 @@ import { handleCronRound } from './endpoint-handlers/cron-handler.js';
 import { handlePush } from './endpoint-handlers/push-handler.js';
 import { handleBroadcastNow, handleBroadcastEnd, handleIsUserBroadcasting } from './endpoint-handlers/broadcast-handler.js';
 import { handleCallIntent, handleUndoCallIntent } from './endpoint-handlers/call-intent-handler.js';
-import { handleAcceptSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
+import { handleAcceptSuggestion, handleCreateSampleSuggestion, handleCreateSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
 
 const app = express();
 const port = 3000;
@@ -76,6 +76,8 @@ app.post('/api/undo-call-intent', handleUndoCallIntent);
 //SUGGESTION ENDPOINTS
 app.post('/api/accept-suggestion', handleAcceptSuggestion);
 app.post('/api/dismiss-suggestion', handleDismissSuggestion);
+app.post('/api/create-suggestion', handleCreateSuggestion);
+app.post('/api/create-sample-suggestion', handleCreateSampleSuggestion);
 
 app.get('/api/simulate-cron-round', handleCronRound)
 
