@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { getMeetingById, getCreatedMeetings, getAcceptedMeetings } from '../backend/query/meeting-lookup.js';
-import { setMeetingState } from '../backend/update/meeting-update.js';
+import { createMeeting, setMeetingState } from '../backend/update/meeting-update.js';
 import { processOffersForNewMeeting } from '../backend/process-meeting.js';
 import {
     getEffectiveTimeType,
@@ -140,6 +140,76 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         const errorMessage = error instanceof Error ? error.message : String(error);
         return res.status(500).json({
             error: "Failed to dismiss suggestion",
+            details: errorMessage
+        });
+    }
+};
+
+export const handleCreateSuggestion = async (req: Request, res: Response) => {
+    const { userId } = req.body;
+
+    console.log("Creating suggestion:", { userId });
+
+    const {
+        userFromId,
+        scheduledEnd,
+        scheduledFor,
+        title,
+        // OLD API (deprecated)
+        meetingType,
+        // NEW API (preferred)
+        timeType,
+        targetType,
+        sourceType,
+        intentLabel,
+        targetUserId
+      } = req.body;
+    
+      try {
+        const createdMeetings = await getCreatedMeetings({userFromId});
+        const acceptedMeetings = await getAcceptedMeetings({acceptedUserId: userFromId});
+    
+        const conflict = findMeetingTimeConflict({
+          userCreatedMeetings: createdMeetings,
+          userAcceptedMeetings: acceptedMeetings,
+          scheduledFor: new Date(scheduledFor),
+          scheduledEnd: new Date(scheduledEnd)
+        });
+    
+        if (conflict) {
+          const errorMessage = conflict.type === 'created'
+            ? "You already have a meeting you created at this time"
+            : "You already have a meeting you accepted at this time";
+          return res.status(409).json({
+            error: errorMessage,
+            existingMeeting: conflict.conflictingMeeting
+          });
+        }
+    
+        const meeting = await createMeeting({
+          userFromId,
+          scheduledEnd,
+          scheduledFor,
+          title,
+          meetingState: DRAFT_MEETING_STATE,
+          meetingType: meetingType || undefined,
+          timeType: timeType || undefined,
+          targetType: targetType || undefined,
+          sourceType: sourceType || undefined,
+          intentLabel: intentLabel || undefined,
+          targetUserId: targetUserId || undefined
+        });
+    
+        if (!meeting || !meeting.id) {
+          return res.status(500).json({ error: "Failed to create meeting" });
+        }
+
+        res.json({});
+    } catch (error) {
+        console.error("Error creating suggestion:", error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        return res.status(500).json({
+            error: "Failed to create suggestion",
             details: errorMessage
         });
     }
