@@ -24,6 +24,15 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
                     displayUsername: true
                 }
             },
+            targetUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            },
             broadcastMetadata: {
                 include: {
                     offerClaimed: {
@@ -60,6 +69,15 @@ export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Pr
                     username: true,
                     displayUsername: true
                 },
+            },
+            targetUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
             },
             broadcastMetadata: {
                 include: {
@@ -100,6 +118,15 @@ export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: str
                     displayUsername: true
                 },
             },
+            targetUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            },
             broadcastMetadata: {
                 include: {
                     offerClaimed: {
@@ -131,6 +158,15 @@ export const getAllSearchingMeetings = async (): Promise<Meeting[]> => {
         },
         include: {
             userFrom: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            },
+            targetUser: {
                 select: {
                     id: true,
                     name: true,
@@ -185,6 +221,15 @@ export const getMeetingById = async ({meetingId}: {meetingId: string}): Promise<
                 }
             },
             acceptedUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    username: true,
+                    displayUsername: true
+                }
+            },
+            targetUser: {
                 select: {
                     id: true,
                     name: true,

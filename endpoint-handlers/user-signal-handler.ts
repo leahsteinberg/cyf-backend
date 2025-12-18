@@ -50,6 +50,7 @@ export const handleAddUserSignal = async (req: Request, res: Response) => {
                     console.log("Duplicate CALL_INTENT found, returning existing signal");
                     return res.json([duplicate]);
                 } else {
+                    // TODO: should be deprecated once Suggestion Engine is running.
                     await createCallIntent({userId, targetUserId});
 
                 }

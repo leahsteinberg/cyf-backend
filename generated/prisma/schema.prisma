@@ -28,6 +28,7 @@ model User {
   meetingsCreated     Meeting[]    @relation("meetingsCreated")
   offersReceived      Offer[]      @relation("offersReceived")
   meetingsAccepted    Meeting[]    @relation("meetingsAccepted")
+  meetingsTargeted    Meeting[]    @relation("targetUser")
   isBroadcasting      Boolean      @default(false)
   userSignals         UserSignal[] @relation("userSignals")
 
@@ -129,6 +130,7 @@ model Meeting {
   sourceType   SourceType? // Optional: tracks who/what triggered this
   intentLabel  String? // Optional: semantic label like "catch_up", "quick_hi"
   targetUserId String? // For FRIEND_SPECIFIC meetings
+  targetUser   User?       @relation("targetUser", fields: [targetUserId], references: [id])
 
   broadcastMetadata BroadcastMetadata?
 
