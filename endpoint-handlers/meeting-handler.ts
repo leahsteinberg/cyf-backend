@@ -174,6 +174,8 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
           targetType: OPEN_TARGET_TYPE,
           sourceType: SYSTEM_REAL_TIME_SOURCE_TYPE,
         });
+        await setIsBroadcasting({userId: meeting.userFromId});
+
       } else {
         // the canceling party in this case is the person who started the broadcast
         // therefore, they are opting to end the broadcast
