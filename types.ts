@@ -89,6 +89,7 @@ export interface Meeting extends BaseEntity {
     userFromId: string;
     scheduledFor: Date;
     scheduledEnd: Date;
+    backupScheduledTimes: Date[];
     createdAt: Date;
     acceptedUserId: string | null;
     meetingState: MeetingState;

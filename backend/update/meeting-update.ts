@@ -15,6 +15,7 @@ type CreateMeetingParams = {
     userFromId: string;
     scheduledFor: Date;
     scheduledEnd: Date;
+    backupScheduledTimes?: Date[];
     title: string;
 
     meetingType?: MeetingType;
@@ -28,7 +29,7 @@ type CreateMeetingParams = {
 };
 
 export const createMeeting = async (params: CreateMeetingParams): Promise<Meeting> => {
-    const { userFromId, scheduledFor, scheduledEnd, title, meetingState } = params;
+    const { userFromId, scheduledFor, scheduledEnd, backupScheduledTimes, title, meetingState } = params;
 
     console.log("making a meeting SF- ", scheduledFor);
 
@@ -65,6 +66,7 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             userFromId,
             scheduledFor,
             scheduledEnd,
+            backupScheduledTimes: backupScheduledTimes || [],
             title,
             meetingState: meetingState || 'SEARCHING',  // Default to SEARCHING if not specified
 

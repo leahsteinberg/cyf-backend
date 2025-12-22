@@ -13,6 +13,7 @@ export interface CreateDraftMeetingParams {
     userFromId: string;
     scheduledFor: Date;
     scheduledEnd: Date;
+    backupScheduledTimes?: Date[];
     title: string;
     timeType: TimeType;
     targetType: TargetType;
@@ -32,6 +33,7 @@ export async function createDraftMeeting(params: CreateDraftMeetingParams): Prom
         userFromId,
         scheduledEnd,
         scheduledFor,
+        backupScheduledTimes,
         title,
         timeType,
         targetType,
@@ -54,6 +56,7 @@ export async function createDraftMeeting(params: CreateDraftMeetingParams): Prom
         userFromId,
         scheduledEnd,
         scheduledFor,
+        backupScheduledTimes: backupScheduledTimes || [],
         title,
         meetingState: DRAFT_MEETING_STATE,
         // New field system

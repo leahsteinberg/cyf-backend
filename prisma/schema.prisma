@@ -117,6 +117,7 @@ model Meeting {
   createdAt         DateTime            @default(now())
   scheduledFor      DateTime
   scheduledEnd      DateTime
+  backupScheduledTimes DateTime[]
   offers            Offer[]             @relation("offers")
   title             String?
   meetingState      MeetingState        @default(SEARCHING)

@@ -109,17 +109,18 @@ model Invitation {
 }
 
 model Meeting {
-  id             String       @id @default(uuid())
-  userFrom       User         @relation("meetingsCreated", fields: [userFromId], references: [id])
-  userFromId     String
-  acceptedUserId String?
-  acceptedUser   User?        @relation("meetingsAccepted", fields: [acceptedUserId], references: [id])
-  createdAt      DateTime     @default(now())
-  scheduledFor   DateTime
-  scheduledEnd   DateTime
-  offers         Offer[]      @relation("offers")
-  title          String?
-  meetingState   MeetingState @default(SEARCHING)
+  id                   String       @id @default(uuid())
+  userFrom             User         @relation("meetingsCreated", fields: [userFromId], references: [id])
+  userFromId           String
+  acceptedUserId       String?
+  acceptedUser         User?        @relation("meetingsAccepted", fields: [acceptedUserId], references: [id])
+  createdAt            DateTime     @default(now())
+  scheduledFor         DateTime
+  scheduledEnd         DateTime
+  backupScheduledTimes DateTime[]
+  offers               Offer[]      @relation("offers")
+  title                String?
+  meetingState         MeetingState @default(SEARCHING)
 
   // OLD FIELD - Keep for backwards compatibility during migration
   meetingType MeetingType @default(ADVANCE)

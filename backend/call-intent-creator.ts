@@ -12,11 +12,20 @@ export const createCallIntent = async ({userId, targetUserId}: {userId: string, 
     const scheduledEnd = new Date(scheduledFor);
     scheduledEnd.setHours(scheduledEnd.getHours() + 1);
 
+    // Generate 3 backup times, each 1 day apart from the original, same hour
+    const backupScheduledTimes: Date[] = [];
+    for (let i = 1; i <= 3; i++) {
+        const backupTime = new Date(scheduledFor);
+        backupTime.setDate(backupTime.getDate() + i);
+        backupScheduledTimes.push(backupTime);
+    }
+
     // Create draft meeting with UNKNOWN time and FRIEND_SPECIFIC target
     const draftMeeting = await createDraftMeeting({
         userFromId: userId,
         scheduledFor,
         scheduledEnd,
+        backupScheduledTimes,
         title: 'Call intent',
         timeType: UNKNOWN_TIME_TYPE,
         targetType: FRIEND_SPECIFIC_TARGET_TYPE,
@@ -29,6 +38,7 @@ export const createCallIntent = async ({userId, targetUserId}: {userId: string, 
         meetingId: draftMeeting.id,
         userId,
         userToId,
-        expiresAt: scheduledFor
+        expiresAt: scheduledFor,
+        backupTimes: backupScheduledTimes
     });
 }
