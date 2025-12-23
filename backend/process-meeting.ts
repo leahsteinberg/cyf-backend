@@ -138,7 +138,7 @@ async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meetin
     if (timeType === IMMEDIATE_TIME_TYPE) {
         // Immediate 1-on-1: use broadcast-style expiration (1 hour)
         await makeBroadcastOffer({ meeting, userOfferedId: targetUserId });
-    } else if (timeType === FUTURE_TIME_TYPE){
+    } else if (timeType === FUTURE_TIME_TYPE || timeType === UNKNOWN_TIME_TYPE){
         // Future 1-on-1: use meeting time as expiration
         const expiresAt = meeting.scheduledFor;
         await makeOffer({
@@ -146,10 +146,11 @@ async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meetin
             userOfferedId: targetUserId,
             expiresAt,
         });
-    } else if (timeType === UNKNOWN_TIME_TYPE) {
-        console.log('Meeting has UNKNOWN time type, skipping offer creation');
-        return meeting;
     }
+    // else if (timeType === UNKNOWN_TIME_TYPE) {
+    //     console.log('Meeting has UNKNOWN time type, skipping offer creation');
+    //     return meeting;
+    // }
 
     console.log(`Created friend-specific offer for meeting ${meeting.id} to user ${targetUserId}`);
     return meeting;

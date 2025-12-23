@@ -195,9 +195,11 @@ export const deleteMeetingAndOffers = async ({meetingId}: {meetingId: string}): 
 
 
 export const updateMeetingState = async (
-    meeting: Meeting, 
+    meeting: Meeting,
     toState: MeetingState,
-    acceptedUserId?: string | null
+    acceptedUserId?: string | null,
+    scheduledFor?: Date,
+    scheduledEnd?: Date
 ) => {
     const result = await prisma.meeting.updateMany({
         where: {
@@ -207,9 +209,11 @@ export const updateMeetingState = async (
         data: {
             meetingState: toState,
             ...(acceptedUserId !== undefined && { acceptedUserId }),
+            ...(scheduledFor && { scheduledFor }),
+            ...(scheduledEnd && { scheduledEnd }),
         },
     });
-    
+
     if (result.count === 0) {
         throw new Error("Meeting state has changed since it was read. Please retry.");
     }

@@ -73,7 +73,13 @@ const getMeetingActorRole = ({meeting, actorId}: {meeting: Meeting, actorId: str
 }
 
 
-export const transitionMeeting = async ({meetingId, toState, actorId}: {meetingId: string, toState: MeetingState, actorId: string}):
+export const transitionMeeting = async ({meetingId, toState, actorId, scheduledFor, scheduledEnd}: {
+    meetingId: string,
+    toState: MeetingState,
+    actorId: string,
+    scheduledFor?: Date,
+    scheduledEnd?: Date
+}):
     Promise<{meeting: Meeting, events: DomainEvent[]}> => {
     const meeting = await getMeetingById({meetingId});
 
@@ -109,7 +115,7 @@ export const transitionMeeting = async ({meetingId, toState, actorId}: {meetingI
         acceptedUserId = actorId;
     }
 
-    await updateMeetingState(meeting, toState, acceptedUserId);
+    await updateMeetingState(meeting, toState, acceptedUserId, scheduledFor, scheduledEnd);
 
     const updatedMeeting = await getMeetingById({meetingId})
     if (!updatedMeeting) {

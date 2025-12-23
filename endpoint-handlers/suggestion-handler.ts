@@ -21,9 +21,9 @@ import { addHour } from '../backend/utils.js';
 
 
 export const handleAcceptSuggestion = async (req: Request, res: Response) => {
-    const { meetingId, userId } = req.body;
+    const { meetingId, userId, scheduledFor, scheduledEnd } = req.body;
 
-    console.log("Accepting suggestion:", { meetingId, userId });
+    console.log("Accepting suggestion:", { meetingId, userId, scheduledFor, scheduledEnd });
 
     if (!meetingId || !userId) {
         return res.status(400).json({ error: "meetingId and userId are required" });
@@ -41,6 +41,10 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
 
         console.log(`Converting suggestion to active meeting: timeType=${timeType}, targetType=${targetType}`);
 
+        // Use the provided scheduledFor/scheduledEnd if available, otherwise use the suggestion's times
+        const finalScheduledFor = scheduledFor ? new Date(scheduledFor) : new Date(suggestion.scheduledFor);
+        const finalScheduledEnd = scheduledEnd ? new Date(scheduledEnd) : new Date(suggestion.scheduledEnd);
+
         if (timeType !== UNKNOWN_TIME_TYPE) {
             const createdMeetings = await getCreatedMeetings({ userFromId: userId });
             const acceptedMeetings = await getAcceptedMeetings({ acceptedUserId: userId });
@@ -48,9 +52,9 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             const conflict = findMeetingTimeConflict({
                 userCreatedMeetings: createdMeetings,
                 userAcceptedMeetings: acceptedMeetings,
-                scheduledFor: new Date(suggestion.scheduledFor),
-                scheduledEnd: new Date(suggestion.scheduledEnd),
-                excludeMeetingId: meetingId 
+                scheduledFor: finalScheduledFor,
+                scheduledEnd: finalScheduledEnd,
+                excludeMeetingId: meetingId
             });
 
             if (conflict) {
@@ -64,10 +68,16 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             }
         }
 
-        const {meeting, events} = await transitionMeeting({meetingId, toState: SEARCHING_MEETING_STATE, actorId: userId})
+        const {meeting, events} = await transitionMeeting({
+            meetingId,
+            toState: SEARCHING_MEETING_STATE,
+            actorId: userId,
+            ...(scheduledFor && { scheduledFor: finalScheduledFor }),
+            ...(scheduledEnd && { scheduledEnd: finalScheduledEnd })
+        })
 
         // if the activated suggestion is a current broadcast, need to set broadcast to true
-        
+
         const activatedMeeting = await getMeetingById({ meetingId });
         if (activatedMeeting?.timeType === IMMEDIATE_TIME_TYPE && activatedMeeting.targetType === OPEN_TARGET_TYPE) {
             await setIsBroadcasting({userId});
@@ -83,7 +93,8 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             meetingId,
             timeType,
             targetType,
-            offersCreated: timeType !== UNKNOWN_TIME_TYPE
+            offersCreated: timeType !== UNKNOWN_TIME_TYPE,
+            updatedScheduledFor: scheduledFor ? finalScheduledFor : 'unchanged'
         });
 
         res.json({
