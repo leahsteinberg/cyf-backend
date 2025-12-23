@@ -138,7 +138,9 @@ export type SourceType = (typeof SourceType)[keyof typeof SourceType]
 
 export const SignalType: {
   CALL_INTENT: 'CALL_INTENT',
-  WALK_PATTERN: 'WALK_PATTERN'
+  WALK_PATTERN: 'WALK_PATTERN',
+  TIME_OF_DAY_PREFERENCE: 'TIME_OF_DAY_PREFERENCE',
+  WORK_HOURS: 'WORK_HOURS'
 };
 
 export type SignalType = (typeof SignalType)[keyof typeof SignalType]

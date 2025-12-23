@@ -7,7 +7,7 @@ export type BroadcastSubState = "PENDING_CLAIMED" | "UNCLAIMED" | "CLAIMED";
 export type TimeType = "IMMEDIATE" | "FUTURE" | "UNKNOWN";
 export type TargetType = "OPEN" | "FRIEND_SPECIFIC" | "GROUP";
 export type SourceType = "USER_INTENT" | "SYSTEM_PATTERN" | "SYSTEM_REAL_TIME";
-export type SignalType = "WALK_PATTERN" | "CALL_INTENT";
+export type SignalType = "WALK_PATTERN" | "CALL_INTENT" | "TIME_OF_DAY_PREFERENCE" | "WORK_HOURS";
 
 // HELPER TYPE 
 export type MeetingActorRole = "INITIATOR" | "ACCEPTOR" | "SPECIFIC_TARGET" | "OPEN_TARGET" | "SYSTEM";
@@ -57,6 +57,8 @@ export const SYSTEM_ACTOR_ROLE: MeetingActorRole = "SYSTEM" as const;
 
 export const WALK_PATTERN_SIGNAL_TYPE: SignalType = "WALK_PATTERN" as const;
 export const CALL_INTENT_SIGNAL_TYPE: SignalType = "CALL_INTENT" as const;
+export const TIME_OF_DAY_PREFERENCE_SIGNAL_TYPE: SignalType = "TIME_OF_DAY_PREFERENCE" as const;
+export const WORK_HOURS_SIGNAL_TYPE: SignalType = "WORK_HOURS" as const;
 
 export type DomainEvent =
   | { type: 'MEETING_SUGGESTED'; meetingId: string }
@@ -129,9 +131,31 @@ type CallIntentPayload = {
     targetUserId: string;
 };
 
+// TODO: Define the structure for time of day preferences
+// Should include preferred times for calls (e.g., morning, afternoon, evening)
+// Possible fields: preferredTimeRanges, dayOfWeek, etc.
+type TimeOfDayPreferencePayload = {
+    // Example structure:
+    // preferredStartHour?: number; // 0-23
+    // preferredEndHour?: number;   // 0-23
+    // dayOfWeek?: string;          // "MONDAY", "TUESDAY", etc.
+};
+
+// TODO: Define the structure for work hours when user cannot have calls
+// Should include work schedule blocking times
+// Possible fields: workStartTime, workEndTime, daysOfWeek, etc.
+type WorkHoursPayload = {
+    // Example structure:
+    // startHour: number;    // 0-23
+    // endHour: number;      // 0-23
+    // daysOfWeek?: string[]; // ["MONDAY", "TUESDAY", ...]
+};
+
 export type SignalPayloadMap = {
     WALK_PATTERN: WalkPatternPayload;
     CALL_INTENT: CallIntentPayload;
+    TIME_OF_DAY_PREFERENCE: TimeOfDayPreferencePayload;
+    WORK_HOURS: WorkHoursPayload;
 }
 
 export interface UserSignal<T extends SignalType> extends BaseEntity {

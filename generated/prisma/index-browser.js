@@ -306,7 +306,9 @@ exports.OfferState = exports.$Enums.OfferState = {
 
 exports.SignalType = exports.$Enums.SignalType = {
   CALL_INTENT: 'CALL_INTENT',
-  WALK_PATTERN: 'WALK_PATTERN'
+  WALK_PATTERN: 'WALK_PATTERN',
+  TIME_OF_DAY_PREFERENCE: 'TIME_OF_DAY_PREFERENCE',
+  WORK_HOURS: 'WORK_HOURS'
 };
 
 exports.Prisma.ModelName = {

@@ -228,4 +228,6 @@ enum SourceType {
 enum SignalType {
   CALL_INTENT
   WALK_PATTERN
+  TIME_OF_DAY_PREFERENCE
+  WORK_HOURS
 }
