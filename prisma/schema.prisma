@@ -132,6 +132,7 @@ model Meeting {
   intentLabel       String?             // Optional: semantic label like "catch_up", "quick_hi"
   targetUserId      String?             // For FRIEND_SPECIFIC meetings
   targetUser        User?               @relation("targetUser", fields: [targetUserId], references: [id])
+  suggestionReason  String?             // Optional: reason why this meeting was suggested
 
   broadcastMetadata BroadcastMetadata?
 

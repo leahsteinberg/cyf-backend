@@ -8809,6 +8809,7 @@ export namespace Prisma {
     sourceType: $Enums.SourceType | null
     intentLabel: string | null
     targetUserId: string | null
+    suggestionReason: string | null
   }
 
   export type MeetingMaxAggregateOutputType = {
@@ -8826,6 +8827,7 @@ export namespace Prisma {
     sourceType: $Enums.SourceType | null
     intentLabel: string | null
     targetUserId: string | null
+    suggestionReason: string | null
   }
 
   export type MeetingCountAggregateOutputType = {
@@ -8844,6 +8846,7 @@ export namespace Prisma {
     sourceType: number
     intentLabel: number
     targetUserId: number
+    suggestionReason: number
     _all: number
   }
 
@@ -8863,6 +8866,7 @@ export namespace Prisma {
     sourceType?: true
     intentLabel?: true
     targetUserId?: true
+    suggestionReason?: true
   }
 
   export type MeetingMaxAggregateInputType = {
@@ -8880,6 +8884,7 @@ export namespace Prisma {
     sourceType?: true
     intentLabel?: true
     targetUserId?: true
+    suggestionReason?: true
   }
 
   export type MeetingCountAggregateInputType = {
@@ -8898,6 +8903,7 @@ export namespace Prisma {
     sourceType?: true
     intentLabel?: true
     targetUserId?: true
+    suggestionReason?: true
     _all?: true
   }
 
@@ -8989,6 +8995,7 @@ export namespace Prisma {
     sourceType: $Enums.SourceType | null
     intentLabel: string | null
     targetUserId: string | null
+    suggestionReason: string | null
     _count: MeetingCountAggregateOutputType | null
     _min: MeetingMinAggregateOutputType | null
     _max: MeetingMaxAggregateOutputType | null
@@ -9024,6 +9031,7 @@ export namespace Prisma {
     sourceType?: boolean
     intentLabel?: boolean
     targetUserId?: boolean
+    suggestionReason?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
     offers?: boolean | Meeting$offersArgs<ExtArgs>
@@ -9048,6 +9056,7 @@ export namespace Prisma {
     sourceType?: boolean
     intentLabel?: boolean
     targetUserId?: boolean
+    suggestionReason?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
     targetUser?: boolean | Meeting$targetUserArgs<ExtArgs>
@@ -9069,6 +9078,7 @@ export namespace Prisma {
     sourceType?: boolean
     intentLabel?: boolean
     targetUserId?: boolean
+    suggestionReason?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
     targetUser?: boolean | Meeting$targetUserArgs<ExtArgs>
@@ -9090,9 +9100,10 @@ export namespace Prisma {
     sourceType?: boolean
     intentLabel?: boolean
     targetUserId?: boolean
+    suggestionReason?: boolean
   }
 
-  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "acceptedUserId" | "createdAt" | "scheduledFor" | "scheduledEnd" | "backupScheduledTimes" | "title" | "meetingState" | "meetingType" | "timeType" | "targetType" | "sourceType" | "intentLabel" | "targetUserId", ExtArgs["result"]["meeting"]>
+  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "acceptedUserId" | "createdAt" | "scheduledFor" | "scheduledEnd" | "backupScheduledTimes" | "title" | "meetingState" | "meetingType" | "timeType" | "targetType" | "sourceType" | "intentLabel" | "targetUserId" | "suggestionReason", ExtArgs["result"]["meeting"]>
   export type MeetingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
@@ -9137,6 +9148,7 @@ export namespace Prisma {
       sourceType: $Enums.SourceType | null
       intentLabel: string | null
       targetUserId: string | null
+      suggestionReason: string | null
     }, ExtArgs["result"]["meeting"]>
     composites: {}
   }
@@ -9580,6 +9592,7 @@ export namespace Prisma {
     readonly sourceType: FieldRef<"Meeting", 'SourceType'>
     readonly intentLabel: FieldRef<"Meeting", 'String'>
     readonly targetUserId: FieldRef<"Meeting", 'String'>
+    readonly suggestionReason: FieldRef<"Meeting", 'String'>
   }
     
 
@@ -13464,7 +13477,8 @@ export namespace Prisma {
     targetType: 'targetType',
     sourceType: 'sourceType',
     intentLabel: 'intentLabel',
-    targetUserId: 'targetUserId'
+    targetUserId: 'targetUserId',
+    suggestionReason: 'suggestionReason'
   };
 
   export type MeetingScalarFieldEnum = (typeof MeetingScalarFieldEnum)[keyof typeof MeetingScalarFieldEnum]
@@ -14205,6 +14219,7 @@ export namespace Prisma {
     sourceType?: EnumSourceTypeNullableFilter<"Meeting"> | $Enums.SourceType | null
     intentLabel?: StringNullableFilter<"Meeting"> | string | null
     targetUserId?: StringNullableFilter<"Meeting"> | string | null
+    suggestionReason?: StringNullableFilter<"Meeting"> | string | null
     userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
     acceptedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     offers?: OfferListRelationFilter
@@ -14228,6 +14243,7 @@ export namespace Prisma {
     sourceType?: SortOrderInput | SortOrder
     intentLabel?: SortOrderInput | SortOrder
     targetUserId?: SortOrderInput | SortOrder
+    suggestionReason?: SortOrderInput | SortOrder
     userFrom?: UserOrderByWithRelationInput
     acceptedUser?: UserOrderByWithRelationInput
     offers?: OfferOrderByRelationAggregateInput
@@ -14254,6 +14270,7 @@ export namespace Prisma {
     sourceType?: EnumSourceTypeNullableFilter<"Meeting"> | $Enums.SourceType | null
     intentLabel?: StringNullableFilter<"Meeting"> | string | null
     targetUserId?: StringNullableFilter<"Meeting"> | string | null
+    suggestionReason?: StringNullableFilter<"Meeting"> | string | null
     userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
     acceptedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     offers?: OfferListRelationFilter
@@ -14277,6 +14294,7 @@ export namespace Prisma {
     sourceType?: SortOrderInput | SortOrder
     intentLabel?: SortOrderInput | SortOrder
     targetUserId?: SortOrderInput | SortOrder
+    suggestionReason?: SortOrderInput | SortOrder
     _count?: MeetingCountOrderByAggregateInput
     _max?: MeetingMaxOrderByAggregateInput
     _min?: MeetingMinOrderByAggregateInput
@@ -14301,6 +14319,7 @@ export namespace Prisma {
     sourceType?: EnumSourceTypeNullableWithAggregatesFilter<"Meeting"> | $Enums.SourceType | null
     intentLabel?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
     targetUserId?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
+    suggestionReason?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
   }
 
   export type BroadcastMetadataWhereInput = {
@@ -15016,6 +15035,7 @@ export namespace Prisma {
     targetType?: $Enums.TargetType | null
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
+    suggestionReason?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
@@ -15039,6 +15059,7 @@ export namespace Prisma {
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
     targetUserId?: string | null
+    suggestionReason?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
@@ -15056,6 +15077,7 @@ export namespace Prisma {
     targetType?: NullableEnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType | null
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
@@ -15079,6 +15101,7 @@ export namespace Prisma {
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
     targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
@@ -15099,6 +15122,7 @@ export namespace Prisma {
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
     targetUserId?: string | null
+    suggestionReason?: string | null
   }
 
   export type MeetingUpdateManyMutationInput = {
@@ -15114,6 +15138,7 @@ export namespace Prisma {
     targetType?: NullableEnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType | null
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MeetingUncheckedUpdateManyInput = {
@@ -15132,6 +15157,7 @@ export namespace Prisma {
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
     targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BroadcastMetadataCreateInput = {
@@ -15817,6 +15843,7 @@ export namespace Prisma {
     sourceType?: SortOrder
     intentLabel?: SortOrder
     targetUserId?: SortOrder
+    suggestionReason?: SortOrder
   }
 
   export type MeetingMaxOrderByAggregateInput = {
@@ -15834,6 +15861,7 @@ export namespace Prisma {
     sourceType?: SortOrder
     intentLabel?: SortOrder
     targetUserId?: SortOrder
+    suggestionReason?: SortOrder
   }
 
   export type MeetingMinOrderByAggregateInput = {
@@ -15851,6 +15879,7 @@ export namespace Prisma {
     sourceType?: SortOrder
     intentLabel?: SortOrder
     targetUserId?: SortOrder
+    suggestionReason?: SortOrder
   }
 
   export type EnumMeetingStateWithAggregatesFilter<$PrismaModel = never> = {
@@ -17359,6 +17388,7 @@ export namespace Prisma {
     targetType?: $Enums.TargetType | null
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
+    suggestionReason?: string | null
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
     targetUser?: UserCreateNestedOneWithoutMeetingsTargetedInput
@@ -17380,6 +17410,7 @@ export namespace Prisma {
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
     targetUserId?: string | null
+    suggestionReason?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
@@ -17435,6 +17466,7 @@ export namespace Prisma {
     targetType?: $Enums.TargetType | null
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
+    suggestionReason?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
     targetUser?: UserCreateNestedOneWithoutMeetingsTargetedInput
@@ -17456,6 +17488,7 @@ export namespace Prisma {
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
     targetUserId?: string | null
+    suggestionReason?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
@@ -17483,6 +17516,7 @@ export namespace Prisma {
     targetType?: $Enums.TargetType | null
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
+    suggestionReason?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
@@ -17504,6 +17538,7 @@ export namespace Prisma {
     targetType?: $Enums.TargetType | null
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
+    suggestionReason?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
@@ -17715,6 +17750,7 @@ export namespace Prisma {
     sourceType?: EnumSourceTypeNullableFilter<"Meeting"> | $Enums.SourceType | null
     intentLabel?: StringNullableFilter<"Meeting"> | string | null
     targetUserId?: StringNullableFilter<"Meeting"> | string | null
+    suggestionReason?: StringNullableFilter<"Meeting"> | string | null
   }
 
   export type OfferUpsertWithWhereUniqueWithoutUserOfferedInput = {
@@ -18867,6 +18903,7 @@ export namespace Prisma {
     targetType?: $Enums.TargetType | null
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
+    suggestionReason?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
@@ -18889,6 +18926,7 @@ export namespace Prisma {
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
     targetUserId?: string | null
+    suggestionReason?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
   }
 
@@ -18944,6 +18982,7 @@ export namespace Prisma {
     targetType?: NullableEnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType | null
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
@@ -18966,6 +19005,7 @@ export namespace Prisma {
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
     targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
   }
 
@@ -19011,6 +19051,7 @@ export namespace Prisma {
     targetType?: $Enums.TargetType | null
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
+    suggestionReason?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     targetUser?: UserCreateNestedOneWithoutMeetingsTargetedInput
@@ -19033,6 +19074,7 @@ export namespace Prisma {
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
     targetUserId?: string | null
+    suggestionReason?: string | null
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
 
@@ -19146,6 +19188,7 @@ export namespace Prisma {
     targetType?: NullableEnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType | null
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     targetUser?: UserUpdateOneWithoutMeetingsTargetedNestedInput
@@ -19168,6 +19211,7 @@ export namespace Prisma {
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
     targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
 
@@ -19439,6 +19483,7 @@ export namespace Prisma {
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
     targetUserId?: string | null
+    suggestionReason?: string | null
   }
 
   export type OfferCreateManyUserOfferedInput = {
@@ -19464,6 +19509,7 @@ export namespace Prisma {
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
     targetUserId?: string | null
+    suggestionReason?: string | null
   }
 
   export type MeetingCreateManyTargetUserInput = {
@@ -19481,6 +19527,7 @@ export namespace Prisma {
     targetType?: $Enums.TargetType | null
     sourceType?: $Enums.SourceType | null
     intentLabel?: string | null
+    suggestionReason?: string | null
   }
 
   export type UserSignalCreateManyUserInput = {
@@ -19634,6 +19681,7 @@ export namespace Prisma {
     targetType?: NullableEnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType | null
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
     targetUser?: UserUpdateOneWithoutMeetingsTargetedNestedInput
@@ -19655,6 +19703,7 @@ export namespace Prisma {
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
     targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
@@ -19674,6 +19723,7 @@ export namespace Prisma {
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
     targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OfferUpdateWithoutUserOfferedInput = {
@@ -19715,6 +19765,7 @@ export namespace Prisma {
     targetType?: NullableEnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType | null
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
     targetUser?: UserUpdateOneWithoutMeetingsTargetedNestedInput
@@ -19736,6 +19787,7 @@ export namespace Prisma {
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
     targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
@@ -19755,6 +19807,7 @@ export namespace Prisma {
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
     targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MeetingUpdateWithoutTargetUserInput = {
@@ -19770,6 +19823,7 @@ export namespace Prisma {
     targetType?: NullableEnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType | null
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
@@ -19791,6 +19845,7 @@ export namespace Prisma {
     targetType?: NullableEnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType | null
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
@@ -19810,6 +19865,7 @@ export namespace Prisma {
     targetType?: NullableEnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType | null
     sourceType?: NullableEnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType | null
     intentLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestionReason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserSignalUpdateWithoutUserInput = {

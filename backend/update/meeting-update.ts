@@ -25,6 +25,7 @@ type CreateMeetingParams = {
     sourceType?: SourceType;
     intentLabel?: string;
     targetUserId?: string;
+    suggestionReason?: string;
     meetingState?: MeetingState;
 };
 
@@ -79,6 +80,7 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             sourceType: params.sourceType || null,
             intentLabel: params.intentLabel || null,
             targetUserId: params.targetUserId || null,
+            suggestionReason: params.suggestionReason || null,
 
             // Create broadcast metadata for immediate + open meetings (broadcasts)
             ...(needsBroadcastMetadata && {

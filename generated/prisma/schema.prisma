@@ -126,12 +126,13 @@ model Meeting {
   meetingType MeetingType @default(ADVANCE)
 
   // NEW FIELDS - Nullable during migration, will become required later
-  timeType     TimeType? // When: IMMEDIATE, FUTURE, UNKNOWN
-  targetType   TargetType? // Who: OPEN, FRIEND_SPECIFIC, GROUP
-  sourceType   SourceType? // Optional: tracks who/what triggered this
-  intentLabel  String? // Optional: semantic label like "catch_up", "quick_hi"
-  targetUserId String? // For FRIEND_SPECIFIC meetings
-  targetUser   User?       @relation("targetUser", fields: [targetUserId], references: [id])
+  timeType         TimeType? // When: IMMEDIATE, FUTURE, UNKNOWN
+  targetType       TargetType? // Who: OPEN, FRIEND_SPECIFIC, GROUP
+  sourceType       SourceType? // Optional: tracks who/what triggered this
+  intentLabel      String? // Optional: semantic label like "catch_up", "quick_hi"
+  targetUserId     String? // For FRIEND_SPECIFIC meetings
+  targetUser       User?       @relation("targetUser", fields: [targetUserId], references: [id])
+  suggestionReason String? // Optional: reason why this meeting was suggested
 
   broadcastMetadata BroadcastMetadata?
 

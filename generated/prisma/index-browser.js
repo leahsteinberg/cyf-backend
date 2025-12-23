@@ -203,7 +203,8 @@ exports.Prisma.MeetingScalarFieldEnum = {
   targetType: 'targetType',
   sourceType: 'sourceType',
   intentLabel: 'intentLabel',
-  targetUserId: 'targetUserId'
+  targetUserId: 'targetUserId',
+  suggestionReason: 'suggestionReason'
 };
 
 exports.Prisma.BroadcastMetadataScalarFieldEnum = {

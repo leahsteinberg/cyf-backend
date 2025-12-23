@@ -20,6 +20,7 @@ export interface CreateDraftMeetingParams {
     sourceType?: SourceType;
     intentLabel?: string;
     targetUserId?: string;
+    suggestionReason?: string;
 }
 
 /**
@@ -39,7 +40,8 @@ export async function createDraftMeeting(params: CreateDraftMeetingParams): Prom
         targetType,
         sourceType,
         intentLabel,
-        targetUserId
+        targetUserId,
+        suggestionReason
     } = params;
 
     // Validate required fields
@@ -65,7 +67,8 @@ export async function createDraftMeeting(params: CreateDraftMeetingParams): Prom
         // Only include optional fields if they have values
         ...(sourceType && { sourceType }),
         ...(intentLabel && { intentLabel }),
-        ...(targetUserId && { targetUserId })
+        ...(targetUserId && { targetUserId }),
+        ...(suggestionReason && { suggestionReason })
     });
 
     if (!meeting || !meeting.id) {

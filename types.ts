@@ -108,6 +108,7 @@ export interface Meeting extends BaseEntity {
     sourceType?: SourceType | null;
     intentLabel?: string | null;
     targetUserId?: string | null;
+    suggestionReason?: string | null;
 
     broadcastMetadata?: BroadcastMetadata | null;
 }
