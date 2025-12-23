@@ -14,3 +14,29 @@ export const getFriendshipsUser2Side = async (id: string): Promise<Friendship[]>
     });
     return friendships || [];
 }
+
+export const getFriendsWithDetails = async ({ userId }: { userId: string }) => {
+    const friendshipsUser1 = await getFriendshipsUser1Side(userId);
+    const friendshipsUser2 = await getFriendshipsUser2Side(userId);
+
+    const friendIds = [
+        ...friendshipsUser1.map(f => f.userId2),
+        ...friendshipsUser2.map(f => f.userId1)
+    ];
+
+    const friends = await prisma.user.findMany({
+        where: {
+            id: { in: friendIds }
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            username: true,
+            displayUsername: true,
+            timezone: true
+        }
+    });
+
+    return friends;
+}

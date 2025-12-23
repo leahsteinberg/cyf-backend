@@ -75,3 +75,21 @@ export const getUserPhoneNumber = async ({ userId }: { userId: string }): Promis
 
     return user?.phoneNumber ?? null;
 };
+
+export const getUserContextInfo = async ({ userId }: { userId: string }) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            username: true,
+            displayUsername: true,
+            timezone: true,
+            isBroadcasting: true,
+            createdAt: true
+        }
+    });
+
+    return user;
+};
