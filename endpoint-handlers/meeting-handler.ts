@@ -27,6 +27,7 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
     intentLabel,
     targetUserIds  // NEW: array of user IDs
   } = req.body;
+  console.log("in createMeeting, got target user ids", targetUserIds)
 
   try {
 
