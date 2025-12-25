@@ -28,7 +28,6 @@ model User {
   meetingsCreated     Meeting[]     @relation("meetingsCreated")
   offersReceived      Offer[]       @relation("offersReceived")
   meetingsAccepted    Meeting[]     @relation("meetingsAccepted")
-  meetingsTargeted    Meeting[]     @relation("targetUser")
   isBroadcasting      Boolean       @default(false)
   userSignals         UserSignal[]  @relation("userSignals")
 
@@ -114,6 +113,7 @@ model Meeting {
   userFromId        String
   acceptedUserId    String?
   acceptedUser      User?               @relation("meetingsAccepted", fields: [acceptedUserId], references: [id])
+  acceptedUserIds   String[]            @default([])
   createdAt         DateTime            @default(now())
   scheduledFor      DateTime
   scheduledEnd      DateTime
@@ -130,9 +130,10 @@ model Meeting {
   targetType        TargetType?         // Who: OPEN, FRIEND_SPECIFIC, GROUP
   sourceType        SourceType?         // Optional: tracks who/what triggered this
   intentLabel       String?             // Optional: semantic label like "catch_up", "quick_hi"
-  targetUserId      String?             // For FRIEND_SPECIFIC meetings
-  targetUser        User?               @relation("targetUser", fields: [targetUserId], references: [id])
+  targetUserIds     String[]            @default([]) // For FRIEND_SPECIFIC or GROUP meetings
   suggestionReason  String?             // Optional: reason why this meeting was suggested
+  minParticipants   Int                 @default(1)
+  maxParticipants   Int                 @default(1)
 
   broadcastMetadata BroadcastMetadata?
 

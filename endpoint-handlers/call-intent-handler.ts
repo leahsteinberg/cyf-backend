@@ -26,7 +26,7 @@ export const handleCallIntent = async (req: Request, res: Response) => {
             return m.meetingState === DRAFT_MEETING_STATE &&
                    timeType === UNKNOWN_TIME_TYPE &&
                    targetType === FRIEND_SPECIFIC_TARGET_TYPE &&
-                   m.targetUserId === userToId;
+                   m.targetUserIds.includes(userToId);
         });
 
         if (existingCallIntent) {
@@ -52,7 +52,7 @@ export const handleCallIntent = async (req: Request, res: Response) => {
             title: 'Call intent',
             timeType: UNKNOWN_TIME_TYPE,
             targetType: FRIEND_SPECIFIC_TARGET_TYPE,
-            targetUserId: userToId,
+            targetUserIds: [userToId],
             sourceType: USER_INTENT_SOURCE_TYPE,
             intentLabel: 'call intent label'
         });
@@ -99,7 +99,7 @@ export const handleUndoCallIntent = async (req: Request, res: Response) => {
             return m.meetingState === DRAFT_MEETING_STATE &&
                    timeType === UNKNOWN_TIME_TYPE &&
                    targetType === FRIEND_SPECIFIC_TARGET_TYPE &&
-                   m.targetUserId === userToId;
+                   m.targetUserIds.includes(userToId);
         });
 
         if (!callIntent) {

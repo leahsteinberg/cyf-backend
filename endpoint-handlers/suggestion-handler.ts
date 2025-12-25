@@ -176,20 +176,20 @@ export const handleCreateSuggestion = async (req: Request, res: Response) => {
         targetType,
         sourceType,
         intentLabel,
-        targetUserId
+        targetUserIds
       } = req.body;
-    
+
       try {
         const createdMeetings = await getCreatedMeetings({userFromId});
         const acceptedMeetings = await getAcceptedMeetings({acceptedUserId: userFromId});
-    
+
         const conflict = findMeetingTimeConflict({
           userCreatedMeetings: createdMeetings,
           userAcceptedMeetings: acceptedMeetings,
           scheduledFor: new Date(scheduledFor),
           scheduledEnd: new Date(scheduledEnd)
         });
-    
+
         if (conflict) {
           const errorMessage = conflict.type === 'created'
             ? "You already have a meeting you created at this time"
@@ -199,7 +199,7 @@ export const handleCreateSuggestion = async (req: Request, res: Response) => {
             existingMeeting: conflict.conflictingMeeting
           });
         }
-    
+
         const meeting = await createMeeting({
             userFromId,
             scheduledEnd,
@@ -211,7 +211,7 @@ export const handleCreateSuggestion = async (req: Request, res: Response) => {
             targetType: targetType || undefined,
             sourceType: sourceType || undefined,
             intentLabel: intentLabel || undefined,
-            targetUserId: targetUserId || undefined
+            targetUserIds: targetUserIds || undefined
         });
     
         if (!meeting || !meeting.id) {

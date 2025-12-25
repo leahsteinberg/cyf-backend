@@ -31,10 +31,11 @@ export const handleAddUserSignal = async (req: Request, res: Response) => {
     console.log("Add user signal from ",userId, type);
 
     try {
-        // Check for duplicate CALL_INTENT with same targetUserId
+        // Check for duplicate CALL_INTENT with same targetUserIds
         if (type === CALL_INTENT_SIGNAL_TYPE) {
-            const targetUserId = payload?.targetUserId;
-            if (targetUserId) {
+            // Support both old format (targetUserId: string) and new format (targetUserIds: string[])
+            const targetUserIds = payload?.targetUserIds || (payload?.targetUserId ? [payload.targetUserId] : null);
+            if (targetUserIds && targetUserIds.length > 0) {
                 const existingSignals = await prisma.userSignal.findMany({
                     where: {
                         userId,
@@ -42,17 +43,21 @@ export const handleAddUserSignal = async (req: Request, res: Response) => {
                     }
                 });
 
-                const duplicate = existingSignals.find(
-                    (signal: any) => signal.payload?.targetUserId === targetUserId
-                );
+                // Check if there's a duplicate with the same targetUserIds
+                const duplicate = existingSignals.find((signal: any) => {
+                    const existingTargetIds = signal.payload?.targetUserIds || (signal.payload?.targetUserId ? [signal.payload.targetUserId] : []);
+                    return JSON.stringify(existingTargetIds.sort()) === JSON.stringify(targetUserIds.sort());
+                });
 
                 if (duplicate) {
                     console.log("Duplicate CALL_INTENT found, returning existing signal");
                     return res.json([duplicate]);
                 } else {
                     // TODO: should be deprecated once Suggestion Engine is running.
-                    await createCallIntent({userId, targetUserId});
-
+                    // For backward compatibility, if single target, use createCallIntent
+                    if (targetUserIds.length === 1) {
+                        await createCallIntent({userId, targetUserId: targetUserIds[0]});
+                    }
                 }
             }
         }

@@ -94,6 +94,7 @@ export interface Meeting extends BaseEntity {
     backupScheduledTimes: Date[];
     createdAt: Date;
     acceptedUserId: string | null;
+    acceptedUserIds: string[];
     meetingState: MeetingState;
     userFrom?: User;
     acceptedUser?: User | null;
@@ -107,8 +108,10 @@ export interface Meeting extends BaseEntity {
     targetType?: TargetType | null;
     sourceType?: SourceType | null;
     intentLabel?: string | null;
-    targetUserId?: string | null;
+    targetUserIds: string[];
     suggestionReason?: string | null;
+    minParticipants: number;
+    maxParticipants: number;
 
     broadcastMetadata?: BroadcastMetadata | null;
 }
@@ -129,7 +132,7 @@ export interface Friendship extends BaseEntity {
 type WalkPatternPayload = {};
 
 type CallIntentPayload = {
-    targetUserId: string;
+    targetUserIds: string[];
 };
 
 // TODO: Define the structure for time of day preferences

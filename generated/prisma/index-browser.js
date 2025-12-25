@@ -192,6 +192,7 @@ exports.Prisma.MeetingScalarFieldEnum = {
   id: 'id',
   userFromId: 'userFromId',
   acceptedUserId: 'acceptedUserId',
+  acceptedUserIds: 'acceptedUserIds',
   createdAt: 'createdAt',
   scheduledFor: 'scheduledFor',
   scheduledEnd: 'scheduledEnd',
@@ -203,8 +204,10 @@ exports.Prisma.MeetingScalarFieldEnum = {
   targetType: 'targetType',
   sourceType: 'sourceType',
   intentLabel: 'intentLabel',
-  targetUserId: 'targetUserId',
-  suggestionReason: 'suggestionReason'
+  targetUserIds: 'targetUserIds',
+  suggestionReason: 'suggestionReason',
+  minParticipants: 'minParticipants',
+  maxParticipants: 'maxParticipants'
 };
 
 exports.Prisma.BroadcastMetadataScalarFieldEnum = {

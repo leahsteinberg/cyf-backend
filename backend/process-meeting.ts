@@ -117,42 +117,42 @@ async function processNewFutureOpenMeeting(meeting: Meeting): Promise<Meeting> {
 
 /**
  * Process new FRIEND_SPECIFIC meeting
- * Creates single offer to the specified friend
+ * Creates offers to the specified friends
  */
 async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meeting> {
-    const targetUserId = meeting.targetUserId;
+    const targetUserIds = meeting.targetUserIds;
 
-    if (!targetUserId) {
-        throw new Error('FRIEND_SPECIFIC meeting missing targetUserId');
+    if (!targetUserIds || targetUserIds.length === 0) {
+        throw new Error('FRIEND_SPECIFIC meeting missing targetUserIds');
     }
 
-    // Verify target user is a friend
+    // Verify all target users are friends
     const allFriendIds = await getFriendIds(meeting.userFromId);
-    if (!allFriendIds.includes(targetUserId)) {
-        throw new Error(`Target user ${targetUserId} is not a friend of ${meeting.userFromId}`);
+    const invalidTargets = targetUserIds.filter(id => !allFriendIds.includes(id));
+    if (invalidTargets.length > 0) {
+        throw new Error(`Target users ${invalidTargets.join(', ')} are not friends of ${meeting.userFromId}`);
     }
 
     // Determine offer type based on time type
     const timeType = getEffectiveTimeType(meeting);
 
-    if (timeType === IMMEDIATE_TIME_TYPE) {
-        // Immediate 1-on-1: use broadcast-style expiration (1 hour)
-        await makeBroadcastOffer({ meeting, userOfferedId: targetUserId });
-    } else if (timeType === FUTURE_TIME_TYPE || timeType === UNKNOWN_TIME_TYPE){
-        // Future 1-on-1: use meeting time as expiration
-        const expiresAt = meeting.scheduledFor;
-        await makeOffer({
-            meeting,
-            userOfferedId: targetUserId,
-            expiresAt,
-        });
+    // Create offers for each target user
+    for (const targetUserId of targetUserIds) {
+        if (timeType === IMMEDIATE_TIME_TYPE) {
+            // Immediate 1-on-1: use broadcast-style expiration (1 hour)
+            await makeBroadcastOffer({ meeting, userOfferedId: targetUserId });
+        } else if (timeType === FUTURE_TIME_TYPE || timeType === UNKNOWN_TIME_TYPE){
+            // Future 1-on-1: use meeting time as expiration
+            const expiresAt = meeting.scheduledFor;
+            await makeOffer({
+                meeting,
+                userOfferedId: targetUserId,
+                expiresAt,
+            });
+        }
     }
-    // else if (timeType === UNKNOWN_TIME_TYPE) {
-    //     console.log('Meeting has UNKNOWN time type, skipping offer creation');
-    //     return meeting;
-    // }
 
-    console.log(`Created friend-specific offer for meeting ${meeting.id} to user ${targetUserId}`);
+    console.log(`Created friend-specific offers for meeting ${meeting.id} to users ${targetUserIds.join(', ')}`);
     return meeting;
 }
 

@@ -60,7 +60,7 @@ export function buildRecentMeetingsContext(
             targetType: m.targetType,
             sourceType: m.sourceType,
             intentLabel: m.intentLabel,
-            targetUserId: m.targetUserId,
+            targetUserIds: m.targetUserIds,
             acceptedUserId: m.acceptedUserId,
             createdAt: m.createdAt,
             role: 'creator' as const
@@ -78,7 +78,7 @@ export function buildRecentMeetingsContext(
             targetType: m.targetType,
             sourceType: m.sourceType,
             intentLabel: m.intentLabel,
-            targetUserId: m.targetUserId,
+            targetUserIds: m.targetUserIds,
             createdByUserId: m.userFromId,
             createdAt: m.createdAt,
             role: 'acceptor' as const

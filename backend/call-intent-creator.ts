@@ -29,7 +29,7 @@ export const createCallIntent = async ({userId, targetUserId}: {userId: string, 
         title: 'Call intent',
         timeType: UNKNOWN_TIME_TYPE,
         targetType: FRIEND_SPECIFIC_TARGET_TYPE,
-        targetUserId: userToId,
+        targetUserIds: [userToId],
         sourceType: USER_INTENT_SOURCE_TYPE,
         intentLabel: 'call intent label'
     });

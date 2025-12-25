@@ -24,9 +24,11 @@ type CreateMeetingParams = {
     targetType?: TargetType;
     sourceType?: SourceType;
     intentLabel?: string;
-    targetUserId?: string;
+    targetUserIds?: string[];
     suggestionReason?: string;
     meetingState?: MeetingState;
+    minParticipants?: number;
+    maxParticipants?: number;
 };
 
 export const createMeeting = async (params: CreateMeetingParams): Promise<Meeting> => {
@@ -79,8 +81,10 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             targetType: finalTargetType,
             sourceType: params.sourceType || null,
             intentLabel: params.intentLabel || null,
-            targetUserId: params.targetUserId || null,
+            targetUserIds: params.targetUserIds || [],
             suggestionReason: params.suggestionReason || null,
+            minParticipants: params.minParticipants || 1,
+            maxParticipants: params.maxParticipants || 1,
 
             // Create broadcast metadata for immediate + open meetings (broadcasts)
             ...(needsBroadcastMetadata && {
@@ -113,13 +117,15 @@ export const setMeetingState = async (
 }; 
 
 export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string, userId: string}): Promise<Meeting> => {
-    const updatedMeeting = prisma.meeting.update({
+    const updatedMeeting = await prisma.meeting.update({
         where: {
             id: meetingId,
         },
         data: {
-            meetingState: ACCEPTED_MEETING_STATE,
-            acceptedUserId: userId,
+            acceptedUserId: userId,  // Keep for backward compatibility
+            acceptedUserIds: {
+                push: userId  // Append to array
+            }
         }
     })
     return updatedMeeting;
@@ -211,6 +217,11 @@ export const updateMeetingState = async (
         data: {
             meetingState: toState,
             ...(acceptedUserId !== undefined && { acceptedUserId }),
+            ...(acceptedUserId && {
+                acceptedUserIds: {
+                    push: acceptedUserId
+                }
+            }),
             ...(scheduledFor && { scheduledFor }),
             ...(scheduledEnd && { scheduledEnd }),
         },
