@@ -88,7 +88,9 @@ export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Pr
 export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: string}): Promise<Meeting[]> => {
     const meetings = await prisma.meeting.findMany({
         where: {
-            acceptedUserId,
+            acceptedUserIds: {
+                has: acceptedUserId
+            }
         },
         include: {
             userFrom: {

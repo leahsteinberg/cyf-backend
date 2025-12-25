@@ -57,10 +57,10 @@ const getMeetingActorRole = ({meeting, actorId}: {meeting: Meeting, actorId: str
     if ([PAST_MEETING_STATE, EXPIRED_MEETING_STATE, REJECTED_MEETING_STATE].includes(meetingState)) {
         return SYSTEM_ACTOR_ROLE;
     }
-    else if (actorId === meetingCreatorId && actorId !== meeting.acceptedUserId && !meeting.targetUserIds.includes(actorId)) {
+    else if (actorId === meetingCreatorId && !meeting.acceptedUserIds.includes(actorId) && !meeting.targetUserIds.includes(actorId)) {
         return INITIATOR_ACTOR_ROLE;
     }
-    else if (actorId === meeting.acceptedUserId) {
+    else if (meeting.acceptedUserIds.includes(actorId)) {
         return ACCEPTOR_ACTOR_ROLE;
     }
     else if (meeting.targetUserIds.includes(actorId)) {

@@ -3,7 +3,7 @@ import { isTimePast } from './utils.js';
 import { OPEN_OFFER_STATE, ACCEPTED_MEETING_STATE, type Offer } from '../types.js';
 import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
 import { setOfferAccepted, setOfferExpired, setOfferRejected } from './update/offer-update.js';
-import { setMeetingAccepted, updateMeetingState } from './update/meeting-update.js';
+import { setMeetingAccepted, setMeetingAcceptors, updateMeetingState } from './update/meeting-update.js';
 import { getMeetingById, getUserFromMeetingId } from './query/meeting-lookup.js';
 
 // Re-export pure Prisma functions for backward compatibility
@@ -37,7 +37,7 @@ export const acceptOffer = async ({ userId, offerId }
     const acceptedOffer = await setOfferAccepted({ offerId });
 
     // Add user to acceptedUserIds array (also updates acceptedUserId for backward compat)
-    await setMeetingAccepted({ meetingId, userId });
+    await setMeetingAcceptors({ meetingId, userId });
 
     // Refresh meeting to get updated acceptedUserIds
     const updatedMeeting = await getMeetingById({ meetingId });

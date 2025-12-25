@@ -134,7 +134,7 @@ export const setMeetingState = async (
     return updatedMeeting;
 }; 
 
-export const setMeetingAccepted = async ({meetingId, userId}: {meetingId: string, userId: string}): Promise<Meeting> => {
+export const setMeetingAcceptors = async ({meetingId, userId}: {meetingId: string, userId: string}): Promise<Meeting> => {
     const updatedMeeting = await prisma.meeting.update({
         where: {
             id: meetingId,
@@ -157,6 +157,7 @@ export const setMeetingOpen = async ({meetingId}: {meetingId: string}): Promise<
         data: {
             meetingState: SEARCHING_MEETING_STATE,
             acceptedUserId: null,
+            acceptedUserIds: []
         }
     })
     return updatedMeeting;
@@ -184,6 +185,7 @@ export const unclaimBroadcastMeeting = async ({meetingId}: {meetingId: string}):
         data: {
             meetingState: SEARCHING_MEETING_STATE,
             acceptedUserId: null,
+            acceptedUserIds: [],
             broadcastMetadata: {
                 update: {
                     subState: UNCLAIMED_BROADCAST_STATE,

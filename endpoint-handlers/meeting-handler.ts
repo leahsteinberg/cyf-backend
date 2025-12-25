@@ -154,7 +154,7 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
     }
 
     const isBroadcastMeeting = getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE && getEffectiveTargetType(meeting) === OPEN_TARGET_TYPE;
-    const isAcceptor = userId === meeting.acceptedUserId;
+    const isAcceptor = meeting.acceptedUserIds.includes(userId);
     const isInitiatorBroadcasting = await getIsBroadcasting({ userId: meeting.userFromId });
     /// if someone accepts a broadcast meeting then cancels it,
     // need to re-spawn 
