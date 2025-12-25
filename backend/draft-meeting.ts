@@ -57,6 +57,23 @@ export async function createDraftMeeting(params: CreateDraftMeetingParams): Prom
         throw new Error("timeType and targetType are required for draft meetings");
     }
 
+    // Validate participant counts
+    if (minParticipants !== undefined && maxParticipants !== undefined) {
+        if (minParticipants > maxParticipants) {
+            throw new Error("minParticipants cannot exceed maxParticipants");
+        }
+    }
+
+    if (targetUserIds && targetUserIds.length > 0 && maxParticipants !== undefined) {
+        if (maxParticipants > targetUserIds.length) {
+            throw new Error("maxParticipants cannot exceed number of invited users");
+        }
+    }
+
+    if (targetType === 'OPEN' && maxParticipants !== undefined && maxParticipants !== 1) {
+        throw new Error("OPEN meetings must have maxParticipants = 1");
+    }
+
     // Create meeting in DRAFT state with new fields
     const meeting = await createMeeting({
         userFromId,

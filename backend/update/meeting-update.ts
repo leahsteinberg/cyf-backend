@@ -59,6 +59,24 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
         finalTargetType = OPEN_TARGET_TYPE;
     }
 
+    // Validate participant counts
+    const minParticipants = params.minParticipants || 1;
+    const maxParticipants = params.maxParticipants || 1;
+
+    if (minParticipants > maxParticipants) {
+        throw new Error("minParticipants cannot exceed maxParticipants");
+    }
+
+    if (params.targetUserIds && params.targetUserIds.length > 0) {
+        if (maxParticipants > params.targetUserIds.length) {
+            throw new Error("maxParticipants cannot exceed number of invited users");
+        }
+    }
+
+    if (finalTargetType === OPEN_TARGET_TYPE && maxParticipants !== 1) {
+        throw new Error("OPEN meetings must have maxParticipants = 1");
+    }
+
     // Determine if broadcast metadata should be created
     // Broadcast metadata needed when: timeType is IMMEDIATE and targetType is OPEN
     const needsBroadcastMetadata = finalTimeType === IMMEDIATE_TIME_TYPE && finalTargetType === OPEN_TARGET_TYPE;
@@ -83,8 +101,8 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             intentLabel: params.intentLabel || null,
             targetUserIds: params.targetUserIds || [],
             suggestionReason: params.suggestionReason || null,
-            minParticipants: params.minParticipants || 1,
-            maxParticipants: params.maxParticipants || 1,
+            minParticipants,
+            maxParticipants,
 
             // Create broadcast metadata for immediate + open meetings (broadcasts)
             ...(needsBroadcastMetadata && {

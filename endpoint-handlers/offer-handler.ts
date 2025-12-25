@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
-import { acceptOffer, getMeetingOffers, getOfferById, getOffersForUser, setOffersExpired } from '../backend/offer.js';
+import { acceptOffer, getMeetingOffers, getOfferById, getOffersForUser } from '../backend/offer.js';
 import { getMeetingById } from '../backend/query/meeting-lookup.js';
 import { setOfferRejected } from '../backend/update/offer-update.js';
-import { ACCEPTED_MEETING_STATE, ACCEPTED_OFFER_STATE, DRAFT_MEETING_STATE, getEffectiveTargetType, getEffectiveTimeType, IMMEDIATE_TIME_TYPE, OPEN_OFFER_STATE, OPEN_TARGET_TYPE, REJECTED_MEETING_STATE, SEARCHING_MEETING_STATE } from '../types.js';
+import { ACCEPTED_OFFER_STATE, getEffectiveTargetType, getEffectiveTimeType, IMMEDIATE_TIME_TYPE, OPEN_OFFER_STATE, OPEN_TARGET_TYPE, REJECTED_MEETING_STATE } from '../types.js';
 import { setMeetingState } from '../backend/update/meeting-update.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
 
@@ -62,16 +62,11 @@ export const handleAcceptOffer = async (req: Request, res: Response) => {
     if (offer.offerState !== OPEN_OFFER_STATE ) {
       throw new Error("Cannot accept an offer that is not open")
     }
-    const meetingId = offer.meetingId;
-    await transitionMeeting({meetingId, toState: ACCEPTED_MEETING_STATE, actorId: userId})
 
+    // acceptOffer now handles state transitions and expiring offers based on participant counts
+    const acceptedOffer = await acceptOffer({userId, offerId});
 
-    await acceptOffer({userId, offerId});
-    const offers = await getMeetingOffers({ meetingId });
-    const otherOffers = offers.filter(o => o.id !== offerId);
-    await setOffersExpired(otherOffers);
-
-    res.json(offers);
+    res.json(acceptedOffer);
   } catch (error) {
     console.error("Error accepting offer:", error);
     res.status(500).json({ error: `Internal server error attempting to accept meeting. Error: ${error}` });
@@ -101,9 +96,14 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
     
 
     const openOffers = offers.filter(o => o.offerState === OPEN_OFFER_STATE);
+    // Only transition to REJECTED if:
+    // - No open offers remain AND
+    // - Not enough acceptances to meet minParticipants
     if (openOffers.length === 0) {
-      const {meeting, events} = await transitionMeeting({meetingId, toState:REJECTED_MEETING_STATE, actorId: userId})
-
+      const meeting = await getMeetingById({meetingId});
+      if (meeting && meeting.acceptedUserIds.length < meeting.minParticipants) {
+        await transitionMeeting({meetingId, toState: REJECTED_MEETING_STATE, actorId: userId});
+      }
     }
     res.json(rejectedOffer);
 

@@ -14,27 +14,50 @@ export const acceptOffer = async ({ userId, offerId }
     : { userId: string, offerId: string }): Promise<Offer> => {
     const offer = await getOfferById({offerId});
     if (!offer) {
-    // TO DO - make sure we address not having the offer (offer === null)
-    // Return ERROR
-    throw new Error("Could not find valid offer")
-
+        throw new Error("Could not find valid offer");
     }
-    const meetingId = offer?.meetingId;
-    const meeting = getMeetingById({ meetingId });
+
+    const meetingId = offer.meetingId;
+    const meeting = await getMeetingById({ meetingId });
     if (!meeting) {
         throw new Error("Could not find meeting for offer");
     }
 
-    const acceptedOffer = await setOfferAccepted({ offerId });
-    await setMeetingAccepted({ meetingId, userId });
-    // const otherOffers = await getMeetingOffers({ meetingId });
-    // const expiredOffers = await setOffersExpired(otherOffers);
-    const offers = await getMeetingOffers({ meetingId });
+    // Check if user already accepted (prevent duplicates)
+    if (meeting.acceptedUserIds.includes(userId)) {
+        throw new Error("User has already accepted this meeting");
+    }
 
-    const otherOffers = offers.filter(o => o.id !== offerId);
-    console.log("IN HANDLE ACCEPT OFFER __", offer);
-    console.log("other offers ----- :))))", otherOffers);
-    await setOffersExpired(otherOffers);
+    // Check if maxParticipants already reached
+    if (meeting.acceptedUserIds.length >= meeting.maxParticipants) {
+        throw new Error("Meeting has reached maximum participants");
+    }
+
+    // Set offer to ACCEPTED
+    const acceptedOffer = await setOfferAccepted({ offerId });
+
+    // Add user to acceptedUserIds array (also updates acceptedUserId for backward compat)
+    await setMeetingAccepted({ meetingId, userId });
+
+    // Refresh meeting to get updated acceptedUserIds
+    const updatedMeeting = await getMeetingById({ meetingId });
+    if (!updatedMeeting) {
+        throw new Error("Failed to retrieve updated meeting");
+    }
+
+    // Check if we should transition to ACCEPTED state
+    if (updatedMeeting.acceptedUserIds.length >= updatedMeeting.minParticipants &&
+        meeting.meetingState !== ACCEPTED_MEETING_STATE) {
+        // Transition to ACCEPTED (first acceptance when min=1)
+        await updateMeetingState(meeting, ACCEPTED_MEETING_STATE, null);
+    }
+
+    // Check if we've reached maxParticipants - expire remaining offers
+    if (updatedMeeting.acceptedUserIds.length >= updatedMeeting.maxParticipants) {
+        const offers = await getMeetingOffers({ meetingId });
+        const openOffers = offers.filter(o => o.offerState === OPEN_OFFER_STATE);
+        await setOffersExpired(openOffers);
+    }
 
     return acceptedOffer;
 };
