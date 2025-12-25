@@ -160,9 +160,16 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
     // need to re-spawn 
     // a broadcast meeting for the original user so they stay broadcasting
     // this is a special case that I should consider refactoring in the fugture.
-    if (isBroadcastMeeting && isInitiatorBroadcasting ) {
-      if (isAcceptor) {
-        console.log("acceptor is canceling broadcast meeting");
+    if (isBroadcastMeeting && isInitiatorBroadcasting && !isAcceptor) {
+        // the canceling party in this case is the person who started the broadcast
+        // therefore, they are opting to end the broadcast
+        console.log("they are opting to end the broadcast");
+        await setIsNotBroadcasting({userId: meeting.userFromId});
+        res.json(meeting)
+
+    }
+    if (isBroadcastMeeting && isInitiatorBroadcasting && isAcceptor) {
+      console.log("acceptor is canceling broadcast meeting");
         // the canceling party is NOT the broadcaster
         // therefore they should not affect the broadcast
         await createMeeting({
@@ -177,16 +184,14 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
           sourceType: SYSTEM_REAL_TIME_SOURCE_TYPE,
         });
         await setIsBroadcasting({userId: meeting.userFromId});
+        res.json(meeting)
 
-      } else {
-        // the canceling party in this case is the person who started the broadcast
-        // therefore, they are opting to end the broadcast
-        console.log("they are opting to end the broadcast");
-        await setIsNotBroadcasting({userId: meeting.userFromId});
     }
-  }
-  res.json(meeting)
 
+    // TODO - if the initiator cancels, then it's a full cancel,
+    // no re-spawn.
+    // If a/the acceptor cancels, we decide if we re-spawn or not.
+  
 
   } catch (error) {
     console.error("Error canceling meeting:", error);
