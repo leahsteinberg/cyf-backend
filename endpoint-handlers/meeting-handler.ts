@@ -1,5 +1,5 @@
 import { createMeeting, deleteMeetingAndOffers } from "../backend/update/meeting-update.js";
-import { getCreatedMeetings, getAcceptedMeetings, getMeetingById } from "../backend/query/meeting-lookup.js";
+import { getCreatedMeetings, getAcceptedMeetings, getMeetingById, enrichMeetingsWithAcceptedUsers } from "../backend/query/meeting-lookup.js";
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import type { Request, Response } from 'express';
 import { ACCEPTED_MEETING_STATE, CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE, EXPIRED_MEETING_STATE, getEffectiveTargetType, getEffectiveTimeType, IMMEDIATE_TIME_TYPE, OPEN_TARGET_TYPE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, SEARCHING_MEETING_STATE, SYSTEM_ACTOR_ROLE, SYSTEM_REAL_TIME_SOURCE_TYPE } from "../types.js";
@@ -133,7 +133,10 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
     return true;
   });
 
-  res.json(filteredMeetings)
+  // Enrich meetings with acceptedUsers array
+  const enrichedMeetings = await enrichMeetingsWithAcceptedUsers(filteredMeetings);
+
+  res.json(enrichedMeetings)
 }
 
 
@@ -165,7 +168,10 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
         // therefore, they are opting to end the broadcast
         console.log("they are opting to end the broadcast");
         await setIsNotBroadcasting({userId: meeting.userFromId});
-        res.json(meeting)
+
+        // Enrich meeting with acceptedUsers array
+        const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
+        res.json(enrichedMeeting)
 
     }
     if (isBroadcastMeeting && isInitiatorBroadcasting && isAcceptor) {
@@ -184,7 +190,10 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
           sourceType: SYSTEM_REAL_TIME_SOURCE_TYPE,
         });
         await setIsBroadcasting({userId: meeting.userFromId});
-        res.json(meeting)
+
+        // Enrich meeting with acceptedUsers array
+        const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
+        res.json(enrichedMeeting)
 
     }
 

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { getMeetingById, getCreatedMeetings, getAcceptedMeetings } from '../backend/query/meeting-lookup.js';
+import { getMeetingById, getCreatedMeetings, getAcceptedMeetings, enrichMeetingsWithAcceptedUsers } from '../backend/query/meeting-lookup.js';
 import { createMeeting, setMeetingState } from '../backend/update/meeting-update.js';
 import { processOffersForNewMeeting } from '../backend/process-meeting.js';
 import {
@@ -97,9 +97,12 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             updatedScheduledFor: scheduledFor ? finalScheduledFor : 'unchanged'
         });
 
+        // Enrich meeting with acceptedUsers array
+        const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([activatedMeeting]);
+
         res.json({
             success: true,
-            meeting: activatedMeeting,
+            meeting: enrichedMeeting,
             metadata: {
                 timeType,
                 targetType,
@@ -138,6 +141,10 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
         // 5. Refresh to get updated meeting
         const dismissedSuggestion = await getMeetingById({ meetingId });
 
+        if (!dismissedSuggestion) {
+            return res.status(500).json({ error: "Failed to retrieve dismissed suggestion" });
+        }
+
         console.log("Suggestion dismissed:", {
             meetingId,
             timeType: getEffectiveTimeType(suggestion),
@@ -145,9 +152,12 @@ export const handleDismissSuggestion = async (req: Request, res: Response) => {
             intentLabel: suggestion.intentLabel
         });
 
+        // Enrich meeting with acceptedUsers array
+        const [enrichedSuggestion] = await enrichMeetingsWithAcceptedUsers([dismissedSuggestion]);
+
         res.json({
             success: true,
-            dismissedSuggestion
+            dismissedSuggestion: enrichedSuggestion
         });
     } catch (error) {
         console.error("Error dismissing suggestion:", error);

@@ -243,3 +243,45 @@ export const getUserFromMeetingId = async (meetingId: string): Promise<User | nu
     });
     return meeting?.userFrom ?? null;
 };
+
+/**
+ * Enriches meetings with acceptedUsers array containing full User objects
+ * for all users in acceptedUserIds
+ */
+export const enrichMeetingsWithAcceptedUsers = async (meetings: Meeting[]): Promise<Meeting[]> => {
+    // Collect all unique acceptedUserIds across all meetings
+    const allAcceptedUserIds = new Set<string>();
+    meetings.forEach(meeting => {
+        meeting.acceptedUserIds.forEach(userId => allAcceptedUserIds.add(userId));
+    });
+
+    if (allAcceptedUserIds.size === 0) {
+        // No accepted users to fetch, return meetings as-is with empty acceptedUsers arrays
+        return meetings.map(m => ({ ...m, acceptedUsers: [] }));
+    }
+
+    // Fetch all accepted users in a single query
+    const acceptedUsers = await prisma.user.findMany({
+        where: {
+            id: { in: Array.from(allAcceptedUserIds) }
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            username: true,
+            displayUsername: true
+        }
+    });
+
+    // Create a map for quick lookup
+    const userMap = new Map(acceptedUsers.map(user => [user.id, user]));
+
+    // Enrich each meeting with its acceptedUsers array
+    return meetings.map(meeting => ({
+        ...meeting,
+        acceptedUsers: meeting.acceptedUserIds
+            .map(userId => userMap.get(userId))
+            .filter((user): user is NonNullable<typeof user> => user !== undefined)
+    }));
+};
