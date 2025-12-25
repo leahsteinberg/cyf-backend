@@ -201,7 +201,7 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
     // no re-spawn.
     // If a/the acceptor cancels, we decide if we re-spawn or not.
   
-
+    res.json(meeting);
   } catch (error) {
     console.error("Error canceling meeting:", error);
     res.status(500).json({ error: "Internal server error while canceling meeting" });
