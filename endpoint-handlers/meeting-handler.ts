@@ -19,12 +19,13 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
     title,
     // OLD API (deprecated)
     meetingType,
+    targetUserId,  // OLD: single user ID (deprecated)
     // NEW API (preferred)
     timeType,
     targetType,
     sourceType,
     intentLabel,
-    targetUserId
+    targetUserIds  // NEW: array of user IDs
   } = req.body;
 
   try {
@@ -64,7 +65,8 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
       targetType: targetType || undefined,
       sourceType: sourceType || undefined,
       intentLabel: intentLabel || undefined,
-      targetUserId: targetUserId || undefined
+      // Handle both old (targetUserId: string) and new (targetUserIds: string[]) formats
+      targetUserIds: targetUserIds || (targetUserId ? [targetUserId] : undefined)
     });
 
     // Validate meeting was created successfully
