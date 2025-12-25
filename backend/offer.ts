@@ -3,7 +3,7 @@ import { isTimePast } from './utils.js';
 import { OPEN_OFFER_STATE, ACCEPTED_MEETING_STATE, type Offer } from '../types.js';
 import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
 import { setOfferAccepted, setOfferExpired, setOfferRejected } from './update/offer-update.js';
-import { setMeetingAccepted, setMeetingAcceptors, updateMeetingState } from './update/meeting-update.js';
+import { setMeetingAcceptors, updateMeetingState } from './update/meeting-update.js';
 import { getMeetingById, getUserFromMeetingId } from './query/meeting-lookup.js';
 
 // Re-export pure Prisma functions for backward compatibility
@@ -41,13 +41,17 @@ export const acceptOffer = async ({ userId, offerId }
 
     // Refresh meeting to get updated acceptedUserIds
     const updatedMeeting = await getMeetingById({ meetingId });
+    console.log("accept offer - updated meeting:", updatedMeeting);
     if (!updatedMeeting) {
         throw new Error("Failed to retrieve updated meeting");
     }
+    console.log("these have accepted", updatedMeeting.acceptedUserIds);
+
 
     // Check if we should transition to ACCEPTED state
     if (updatedMeeting.acceptedUserIds.length >= updatedMeeting.minParticipants &&
         meeting.meetingState !== ACCEPTED_MEETING_STATE) {
+            
         // Transition to ACCEPTED (first acceptance when min=1)
         await updateMeetingState(meeting, ACCEPTED_MEETING_STATE, null);
     }
