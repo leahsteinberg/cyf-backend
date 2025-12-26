@@ -1,13 +1,11 @@
 import type { Meeting } from '../types.js';
 import {
-    getEffectiveTimeType,
-    getEffectiveTargetType,
+    isBroadcastMeeting,
     PAST_MEETING_STATE,
     DRAFT_MEETING_STATE,
     DISMISSED_DRAFT_MEETING_STATE,
-    IMMEDIATE_TIME_TYPE,
-    OPEN_TARGET_TYPE,
-    UNKNOWN_TIME_TYPE
+    UNKNOWN_TIME_TYPE,
+    getEffectiveTimeType
 } from '../types.js';
 
 /**
@@ -17,7 +15,7 @@ import {
  * - PAST meetings (already happened)
  * - DRAFT meetings (not yet activated)
  * - DISMISSED meetings (user dismissed the suggestion)
- * - BROADCAST meetings (IMMEDIATE + OPEN - don't block calendar)
+ * - BROADCAST meetings (IMMEDIATE - any target type, don't block calendar)
  * - UNKNOWN time meetings (no set time yet)
  *
  * @param userCreatedMeetings - Meetings created by the user
@@ -63,15 +61,13 @@ export const findMeetingTimeConflict = ({
             return true;
         }
 
-        // Exclude BROADCAST meetings (IMMEDIATE + OPEN) - they don't block calendar
-        const timeType = getEffectiveTimeType(meeting);
-        const targetType = getEffectiveTargetType(meeting);
-        const isBroadcast = timeType === IMMEDIATE_TIME_TYPE && targetType === OPEN_TARGET_TYPE;
-        if (isBroadcast) {
+        // Exclude ALL BROADCAST meetings (IMMEDIATE - any target) - they don't block calendar
+        if (isBroadcastMeeting(meeting)) {
             return true;
         }
 
         // Exclude UNKNOWN time meetings (no set time yet)
+        const timeType = getEffectiveTimeType(meeting);
         if (timeType === UNKNOWN_TIME_TYPE) {
             return true;
         }

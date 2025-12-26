@@ -11,6 +11,7 @@ import {
     UNKNOWN_TIME_TYPE,
     OPEN_TARGET_TYPE,
     FRIEND_SPECIFIC_TARGET_TYPE,
+    GROUP_TARGET_TYPE,
     DISMISSED_DRAFT_MEETING_STATE,
     ACCEPTED_MEETING_STATE,
     PAST_MEETING_STATE,
@@ -41,9 +42,15 @@ export const processOffersForNewMeeting = async (meeting: Meeting): Promise<Meet
     console.log(`Processing new meeting: timeType=${timeType}, targetType=${targetType}`);
 
     // Route based on flexible type combination
-    if (timeType === IMMEDIATE_TIME_TYPE && targetType === OPEN_TARGET_TYPE) {
-        // BROADCAST: Parallel offers to all friends, immediate
-        return await processNewBroadcastMeeting(meeting);
+    // Handle ALL IMMEDIATE meetings (broadcasts - can be OPEN, FRIEND_SPECIFIC, or GROUP)
+    if (timeType === IMMEDIATE_TIME_TYPE) {
+        if (targetType === OPEN_TARGET_TYPE) {
+            // OPEN BROADCAST: Parallel offers to all friends, immediate
+            return await processNewBroadcastMeeting(meeting);
+        } else if (targetType === FRIEND_SPECIFIC_TARGET_TYPE || targetType === GROUP_TARGET_TYPE) {
+            // TARGETED BROADCAST: Offers to specific users, immediate
+            return await processNewTargetedBroadcastMeeting(meeting);
+        }
     }
 
     if (timeType === FUTURE_TIME_TYPE && targetType === OPEN_TARGET_TYPE) {
@@ -68,7 +75,7 @@ export const processOffersForNewMeeting = async (meeting: Meeting): Promise<Meet
 }
 
 /**
- * Process new BROADCAST meeting (IMMEDIATE + OPEN)
+ * Process new OPEN BROADCAST meeting (IMMEDIATE + OPEN)
  * Creates offers to all friends immediately with 1-hour expiration
  */
 async function processNewBroadcastMeeting(meeting: Meeting): Promise<Meeting> {
@@ -81,7 +88,36 @@ async function processNewBroadcastMeeting(meeting: Meeting): Promise<Meeting> {
 
     await Promise.all(offerPromises);
 
-    console.log(`Created ${allFriendIds.length} broadcast offers for meeting ${meeting.id}`);
+    console.log(`Created ${allFriendIds.length} OPEN broadcast offers for meeting ${meeting.id}`);
+    return meeting;
+}
+
+/**
+ * Process new TARGETED BROADCAST meeting (IMMEDIATE + FRIEND_SPECIFIC or GROUP)
+ * Creates offers to specific users immediately with 1-hour expiration
+ */
+async function processNewTargetedBroadcastMeeting(meeting: Meeting): Promise<Meeting> {
+    const targetUserIds = meeting.targetUserIds;
+
+    if (!targetUserIds || targetUserIds.length === 0) {
+        throw new Error('Targeted broadcast meeting missing targetUserIds');
+    }
+
+    // Verify all target users are friends
+    const allFriendIds = await getFriendIds(meeting.userFromId);
+    const invalidTargets = targetUserIds.filter(id => !allFriendIds.includes(id));
+    if (invalidTargets.length > 0) {
+        throw new Error(`Target users ${invalidTargets.join(', ')} are not friends of ${meeting.userFromId}`);
+    }
+
+    // Create immediate offers to each target user
+    const offerPromises = targetUserIds.map(friendId =>
+        makeBroadcastOffer({ meeting, userOfferedId: friendId })
+    );
+
+    await Promise.all(offerPromises);
+
+    console.log(`Created ${targetUserIds.length} targeted broadcast offers for meeting ${meeting.id}`);
     return meeting;
 }
 
@@ -202,7 +238,13 @@ const processOffersForBroadcastMeeting = async(meeting: Meeting) => {
     if (meetingInPast) {
         const offers = await getMeetingOffers({meetingId})
         await setOffersExpired(offers);
-        await setIsNotBroadcasting({userId: meeting.userFromId});
+
+        // Only turn off isBroadcasting flag for OPEN broadcasts, not targeted broadcasts
+        const targetType = getEffectiveTargetType(meeting);
+        if (targetType === OPEN_TARGET_TYPE) {
+            await setIsNotBroadcasting({userId: meeting.userFromId});
+        }
+
         return await setMeetingState({meetingId, meetingState: PAST_MEETING_STATE});
     }
     return meeting;
@@ -229,8 +271,8 @@ export const processOffersForMeeting = async (meeting: Meeting) => {
     const timeType = getEffectiveTimeType(meeting);
     const targetType = getEffectiveTargetType(meeting);
 
-    // Handle BROADCAST meetings (IMMEDIATE + OPEN)
-    if (timeType === IMMEDIATE_TIME_TYPE && targetType === OPEN_TARGET_TYPE) {
+    // Handle ALL BROADCAST meetings (any IMMEDIATE meeting, regardless of target)
+    if (timeType === IMMEDIATE_TIME_TYPE) {
         return processOffersForBroadcastMeeting(meeting);
     }
 

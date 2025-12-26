@@ -258,3 +258,23 @@ export function getEffectiveTargetType(meeting: Meeting): TargetType {
     // Fallback: derive from old meetingType
     return meetingTypeToNew(meeting.meetingType).targetType;
 }
+
+/**
+ * Checks if a meeting is a broadcast (IMMEDIATE time, any target type)
+ * A broadcast is defined by being IMMEDIATE (happening now), not by who it targets
+ * - IMMEDIATE + OPEN = broadcast to all friends
+ * - IMMEDIATE + FRIEND_SPECIFIC = broadcast to specific friend(s)
+ * - IMMEDIATE + GROUP = broadcast to a group
+ */
+export function isBroadcastMeeting(meeting: Meeting): boolean {
+    return getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE;
+}
+
+/**
+ * Checks if a meeting is an OPEN broadcast (broadcast to all friends)
+ * This is the legacy/traditional broadcast behavior
+ */
+export function isOpenBroadcast(meeting: Meeting): boolean {
+    return getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE &&
+           getEffectiveTargetType(meeting) === OPEN_TARGET_TYPE;
+}

@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { acceptOffer, getMeetingOffers, getOfferById, getOffersForUser } from '../backend/offer.js';
 import { getMeetingById } from '../backend/query/meeting-lookup.js';
 import { setOfferRejected } from '../backend/update/offer-update.js';
-import { ACCEPTED_OFFER_STATE, getEffectiveTargetType, getEffectiveTimeType, IMMEDIATE_TIME_TYPE, OPEN_OFFER_STATE, OPEN_TARGET_TYPE, REJECTED_MEETING_STATE } from '../types.js';
+import { ACCEPTED_OFFER_STATE, isBroadcastMeeting, OPEN_OFFER_STATE, REJECTED_MEETING_STATE } from '../types.js';
 import { setMeetingState } from '../backend/update/meeting-update.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
 
@@ -19,16 +19,13 @@ export const handleGetOffers = async (req: Request, res: Response) => {
     const offers = await getOffersForUser({ userId });
 
     // Filter out duplicate broadcast offers from the same user, keeping only the newest
+    // This applies to ALL broadcasts (IMMEDIATE), not just OPEN broadcasts
     const seenBroadcastUsers = new Set<string>();
     const filteredOffers = offers.filter(offer => {
       const meeting = (offer as any).meeting;
       if (!meeting) return true;
 
-      const timeType = getEffectiveTimeType(meeting);
-      const targetType = getEffectiveTargetType(meeting);
-      const isBroadcast = timeType === IMMEDIATE_TIME_TYPE && targetType === OPEN_TARGET_TYPE;
-
-      if (isBroadcast) {
+      if (isBroadcastMeeting(meeting)) {
         const userFromId = meeting.userFromId;
         if (seenBroadcastUsers.has(userFromId)) {
           return false; // Filter out duplicate

@@ -12,7 +12,8 @@ import {
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
     FUTURE_TIME_TYPE,
-    SYSTEM_REAL_TIME_SOURCE_TYPE
+    SYSTEM_REAL_TIME_SOURCE_TYPE,
+    isOpenBroadcast
 } from '../types.js';
 import { findMeetingTimeConflict } from '../backend/meeting-conflict.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
@@ -76,10 +77,10 @@ export const handleAcceptSuggestion = async (req: Request, res: Response) => {
             ...(scheduledEnd && { scheduledEnd: finalScheduledEnd })
         })
 
-        // if the activated suggestion is a current broadcast, need to set broadcast to true
+        // if the activated suggestion is an OPEN broadcast, set isBroadcasting flag
 
         const activatedMeeting = await getMeetingById({ meetingId });
-        if (activatedMeeting?.timeType === IMMEDIATE_TIME_TYPE && activatedMeeting.targetType === OPEN_TARGET_TYPE) {
+        if (activatedMeeting && isOpenBroadcast(activatedMeeting)) {
             await setIsBroadcasting({userId});
         }
 
