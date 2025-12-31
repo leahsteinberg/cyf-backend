@@ -3,6 +3,8 @@ import { processOffersForNewMeeting } from './process-meeting.js';
 import { setIsBroadcasting } from './update/user-update.js';
 import type { Meeting } from '../types.js';
 import {
+    FUTURE_TIME_TYPE,
+    OPEN_TARGET_TYPE,
     SEARCHING_MEETING_STATE,
     SYSTEM_REAL_TIME_SOURCE_TYPE,
     isOpenBroadcast
@@ -38,12 +40,12 @@ export const respawnMeeting = async (cancelledMeeting: Meeting): Promise<Meeting
         scheduledEnd: cancelledMeeting.scheduledEnd,
         title: cancelledMeeting.title || 'Meeting',
         meetingState: SEARCHING_MEETING_STATE,
-        timeType: cancelledMeeting.timeType || undefined,
-        targetType: cancelledMeeting.targetType || undefined,
+        timeType: cancelledMeeting.timeType || FUTURE_TIME_TYPE,
+        targetType: cancelledMeeting.targetType || OPEN_TARGET_TYPE,
         targetUserIds: cancelledMeeting.targetUserIds || [],
         sourceType: SYSTEM_REAL_TIME_SOURCE_TYPE,
-        minParticipants: cancelledMeeting.minParticipants,
-        maxParticipants: cancelledMeeting.maxParticipants,
+        minParticipants: cancelledMeeting.minParticipants ?? 1,
+        maxParticipants: cancelledMeeting.maxParticipants ?? 1,
     });
 
     // Process offers using unified logic (handles all target types)
