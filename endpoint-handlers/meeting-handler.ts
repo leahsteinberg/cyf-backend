@@ -156,6 +156,9 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
     const isAnOpenBroadcast = isOpenBroadcast(meeting);
     const isAcceptor = meeting.acceptedUserIds.includes(userId);
     const isInitiatorBroadcasting = await isBroadcastingToUser({possibleBroadcasterId: meeting.userFromId, userId});
+    console.log("Cancelling a broadcast meeting?? ",{isAnOpenBroadcast, isAcceptor, isInitiatorBroadcasting});
+
+
     /// if someone accepts an OPEN broadcast meeting then cancels it,
     // need to re-spawn a broadcast meeting for the original user so they stay broadcasting
     // this is a special case that I should consider refactoring in the future.
