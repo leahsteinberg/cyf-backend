@@ -1,12 +1,13 @@
 import { createMeeting } from "../backend/update/meeting-update.js";
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById, enrichMeetingsWithAcceptedUsers } from "../backend/query/meeting-lookup.js";
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
+import { respawnMeeting } from "../backend/respawn-meeting.js";
 import type { Request, Response } from 'express';
-import { ACCEPTED_MEETING_STATE, CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE, EXPIRED_MEETING_STATE, IMMEDIATE_TIME_TYPE, OPEN_TARGET_TYPE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, SEARCHING_MEETING_STATE, SYSTEM_REAL_TIME_SOURCE_TYPE, isBroadcastMeeting, isOpenBroadcast } from "../types.js";
+import { ACCEPTED_MEETING_STATE, CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE, EXPIRED_MEETING_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, SEARCHING_MEETING_STATE, isBroadcastMeeting, isOpenBroadcast } from "../types.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
 import { transitionMeeting } from "../backend/transition-meeting.js";
 import { getMeetingOffers, setOffersExpired } from "../backend/offer.js";
-import { setIsBroadcasting, setIsNotBroadcasting } from "../backend/update/user-update.js";
+import { setIsNotBroadcasting } from "../backend/update/user-update.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -155,64 +156,39 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
     const offers = await getMeetingOffers({meetingId});
     await setOffersExpired(offers);
 
-    // Determine if this is a broadcast meeting (IMMEDIATE - any target type)
-    const isBroadcast = isBroadcastMeeting(meeting);
+    // Determine who cancelled
     const isCreator = meeting.userFromId === userId;
     const isAcceptor = meeting.acceptedUserIds?.includes(userId) || false;
 
     console.log("Cancel context:", {
-      isBroadcast,
       isCreator,
       isAcceptor,
       meetingType: meeting.timeType || meeting.meetingType
     });
 
-    // Handle IMMEDIATE (broadcast) meeting cancellations
-    if (isBroadcast) {
-      if (isAcceptor) {
-        // ACCEPTOR CANCELS: Re-create meeting in SEARCHING state
-        // This returns the broadcast to its previous state, giving the acceptor a new offer
-        console.log("Acceptor cancelled broadcast - re-spawning meeting");
+    if (isAcceptor) {
+      // ACCEPTOR CANCELS: Respawn for ALL meeting types
+      // This returns the meeting to circulation, giving the creator and all recipients (including canceller) another chance
+      console.log("Acceptor cancelled - respawning meeting");
+      await respawnMeeting(meeting);
 
-        const respawnedMeeting = await createMeeting({
-          userFromId: meeting.userFromId,
-          scheduledEnd: meeting.scheduledEnd,
-          scheduledFor: meeting.scheduledFor,
-          title: meeting.title || 'Broadcast meeting',
-          meetingState: SEARCHING_MEETING_STATE,
-          timeType: meeting.timeType || IMMEDIATE_TIME_TYPE,
-          targetType: meeting.targetType || OPEN_TARGET_TYPE,
-          targetUserIds: meeting.targetUserIds || [],
-          sourceType: SYSTEM_REAL_TIME_SOURCE_TYPE,
-        });
+      const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
+      return res.json(enrichedMeeting);
 
-        // Process offers for the re-spawned meeting (uses unified logic)
-        await processOffersForNewMeeting(respawnedMeeting);
+    } else if (isCreator) {
+      // CREATOR CANCELS: Full cancellation, no respawn
+      console.log("Creator cancelled - full cancellation");
 
-        // Set isBroadcasting flag ONLY for OPEN broadcasts
-        if (isOpenBroadcast(respawnedMeeting)) {
-          await setIsBroadcasting({userId: meeting.userFromId});
-        }
-
-        const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
-        return res.json(enrichedMeeting);
-
-      } else if (isCreator) {
-        // CREATOR CANCELS: Full cancellation, no re-spawn
-        // Remove broadcast status (offers already expired above)
-        console.log("Creator cancelled broadcast - ending broadcast completely");
-
-        // Clear isBroadcasting flag ONLY for OPEN broadcasts
-        if (isOpenBroadcast(meeting)) {
-          await setIsNotBroadcasting({userId: meeting.userFromId});
-        }
-
-        const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
-        return res.json(enrichedMeeting);
+      // Clear isBroadcasting flag ONLY for OPEN broadcasts
+      if (isOpenBroadcast(meeting)) {
+        await setIsNotBroadcasting({userId: meeting.userFromId});
       }
+
+      const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
+      return res.json(enrichedMeeting);
     }
 
-    // For non-broadcast meetings, just return the cancelled meeting
+    // Fallback: neither creator nor acceptor (system cancellation?)
     const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
     res.json(enrichedMeeting);
 
