@@ -51,10 +51,6 @@ export const respawnMeeting = async (cancelledMeeting: Meeting): Promise<Meeting
     // Process offers using unified logic (handles all target types)
     await processOffersForNewMeeting(respawnedMeeting);
 
-    // Set isBroadcasting flag ONLY for OPEN broadcasts
-    if (isOpenBroadcast(respawnedMeeting)) {
-        await setIsBroadcasting({userId: cancelledMeeting.userFromId});
-    }
 
     return respawnedMeeting;
 };

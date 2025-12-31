@@ -7,7 +7,7 @@ import { ACCEPTED_MEETING_STATE, CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
 import { transitionMeeting } from "../backend/transition-meeting.js";
 import { getMeetingOffers, setOffersExpired } from "../backend/offer.js";
-import { setIsNotBroadcasting } from "../backend/update/user-update.js";
+import { setIsBroadcasting, setIsNotBroadcasting } from "../backend/update/user-update.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -170,7 +170,12 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
       // ACCEPTOR CANCELS: Respawn for ALL meeting types
       // This returns the meeting to circulation, giving the creator and all recipients (including canceller) another chance
       console.log("Acceptor cancelled - respawning meeting");
-      await respawnMeeting(meeting);
+      const respawnedMeeting = await respawnMeeting(meeting);
+
+          // Set isBroadcasting flag ONLY for OPEN broadcasts
+      if (isOpenBroadcast(respawnedMeeting)) {
+        await setIsBroadcasting({userId: meeting.userFromId});
+      }
 
       const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
       return res.json(enrichedMeeting);
