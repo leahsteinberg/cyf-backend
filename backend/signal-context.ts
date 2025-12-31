@@ -1,6 +1,6 @@
 import { getUserContextInfo } from "./query/user-lookup.js";
 import { getUserSignalsForUser } from "./query/signal-lookup.js";
-import { getFriendsWithDetails } from "./query/friendship-lookup.js";
+import { getFriendsWithDetails, enrichFriendsWithBroadcastStatus } from "./query/friendship-lookup.js";
 import { getCreatedMeetings, getAcceptedMeetings } from "./query/meeting-lookup.js";
 import {
     buildCallIntentContext,
@@ -22,6 +22,12 @@ export async function buildSuggestionContext(userId: string) {
     const createdMeetings = await getCreatedMeetings({ userFromId: userId });
     const acceptedMeetings = await getAcceptedMeetings({ acceptedUserId: userId });
 
+    // Enrich friends with viewer-specific broadcast status
+    const enrichedFriends = await enrichFriendsWithBroadcastStatus({
+        friends,
+        viewerId: userId
+    });
+
     return {
         user: {
             id: user.id,
@@ -39,7 +45,7 @@ export async function buildSuggestionContext(userId: string) {
             timeOfDayPreferences: buildTimeOfDayPreferenceContext(signals),
             workHours: buildWorkHoursContext(signals)
         },
-        friends,
+        friends: enrichedFriends,
         recentMeetings: buildRecentMeetingsContext(createdMeetings, acceptedMeetings)
     };
   }

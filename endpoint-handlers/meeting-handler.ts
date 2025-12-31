@@ -9,6 +9,7 @@ import { transitionMeeting } from "../backend/transition-meeting.js";
 import { getMeetingOffers, setOffersExpired } from "../backend/offer.js";
 import { getIsBroadcasting } from "../backend/query/user-lookup.js";
 import { setIsBroadcasting, setIsNotBroadcasting } from "../backend/update/user-update.js";
+import { isBroadcastingToUser } from "../backend/broadcast-to-user.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -154,7 +155,7 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
     // Check if this is an OPEN broadcast (isBroadcasting flag is only for OPEN broadcasts)
     const isAnOpenBroadcast = isOpenBroadcast(meeting);
     const isAcceptor = meeting.acceptedUserIds.includes(userId);
-    const isInitiatorBroadcasting = await getIsBroadcasting({ userId: meeting.userFromId });
+    const isInitiatorBroadcasting = await isBroadcastingToUser({possibleBroadcasterId: meeting.userFromId, userId});//getIsBroadcasting({ userId: meeting.userFromId });
     /// if someone accepts an OPEN broadcast meeting then cancels it,
     // need to re-spawn a broadcast meeting for the original user so they stay broadcasting
     // this is a special case that I should consider refactoring in the future.

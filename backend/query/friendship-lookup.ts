@@ -1,5 +1,7 @@
-import type { Friendship } from "../../types.js";
+import type { Friendship, User } from "../../types.js";
+import { getEffectiveTimeType, IMMEDIATE_TIME_TYPE, SEARCHING_MEETING_STATE } from "../../types.js";
 import { prisma } from "../auth.js";
+import { getOfferedMeetings } from "../meeting.js";
 
 export const getFriendshipsUser1Side = async (id: string): Promise<Friendship[]> => {
     const friendships = await prisma.friendship.findMany({
@@ -40,3 +42,44 @@ export const getFriendsWithDetails = async ({ userId }: { userId: string }) => {
 
     return friends;
 }
+
+/**
+ * Enriches friends list with viewer-specific broadcast status.
+ *
+ * For each friend, adds `isBroadcastingToMe` field indicating whether
+ * that friend is currently broadcasting TO the viewer.
+ *
+ * Uses batch approach for performance: fetches all offered meetings once,
+ * then performs in-memory filtering to avoid N+1 queries.
+ *
+ * @param friends - Array of friend User objects to enrich
+ * @param viewerId - ID of the user viewing the friend list
+ * @returns Friends with added `isBroadcastingToMe` boolean field
+ */
+export const enrichFriendsWithBroadcastStatus = async ({
+    friends,
+    viewerId
+}: {
+    friends: User[],
+    viewerId: string
+}): Promise<Array<User & { isBroadcastingToMe: boolean }>> => {
+    // Batch check: Get all meetings offered to the viewer
+    const offeredMeetings = await getOfferedMeetings(viewerId);
+
+    // Filter to only IMMEDIATE/SEARCHING meetings (active broadcasts)
+    const broadcastMeetings = offeredMeetings.filter(
+        m => getEffectiveTimeType(m) === IMMEDIATE_TIME_TYPE &&
+             m.meetingState === SEARCHING_MEETING_STATE
+    );
+
+    // Create set of broadcaster IDs for O(1) lookup
+    const broadcasterIds = new Set(
+        broadcastMeetings.map(m => m.userFromId)
+    );
+
+    // Enrich each friend with broadcast status
+    return friends.map(friend => ({
+        ...friend,
+        isBroadcastingToMe: broadcasterIds.has(friend.id)
+    }));
+};
