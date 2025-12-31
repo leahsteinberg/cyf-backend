@@ -1,3 +1,5 @@
+import { FRIEND_SPECIFIC_TARGET_TYPE, GROUP_TARGET_TYPE, OPEN_TARGET_TYPE, type TargetType } from "../types.js";
+
 export const isTimePast = async ({eventTime}: {eventTime: Date}): Promise<boolean> => {
     const now = new Date();
     return ((eventTime.getTime() - now.getTime()) <= -15);
@@ -64,4 +66,18 @@ export const getRelativeDateString = (meetingTime: Date, timezone: string | null
         day: 'numeric',
         timeZone: tz
     });
+};
+
+
+export const determineTargetType = (targetUserIds: string[]): TargetType => {
+    if (!targetUserIds) {
+        return OPEN_TARGET_TYPE;
+    }
+    // Determine targetType based on number of selected friends
+    if (targetUserIds.length === 0) {
+        return OPEN_TARGET_TYPE;
+    } else if (targetUserIds.length === 1) {
+        return FRIEND_SPECIFIC_TARGET_TYPE;
+    }
+    return GROUP_TARGET_TYPE;
 };

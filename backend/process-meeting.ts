@@ -46,7 +46,9 @@ export const processOffersForNewMeeting = async (meeting: Meeting): Promise<Meet
     if (timeType === IMMEDIATE_TIME_TYPE) {
         if (targetType === OPEN_TARGET_TYPE) {
             // OPEN BROADCAST: Parallel offers to all friends, immediate
+            // this is an error state
             return await processNewBroadcastMeeting(meeting);
+      
         } else if (targetType === FRIEND_SPECIFIC_TARGET_TYPE || targetType === GROUP_TARGET_TYPE) {
             // TARGETED BROADCAST: Offers to specific users, immediate
             return await processNewTargetedBroadcastMeeting(meeting);
@@ -195,8 +197,7 @@ async function processNewFriendSpecificMeeting(meeting: Meeting): Promise<Meetin
 export const makeBroadcastOffer = async({meeting, userOfferedId}:
     {meeting: Meeting; userOfferedId: string
     }): Promise<Offer | undefined> => {
-        const expiresAt = addHour(new Date());
-        const offer = await makeOffer({meeting, userOfferedId, expiresAt});
+        const offer = await makeOffer({meeting, userOfferedId, expiresAt: meeting.scheduledEnd});
         return offer;
     }
 
@@ -227,7 +228,7 @@ export const makeOffer = async ({meeting, userOfferedId, expiresAt }:
     const offer = await createOffer({meetingId, userOfferedId, expiresAt});
     console.log("New Offer", offer)
     if (offer) {
-        createAndSendOfferPush({ offer });
+        await createAndSendOfferPush({ offer });
     }
     return offer;
 }

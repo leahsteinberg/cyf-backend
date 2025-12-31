@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { createMeeting } from '../backend/update/meeting-update.js';
-import { addHour } from '../backend/utils.js';
+import { addHour, determineTargetType, minutesSince } from '../backend/utils.js';
 import { processNewBroadcastMeeting } from '../backend/process-broadcast.js';
 import { processOffersForNewMeeting } from '../backend/process-meeting.js';
 import { setOffersExpired } from '../backend/offer.js';
@@ -8,7 +8,7 @@ import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
-import { getMeetingOffers } from '../backend/query/offer-lookup.js';
+import { getMeetingOffers, getOfferById } from '../backend/query/offer-lookup.js';
 import {
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
@@ -36,30 +36,18 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
         const activeBroadcast = createdMeetings.find(m => {
             return isOpenBroadcast(m) && m.meetingState !== PAST_MEETING_STATE;
         });
-
-        // if (activeBroadcast) {
-        //     return res.status(409).json({
-        //         error: "You already have an active broadcast",
-        //         existingBroadcast: activeBroadcast
-        //     });
-        // }
+        if (activeBroadcast) {
+            // do not make a new broadcast and use the existing one.
+            const offers = await getMeetingOffers({meetingId: activeBroadcast.id});
+            const expiredOffers = await setOffersExpired(offers);
+            await setIsNotBroadcasting({userId});
+        }
 
         const scheduledFor = new Date();
         const scheduledEnd = addHour(scheduledFor);
 
         // Determine targetType based on targetUserIds
-        let targetType = OPEN_TARGET_TYPE; // Default: broadcast to all friends
-        let maxParticipants = 1; // Default for OPEN broadcasts
-
-        if (targetUserIds && targetUserIds.length > 0) {
-            // Targeted broadcast to specific users
-            if (targetUserIds.length === 1) {
-                targetType = FRIEND_SPECIFIC_TARGET_TYPE;
-            } else {
-                targetType = GROUP_TARGET_TYPE;
-            }
-            maxParticipants = targetUserIds.length;
-        }
+        const targetType = determineTargetType(targetUserIds);
 
         console.log('[METRICS] api.broadcast_now', {
             userId,
@@ -79,7 +67,7 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             sourceType: USER_INTENT_SOURCE_TYPE,
             targetUserIds: targetUserIds || [],
             minParticipants: 1,
-            maxParticipants,
+            maxParticipants: 1,
         });
 
         // Validate meeting was created successfully before creating offers
@@ -97,8 +85,9 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
         } else {
             // Targeted broadcast: use general offer processing (will route to targeted broadcast handler)
             processedBroadcast = await processOffersForNewMeeting(meeting);
+            // await setIsBroadcasting({ userId });
+            // need to handle the "isBroadcasting" state for smaller broadcasts
         }
-
         res.json({ success: true, userId, meeting: processedBroadcast });
     } catch (error) {
         console.error("Error in broadcast now:", error);

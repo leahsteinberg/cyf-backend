@@ -2,7 +2,8 @@
 import type { Meeting, Offer } from '../types.js';
 import { isBroadcastMeeting } from '../types.js';
 import { getMeetingOffers } from './offer.js';
-import { getAcceptedOfferByMeetingId } from './query/offer-lookup.js';
+import { getMeetingById } from './query/meeting-lookup.js';
+import { getAcceptedOfferByMeetingId, getOffersForUser } from './query/offer-lookup.js';
 import { deleteMeetingAndOffers, setMeetingOpen } from './update/meeting-update.js';
 import { setOfferOpen } from './update/offer-update.js';
 
@@ -38,3 +39,17 @@ export const unacceptMeetingByAcceptor = async ({meetingId}: {meetingId: string}
   return reOpenedOffer;
 
 }
+
+
+export const getOfferedMeetings = async (userId: string): Promise<Meeting[]> =>
+    {
+        const offers = await getOffersForUser({userId});
+        const meetingIds = offers.map((o: Offer) => o.meetingId);
+        const meetingsOfferedPromises = meetingIds.map((meetingId: string) => getMeetingById({meetingId}));
+        const meetings = await Promise.all(meetingsOfferedPromises);
+        const filteredMeetings = meetings.filter((m) => !!m);
+        if (!filteredMeetings) {
+            return [];
+        }
+        return filteredMeetings;
+    }

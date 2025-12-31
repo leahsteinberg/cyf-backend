@@ -91,7 +91,7 @@ export const processNewBroadcastMeeting = async ({meeting}: {meeting: Meeting}):
     const allFriendIds = await getFriendIds(userFrom);
     console.log("broadcast meeting - allfriendIds, ", allFriendIds)
     for (let friendId of allFriendIds) {
-        await makeBroadcastOffer({meeting, userOfferedId: friendId})
+        await makeBroadcastOffer({meeting, userOfferedId: friendId});
     }
 
     return meeting;
