@@ -1,0 +1,72 @@
+import { FRIEND_SPECIFIC_TARGET_TYPE, GROUP_TARGET_TYPE, OPEN_TARGET_TYPE } from "../types.js";
+export const isTimePast = async ({ eventTime }) => {
+    const now = new Date();
+    return ((eventTime.getTime() - now.getTime()) <= -15);
+};
+export const minutesUntil = async ({ eventTime }) => {
+    const now = new Date();
+    const timeBetween = eventTime.getTime() - now.getTime();
+    // turn time between into number of minutes
+    const minutesUntil = (timeBetween / 1000) / 60;
+    return minutesUntil;
+};
+export const minutesSince = async ({ eventTime }) => {
+    const now = new Date();
+    const timeBetween = now.getTime() - eventTime.getTime();
+    // turn time between into number of minutes
+    const minutesSince = (timeBetween / 1000) / 60;
+    return minutesSince;
+};
+export const minutesBetween = async ({ earlierTime, laterTime }) => {
+    const timeBetween = laterTime.getTime() - earlierTime.getTime();
+    const minutes = (timeBetween / 1000) / 60;
+    return minutes;
+};
+export const addHour = (date) => {
+    return new Date(date.getTime() + 60 * 60 * 1000);
+};
+/**
+ * Generates a relative date string for push notifications
+ * Uses user's timezone for accurate day comparisons
+ */
+export const getRelativeDateString = (meetingTime, timezone) => {
+    const now = new Date();
+    // Use timezone if available, otherwise fall back to UTC
+    const tz = timezone || 'UTC';
+    // Get date parts in user's timezone
+    const nowInTz = new Date(now.toLocaleString('en-US', { timeZone: tz }));
+    const meetingInTz = new Date(meetingTime.toLocaleString('en-US', { timeZone: tz }));
+    // Compare dates (ignoring time)
+    const today = new Date(nowInTz.getFullYear(), nowInTz.getMonth(), nowInTz.getDate());
+    const meetingDay = new Date(meetingInTz.getFullYear(), meetingInTz.getMonth(), meetingInTz.getDate());
+    const diffDays = Math.round((meetingDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays === 0)
+        return "Today";
+    if (diffDays === 1)
+        return "Tomorrow";
+    if (diffDays >= 2 && diffDays <= 6) {
+        // Return day name (e.g., "Monday")
+        return meetingTime.toLocaleDateString('en-US', { weekday: 'long', timeZone: tz });
+    }
+    // For dates further out, use "Mon, Nov 17" format
+    return meetingTime.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        timeZone: tz
+    });
+};
+export const determineTargetType = (targetUserIds) => {
+    if (!targetUserIds) {
+        return OPEN_TARGET_TYPE;
+    }
+    // Determine targetType based on number of selected friends
+    if (targetUserIds.length === 0) {
+        return OPEN_TARGET_TYPE;
+    }
+    else if (targetUserIds.length === 1) {
+        return FRIEND_SPECIFIC_TARGET_TYPE;
+    }
+    return GROUP_TARGET_TYPE;
+};
+//# sourceMappingURL=utils.js.map

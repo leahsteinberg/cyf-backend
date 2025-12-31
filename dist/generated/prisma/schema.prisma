@@ -1,0 +1,234 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String       @id
+  email               String       @unique
+  name                String?
+  emailVerified       Boolean      @default(false)
+  image               String?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @default(now()) @updatedAt
+  sessions            Session[]
+  accounts            Account[]
+  phoneNumber         String?
+  phoneNumberVerified Boolean?
+  pushToken           String?
+  timezone            String?
+  friendsWith         Friendship[] @relation("friendsWith")
+  friendsOf           Friendship[] @relation("friendsOf")
+  invitesSent         Invitation[] @relation("invitesSent")
+  meetingsCreated     Meeting[]    @relation("meetingsCreated")
+  offersReceived      Offer[]      @relation("offersReceived")
+  meetingsAccepted    Meeting[]    @relation("meetingsAccepted")
+  isBroadcasting      Boolean      @default(false)
+  userSignals         UserSignal[] @relation("userSignals")
+
+  username        String?
+  displayUsername String?
+
+  @@unique([phoneNumber])
+  @@unique([username])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+model Friendship {
+  id    String @id @default(uuid())
+  user1 User   @relation("friendsOf", fields: [userId1], references: [id])
+  user2 User   @relation("friendsWith", fields: [userId2], references: [id])
+
+  userId1 String
+  userId2 String
+
+  @@map("friendship")
+}
+
+model Invitation {
+  id                String   @id @default(uuid())
+  token             String   @default(uuid())
+  userFrom          User     @relation("invitesSent", fields: [userFromId], references: [id])
+  userFromId        String
+  userToPhoneNumber String
+  createdAt         DateTime @default(now())
+  accepted          Boolean  @default(false)
+
+  @@map("invitation")
+}
+
+model Meeting {
+  id                   String       @id @default(uuid())
+  userFrom             User         @relation("meetingsCreated", fields: [userFromId], references: [id])
+  userFromId           String
+  acceptedUserId       String?
+  acceptedUser         User?        @relation("meetingsAccepted", fields: [acceptedUserId], references: [id])
+  acceptedUserIds      String[]     @default([])
+  createdAt            DateTime     @default(now())
+  scheduledFor         DateTime
+  scheduledEnd         DateTime
+  backupScheduledTimes DateTime[]
+  offers               Offer[]      @relation("offers")
+  title                String?
+  meetingState         MeetingState @default(SEARCHING)
+
+  // OLD FIELD - Keep for backwards compatibility during migration
+  meetingType MeetingType @default(ADVANCE)
+
+  // NEW FIELDS - Nullable during migration, will become required later
+  timeType         TimeType? // When: IMMEDIATE, FUTURE, UNKNOWN
+  targetType       TargetType? // Who: OPEN, FRIEND_SPECIFIC, GROUP
+  sourceType       SourceType? // Optional: tracks who/what triggered this
+  intentLabel      String? // Optional: semantic label like "catch_up", "quick_hi"
+  targetUserIds    String[]    @default([]) // For FRIEND_SPECIFIC or GROUP meetings
+  suggestionReason String? // Optional: reason why this meeting was suggested
+  minParticipants  Int         @default(1)
+  maxParticipants  Int         @default(1)
+
+  broadcastMetadata BroadcastMetadata?
+
+  @@map("meeting")
+}
+
+model BroadcastMetadata {
+  id             String            @id @default(uuid())
+  meeting        Meeting           @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  meetingId      String            @unique
+  subState       BroadcastSubState @default(UNCLAIMED)
+  pendingAt      DateTime?
+  offerClaimed   Offer?            @relation("broadcastClaimed", fields: [offerClaimedId], references: [id])
+  offerClaimedId String?
+
+  @@map("broadcast_metadata")
+}
+
+model Offer {
+  id              String              @id @default(uuid())
+  meeting         Meeting             @relation("offers", fields: [meetingId], references: [id])
+  meetingId       String
+  userOffered     User                @relation("offersReceived", fields: [userOfferedId], references: [id])
+  userOfferedId   String
+  offerState      OfferState          @default(OPEN)
+  createdAt       DateTime            @default(now())
+  expiresAt       DateTime
+  broadcastClaims BroadcastMetadata[] @relation("broadcastClaimed")
+
+  @@map("offer")
+}
+
+model UserSignal {
+  id        String     @id @default(uuid())
+  userId    String
+  user      User       @relation("userSignals", fields: [userId], references: [id])
+  type      SignalType
+  payload   Json
+  startsAt  DateTime?
+  endsAt    DateTime?
+  createdAt DateTime   @default(now())
+
+  @@map("userSignal")
+}
+
+enum OfferState {
+  OPEN
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum MeetingState {
+  DRAFT // NEW: Suggestion before activation
+  SEARCHING
+  ACCEPTED
+  REJECTED
+  PAST
+  EXPIRED // NEW: For time-bounded suggestions
+  DISMISSED_DRAFT // NEW: For suggestions the user dismisses
+  CANCELED //A searching or accepted meeting the initiator cancels
+}
+
+enum MeetingType {
+  ADVANCE
+  BROADCAST
+}
+
+enum BroadcastSubState {
+  PENDING_CLAIMED
+  UNCLAIMED
+  CLAIMED
+}
+
+enum TimeType {
+  IMMEDIATE // Happening now (old BROADCAST)
+  FUTURE // Scheduled for later (old ADVANCE)
+  UNKNOWN // Time TBD (new concept)
+}
+
+enum TargetType {
+  OPEN // Multiple friends can accept (old BROADCAST/ADVANCE)
+  FRIEND_SPECIFIC // Specific friend (new concept)
+  GROUP // Predefined group (future)
+}
+
+enum SourceType {
+  USER_INTENT // User-initiated
+  SYSTEM_PATTERN // System suggestion based on patterns
+  SYSTEM_REAL_TIME // System suggestion in real-time
+}
+
+enum SignalType {
+  CALL_INTENT
+  WALK_PATTERN
+  TIME_OF_DAY_PREFERENCE
+  WORK_HOURS
+}

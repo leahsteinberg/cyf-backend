@@ -1,18 +1,10 @@
-import type { Meeting, Offer } from "../types.js";
 import { getEffectiveTimeType, getEffectiveTargetType, IMMEDIATE_TIME_TYPE, OPEN_TARGET_TYPE } from "../types.js";
 import { getFriendIds } from "./friendship.js";
 import { makeOffer } from "./process-meeting.js";
 import { setBroadcastPending, setBroadcastUnclaimed } from "./update/broadcast-update.js";
 import { getOfferById } from "./query/offer-lookup.js";
 import { getMeetingById } from "./query/meeting-lookup.js";
-
-type ValidationResult =
-    | { valid: true; offer: Offer; meeting: Meeting }
-    | { valid: false; error: string; statusCode: number };
-
-export const validateBroadcastRequest = async (
-    {userId, offerId}: {userId: string, offerId: string}
-): Promise<ValidationResult> => {
+export const validateBroadcastRequest = async ({ userId, offerId }) => {
     // Validate userId and offerId are provided
     if (!userId || !offerId) {
         return {
@@ -21,7 +13,6 @@ export const validateBroadcastRequest = async (
             statusCode: 400
         };
     }
-
     // Check if offer exists
     const offer = await getOfferById({ offerId });
     if (!offer) {
@@ -31,7 +22,6 @@ export const validateBroadcastRequest = async (
             statusCode: 404
         };
     }
-
     // Check if offer belongs to the user
     if (offer.userOfferedId !== userId) {
         return {
@@ -40,7 +30,6 @@ export const validateBroadcastRequest = async (
             statusCode: 403
         };
     }
-
     // Check if meeting exists
     const meeting = await getMeetingById({ meetingId: offer.meetingId });
     if (!meeting) {
@@ -50,12 +39,10 @@ export const validateBroadcastRequest = async (
             statusCode: 404
         };
     }
-
     // Check if meeting is BROADCAST type (IMMEDIATE + OPEN)
     const timeType = getEffectiveTimeType(meeting);
     const targetType = getEffectiveTargetType(meeting);
     const isBroadcast = timeType === IMMEDIATE_TIME_TYPE && targetType === OPEN_TARGET_TYPE;
-
     if (!isBroadcast) {
         return {
             valid: false,
@@ -63,7 +50,6 @@ export const validateBroadcastRequest = async (
             statusCode: 400
         };
     }
-
     // Check if meeting has broadcast metadata
     if (!meeting.broadcastMetadata) {
         return {
@@ -72,25 +58,20 @@ export const validateBroadcastRequest = async (
             statusCode: 500
         };
     }
-
     return {
         valid: true,
         offer,
         meeting
     };
 };
-
-export const processNewBroadcastMeeting = async ({meeting}: {meeting: Meeting}): Promise<Meeting> => {
+export const processNewBroadcastMeeting = async ({ meeting }) => {
     // Validate meeting exists and has required fields
     if (!meeting || !meeting.id || !meeting.userFromId) {
         throw new Error("Invalid meeting: missing required fields");
     }
-
     const userFrom = meeting.userFromId;
-
     const allFriendIds = await getFriendIds(userFrom);
-    console.log("broadcast meeting - allfriendIds, ", allFriendIds)
-
+    console.log("broadcast meeting - allfriendIds, ", allFriendIds);
     // Create offers to all friends with broadcast expiration (scheduledEnd)
     for (let friendId of allFriendIds) {
         await makeOffer({
@@ -99,19 +80,15 @@ export const processNewBroadcastMeeting = async ({meeting}: {meeting: Meeting}):
             expiresAt: meeting.scheduledEnd
         });
     }
-
     return meeting;
 };
-
 /// UNCLAIMED
-export const tryAcceptUnclaimedBroadcast = async ({meeting, offerId}: {meeting: Meeting, offerId: string}) => {
-    return await setBroadcastPending({meetingId: meeting.id, offerClaimedId: offerId});
-}
-
-
+export const tryAcceptUnclaimedBroadcast = async ({ meeting, offerId }) => {
+    return await setBroadcastPending({ meetingId: meeting.id, offerClaimedId: offerId });
+};
 // CLAIMED
-export const tryAcceptClaimedBroadcast = async ({meeting}: {meeting: Meeting}) => {
+export const tryAcceptClaimedBroadcast = async ({ meeting }) => {
     // return an error - later on, maybe return somethign that's like "come back in 5 mins"
-}
-
-export const cancelClaimedBroadcast = async ({meeting}: {meeting: Meeting}) => {}
+};
+export const cancelClaimedBroadcast = async ({ meeting }) => { };
+//# sourceMappingURL=process-broadcast.js.map
