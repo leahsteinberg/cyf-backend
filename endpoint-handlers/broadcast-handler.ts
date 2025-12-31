@@ -1,19 +1,16 @@
 import type { Request, Response } from 'express';
 import { createMeeting } from '../backend/update/meeting-update.js';
-import { addHour, determineTargetType, minutesSince } from '../backend/utils.js';
-import { processNewBroadcastMeeting } from '../backend/process-broadcast.js';
+import { addHour, determineTargetType } from '../backend/utils.js';
 import { processOffersForNewMeeting } from '../backend/process-meeting.js';
 import { setOffersExpired } from '../backend/offer.js';
 import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { findBroadcastedMeetings } from '../backend/meeting.js';
 import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
-import { getMeetingOffers, getOfferById } from '../backend/query/offer-lookup.js';
+import { getMeetingOffers } from '../backend/query/offer-lookup.js';
 import {
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
-    FRIEND_SPECIFIC_TARGET_TYPE,
-    GROUP_TARGET_TYPE,
     PAST_MEETING_STATE,
     USER_INTENT_SOURCE_TYPE,
     SEARCHING_MEETING_STATE,
@@ -75,20 +72,15 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             return res.status(500).json({ error: "Failed to create broadcast meeting" });
         }
 
-        // Process offers based on whether it's OPEN or targeted
-        let processedBroadcast;
+        // Use unified offer processing for all broadcast types
+        const processedMeeting = await processOffersForNewMeeting(meeting);
+
+        // Set isBroadcasting flag ONLY for OPEN broadcasts (broadcasting to all friends)
         if (targetType === OPEN_TARGET_TYPE) {
-            // OPEN broadcast: use specialized process-broadcast logic
-            processedBroadcast = await processNewBroadcastMeeting({ meeting });
-            // Set user as broadcasting (only for OPEN broadcasts)
             await setIsBroadcasting({ userId });
-        } else {
-            // Targeted broadcast: use general offer processing (will route to targeted broadcast handler)
-            processedBroadcast = await processOffersForNewMeeting(meeting);
-            // await setIsBroadcasting({ userId });
-            // need to handle the "isBroadcasting" state for smaller broadcasts
         }
-        res.json({ success: true, userId, meeting: processedBroadcast });
+
+        res.json({ success: true, userId, meeting: processedMeeting });
     } catch (error) {
         console.error("Error in broadcast now:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);
