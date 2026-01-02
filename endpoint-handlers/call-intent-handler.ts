@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { createDraftMeeting } from '../backend/draft-meeting.js';
 import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { deleteMeetingAndOffers } from '../backend/update/meeting-update.js';
-import { getEffectiveTimeType, getEffectiveTargetType, UNKNOWN_TIME_TYPE, FRIEND_SPECIFIC_TARGET_TYPE, USER_INTENT_SOURCE_TYPE, DRAFT_MEETING_STATE } from '../types.js';
+import { getEffectiveTimeType, getEffectiveTargetType, UNKNOWN_TIME_TYPE, FRIEND_SPECIFIC_TARGET_TYPE, USER_INTENT_SOURCE_TYPE, DRAFT_MEETING_STATE, FUTURE_TIME_TYPE } from '../types.js';
 
 /**
  * Creates a call intent (DRAFT meeting with UNKNOWN time and FRIEND_SPECIFIC target)
@@ -50,7 +50,7 @@ export const handleCallIntent = async (req: Request, res: Response) => {
             scheduledFor,
             scheduledEnd,
             title: 'Call intent',
-            timeType: UNKNOWN_TIME_TYPE,
+            timeType: FUTURE_TIME_TYPE,
             targetType: FRIEND_SPECIFIC_TARGET_TYPE,
             targetUserIds: [userToId],
             sourceType: USER_INTENT_SOURCE_TYPE,
