@@ -285,3 +285,47 @@ export const enrichMeetingsWithAcceptedUsers = async (meetings: Meeting[]): Prom
             .filter((user): user is NonNullable<typeof user> => user !== undefined)
     }));
 };
+
+/**
+ * Enriches meetings with targetUsers array containing full User objects
+ * for all users in targetUserIds
+ */
+export const enrichMeetingsWithTargetUsers = async (meetings: Meeting[]): Promise<Meeting[]> => {
+    // Collect all unique targetUserIds across all meetings
+    const allTargetUserIds = new Set<string>();
+    meetings.forEach(meeting => {
+        if (meeting.targetUserIds && meeting.targetUserIds.length > 0) {
+            meeting.targetUserIds.forEach(userId => allTargetUserIds.add(userId));
+        }
+    });
+
+    if (allTargetUserIds.size === 0) {
+        // No target users to fetch, return meetings as-is with empty targetUsers arrays
+        return meetings.map(m => ({ ...m, targetUsers: [] }));
+    }
+
+    // Fetch all target users in a single query
+    const targetUsers = await prisma.user.findMany({
+        where: {
+            id: { in: Array.from(allTargetUserIds) }
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            username: true,
+            displayUsername: true
+        }
+    });
+
+    // Create a map for quick lookup
+    const userMap = new Map(targetUsers.map(user => [user.id, user]));
+
+    // Enrich each meeting with its targetUsers array
+    return meetings.map(meeting => ({
+        ...meeting,
+        targetUsers: (meeting.targetUserIds || [])
+            .map(userId => userMap.get(userId))
+            .filter((user): user is NonNullable<typeof user> => user !== undefined)
+    }));
+};

@@ -1,5 +1,5 @@
 import { createMeeting } from "../backend/update/meeting-update.js";
-import { getCreatedMeetings, getAcceptedMeetings, getMeetingById, enrichMeetingsWithAcceptedUsers } from "../backend/query/meeting-lookup.js";
+import { getCreatedMeetings, getAcceptedMeetings, getMeetingById, enrichMeetingsWithAcceptedUsers, enrichMeetingsWithTargetUsers } from "../backend/query/meeting-lookup.js";
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import { respawnMeeting } from "../backend/respawn-meeting.js";
 import type { Request, Response } from 'express';
@@ -127,8 +127,9 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
     return true;
   });
 
-  // Enrich meetings with acceptedUsers array
-  const enrichedMeetings = await enrichMeetingsWithAcceptedUsers(filteredMeetings);
+  // Enrich meetings with acceptedUsers and targetUsers arrays
+  const meetingsWithAcceptedUsers = await enrichMeetingsWithAcceptedUsers(filteredMeetings);
+  const enrichedMeetings = await enrichMeetingsWithTargetUsers(meetingsWithAcceptedUsers);
 
   res.json(enrichedMeetings)
 }
