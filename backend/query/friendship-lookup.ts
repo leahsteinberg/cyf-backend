@@ -1,7 +1,7 @@
 import type { Friendship, User } from "../../types.js";
-import { getEffectiveTimeType, IMMEDIATE_TIME_TYPE, SEARCHING_MEETING_STATE } from "../../types.js";
 import { prisma } from "../auth.js";
 import { getOfferedMeetings } from "../meeting.js";
+import { isActiveBroadcastMeeting } from "../broadcast-to-user.js";
 
 export const getFriendshipsUser1Side = async (id: string): Promise<Friendship[]> => {
     const friendships = await prisma.friendship.findMany({
@@ -66,11 +66,8 @@ export const enrichFriendsWithBroadcastStatus = async ({
     // Batch check: Get all meetings offered to the viewer
     const offeredMeetings = await getOfferedMeetings(viewerId);
 
-    // Filter to only IMMEDIATE/SEARCHING meetings (active broadcasts)
-    const broadcastMeetings = offeredMeetings.filter(
-        m => getEffectiveTimeType(m) === IMMEDIATE_TIME_TYPE &&
-             m.meetingState === SEARCHING_MEETING_STATE
-    );
+    // Filter to only active broadcasts using shared helper
+    const broadcastMeetings = offeredMeetings.filter(isActiveBroadcastMeeting);
 
     // Create set of broadcaster IDs for O(1) lookup
     const broadcasterIds = new Set(

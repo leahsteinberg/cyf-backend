@@ -1,7 +1,27 @@
-import { getEffectiveTimeType, IMMEDIATE_TIME_TYPE, SEARCHING_MEETING_STATE, type Offer } from "../types.js";
+import { getEffectiveTimeType, IMMEDIATE_TIME_TYPE, SEARCHING_MEETING_STATE, ACCEPTED_MEETING_STATE, type Offer, type Meeting } from "../types.js";
 import { getOfferedMeetings } from "./meeting.js";
 import { getOffersForUser } from "./offer.js"
 import { getCreatedMeetings, getMeetingById } from "./query/meeting-lookup.js";
+
+/**
+ * Checks if a meeting is an active broadcast.
+ *
+ * A broadcast is "active" if:
+ * - It's IMMEDIATE (broadcast)
+ * - State is SEARCHING or ACCEPTED
+ * - Not expired (scheduledEnd > now)
+ *
+ * @param meeting - Meeting to check
+ * @returns true if meeting is an active broadcast
+ */
+export const isActiveBroadcastMeeting = (meeting: Meeting): boolean => {
+    const now = new Date();
+    return (
+        getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE &&
+        (meeting.meetingState === SEARCHING_MEETING_STATE || meeting.meetingState === ACCEPTED_MEETING_STATE) &&
+        meeting.scheduledEnd > now
+    );
+};
 
 /**
  * Checks if a specific user is broadcasting TO another user (viewer-specific).
@@ -33,11 +53,7 @@ export const isBroadcastingToUser = async ({possibleBroadcasterId, userId}: {pos
 
     const offeredMeetings = await getOfferedMeetings(userId);
     const possibleBroadcasterMeetings = offeredMeetings.filter((o) => o.userFromId === possibleBroadcasterId);
-    const broadcastMeetings = possibleBroadcasterMeetings.filter((m) => getEffectiveTimeType(m) === IMMEDIATE_TIME_TYPE && m.meetingState === SEARCHING_MEETING_STATE);
-    if (broadcastMeetings.length) {
-        return true;
-    }
-    return false;
+    return possibleBroadcasterMeetings.some(isActiveBroadcastMeeting);
 }
 
 /**
@@ -60,6 +76,5 @@ export const isBroadcastingToUser = async ({possibleBroadcasterId, userId}: {pos
  */
 export const isBroadcasting = async (userFromId: string): Promise<boolean> => {
     const meetings = await getCreatedMeetings({ userFromId });
-    const broadcastMeetings = meetings.filter((m) => getEffectiveTimeType(m) === IMMEDIATE_TIME_TYPE && m.meetingState === SEARCHING_MEETING_STATE);
-    return !!broadcastMeetings.length;
+    return meetings.some(isActiveBroadcastMeeting);
 };
