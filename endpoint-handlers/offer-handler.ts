@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { acceptOffer, getMeetingOffers, getOfferById, getOffersForUser } from '../backend/offer.js';
 import { getMeetingById } from '../backend/query/meeting-lookup.js';
 import { setOfferRejected } from '../backend/update/offer-update.js';
-import { ACCEPTED_OFFER_STATE, isBroadcastMeeting, OPEN_OFFER_STATE, REJECTED_MEETING_STATE } from '../types.js';
+import { ACCEPTED_OFFER_STATE, isBroadcastMeeting, OPEN_OFFER_STATE, REJECTED_MEETING_STATE, SEARCHING_MEETING_STATE } from '../types.js';
 import { setMeetingState } from '../backend/update/meeting-update.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
 
@@ -83,10 +83,14 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
     if (!offer) {
       throw new Error("Cannot find offer")
     }
-    if (offer.offerState !== ACCEPTED_OFFER_STATE ) {
-      throw new Error("Cannot reject an offer that is not open")
+    if (offer.offerState !== OPEN_OFFER_STATE ) {
+      throw new Error("Cannot reject an offer that is not open.")
     }
     const meetingId = offer.meetingId;
+    const meeting = await getMeetingById({meetingId});
+    if (meeting?.meetingState !== SEARCHING_MEETING_STATE) {
+      throw new Error("Cannot reject an offer that is not open.")
+    }
     
     const rejectedOffer = await setOfferRejected({ offerId });
     const offers = await getMeetingOffers({meetingId});
