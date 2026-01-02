@@ -101,7 +101,6 @@ export const handleRejectOffer = async (req: Request, res: Response) => {
     // - No open offers remain AND
     // - Not enough acceptances to meet minParticipants
     if (openOffers.length === 0) {
-      const meeting = await getMeetingById({meetingId});
       if (meeting && meeting.acceptedUserIds.length < meeting.minParticipants) {
         await transitionMeeting({meetingId, toState: REJECTED_MEETING_STATE, actorId: userId});
       }
