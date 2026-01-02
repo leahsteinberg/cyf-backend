@@ -5,12 +5,10 @@ import { processOffersForNewMeeting } from '../backend/process-meeting.js';
 import { setOffersExpired } from '../backend/offer.js';
 import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { findBroadcastedMeetings } from '../backend/meeting.js';
-import { setIsBroadcasting, setIsNotBroadcasting } from '../backend/update/user-update.js';
 import { getIsBroadcasting } from '../backend/query/user-lookup.js';
 import { getMeetingOffers } from '../backend/query/offer-lookup.js';
 import {
     IMMEDIATE_TIME_TYPE,
-    OPEN_TARGET_TYPE,
     PAST_MEETING_STATE,
     USER_INTENT_SOURCE_TYPE,
     SEARCHING_MEETING_STATE,
@@ -37,7 +35,6 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             // do not make a new broadcast and use the existing one.
             const offers = await getMeetingOffers({meetingId: activeBroadcast.id});
             const expiredOffers = await setOffersExpired(offers);
-            await setIsNotBroadcasting({userId});
         }
 
         const scheduledFor = new Date();
@@ -75,11 +72,6 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
         // Use unified offer processing for all broadcast types
         const processedMeeting = await processOffersForNewMeeting(meeting);
 
-        // Set isBroadcasting flag ONLY for OPEN broadcasts (broadcasting to all friends)
-        if (targetType === OPEN_TARGET_TYPE) {
-            await setIsBroadcasting({ userId });
-        }
-
         res.json({ success: true, userId, meeting: processedMeeting });
     } catch (error) {
         console.error("Error in broadcast now:", error);
@@ -97,9 +89,6 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
     }
 
     try {
-        // Set user as not broadcasting
-        await setIsNotBroadcasting({ userId });
-
         const meetings = await getCreatedMeetings({userFromId: userId});
         const broadcastMeetings = await findBroadcastedMeetings(meetings);
         // should be just one meeting, but want to account for error state

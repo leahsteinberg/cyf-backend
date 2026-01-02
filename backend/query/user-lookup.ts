@@ -1,4 +1,6 @@
 import { prisma } from "../auth.js";
+import { getCreatedMeetings } from "./meeting-lookup.js";
+import { getEffectiveTimeType, IMMEDIATE_TIME_TYPE, SEARCHING_MEETING_STATE, ACCEPTED_MEETING_STATE } from "../../types.js";
 
 export const getUsersFromIds = async (userIds: string[]) => {
     const users = await prisma.user.findMany({
@@ -51,16 +53,14 @@ export const getUserTimezone = async ({ userId }: { userId: string }): Promise<s
 };
 
 export const getIsBroadcasting = async ({ userId }: { userId: string }): Promise<boolean> => {
-    const user = await prisma.user.findUnique({
-        where: {
-            id: userId
-        },
-        select: {
-            isBroadcasting: true
-        }
-    });
+    const meetings = await getCreatedMeetings({ userFromId: userId });
+    const now = new Date();
 
-    return user?.isBroadcasting ?? false;
+    return meetings.some(m =>
+        getEffectiveTimeType(m) === IMMEDIATE_TIME_TYPE &&
+        (m.meetingState === SEARCHING_MEETING_STATE || m.meetingState === ACCEPTED_MEETING_STATE) &&
+        m.scheduledEnd > now
+    );
 };
 
 export const getUserPhoneNumber = async ({ userId }: { userId: string }): Promise<string | null> => {

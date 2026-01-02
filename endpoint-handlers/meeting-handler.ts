@@ -3,11 +3,10 @@ import { getCreatedMeetings, getAcceptedMeetings, getMeetingById, enrichMeetings
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import { respawnMeeting } from "../backend/respawn-meeting.js";
 import type { Request, Response } from 'express';
-import { ACCEPTED_MEETING_STATE, CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE, EXPIRED_MEETING_STATE, PAST_MEETING_STATE, REJECTED_MEETING_STATE, SEARCHING_MEETING_STATE, isBroadcastMeeting, isOpenBroadcast } from "../types.js";
+import { CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE, EXPIRED_MEETING_STATE, PAST_MEETING_STATE, isBroadcastMeeting } from "../types.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
 import { transitionMeeting } from "../backend/transition-meeting.js";
 import { getMeetingOffers, setOffersExpired } from "../backend/offer.js";
-import { setIsBroadcasting, setIsNotBroadcasting } from "../backend/update/user-update.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -90,27 +89,6 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
 
   const allMeetings = [...meetings, ...acceptedMeetings];
 
-  // Check for OPEN broadcast meetings (broadcasting to all friends)
-  // isBroadcasting flag is specifically for OPEN broadcasts, not targeted broadcasts
-  const openBroadcastMeetings = allMeetings.filter(m => isOpenBroadcast(m));
-
-  const invalidOpenBroadcasts = openBroadcastMeetings.filter(m =>
-    m.meetingState === PAST_MEETING_STATE ||
-    m.meetingState === EXPIRED_MEETING_STATE ||
-    m.meetingState === CANCELED_MEETING_STATE
-  );
-
-  const validOpenBroadcasts = openBroadcastMeetings.filter(m =>
-    m.meetingState === SEARCHING_MEETING_STATE ||
-    m.meetingState === ACCEPTED_MEETING_STATE ||
-    m.meetingState === REJECTED_MEETING_STATE
-  );
-
-  // If there are invalid OPEN broadcasts but no valid ones, set isBroadcasting to false
-  if (invalidOpenBroadcasts.length > 0 && validOpenBroadcasts.length === 0) {
-    await setIsNotBroadcasting({userId: userFromId});
-  }
-
   // Filter out ALL invalid broadcasts (both OPEN and targeted) and dismissed drafts
   const filteredMeetings = allMeetings.filter(m => {
     if (m.meetingState === DISMISSED_DRAFT_MEETING_STATE) return false;
@@ -171,12 +149,7 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
       // ACCEPTOR CANCELS: Respawn for ALL meeting types
       // This returns the meeting to circulation, giving the creator and all recipients (including canceller) another chance
       console.log("Acceptor cancelled - respawning meeting");
-      const respawnedMeeting = await respawnMeeting(meeting);
-
-          // Set isBroadcasting flag ONLY for OPEN broadcasts
-      if (isOpenBroadcast(respawnedMeeting)) {
-        await setIsBroadcasting({userId: meeting.userFromId});
-      }
+      await respawnMeeting(meeting);
 
       const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
       return res.json(enrichedMeeting);
@@ -184,11 +157,6 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
     } else if (isCreator) {
       // CREATOR CANCELS: Full cancellation, no respawn
       console.log("Creator cancelled - full cancellation");
-
-      // Clear isBroadcasting flag ONLY for OPEN broadcasts
-      if (isOpenBroadcast(meeting)) {
-        await setIsNotBroadcasting({userId: meeting.userFromId});
-      }
 
       const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
       return res.json(enrichedMeeting);
