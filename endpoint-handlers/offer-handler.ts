@@ -35,8 +35,8 @@ export const handleGetOffers = async (req: Request, res: Response) => {
 
       return true;
     });
-
-    res.json(filteredOffers);
+    console.log("offers ---", offers);
+    res.json(offers);
   } catch (error) {
     console.error("Error fetching offers:", error);
     res.status(500).json({ error: "Internal server error" });
