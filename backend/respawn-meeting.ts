@@ -9,6 +9,7 @@ import {
     SYSTEM_REAL_TIME_SOURCE_TYPE,
     isOpenBroadcast
 } from '../types.js';
+import type { CreateDraftMeetingParams } from './draft-meeting.js';
 
 /**
  * Respawns a cancelled meeting by creating a new meeting in SEARCHING state.
@@ -46,7 +47,8 @@ export const respawnMeeting = async (cancelledMeeting: Meeting): Promise<Meeting
         sourceType: SYSTEM_REAL_TIME_SOURCE_TYPE,
         minParticipants: cancelledMeeting.minParticipants ?? 1,
         maxParticipants: cancelledMeeting.maxParticipants ?? 1,
-    });
+        ...(cancelledMeeting.intentLabel && {intentLabel: cancelledMeeting.intentLabel}),
+    } as CreateDraftMeetingParams);
 
     // Process offers using unified logic (handles all target types)
     await processOffersForNewMeeting(respawnedMeeting);
