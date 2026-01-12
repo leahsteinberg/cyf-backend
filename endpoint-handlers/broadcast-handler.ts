@@ -18,7 +18,7 @@ import {
 import { transitionMeeting } from '../backend/transition-meeting.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
-    const { userId, targetUserIds } = req.body;
+    const { userId, targetUserIds, intentLabel } = req.body;
     console.log("broadcast now --", { userId });
 
     if (!userId) {
@@ -62,6 +62,7 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             targetUserIds: targetUserIds || [],
             minParticipants: 1,
             maxParticipants: 1,
+            intentLabel: intentLabel || null,
         });
 
         // Validate meeting was created successfully before creating offers
