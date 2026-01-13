@@ -12,6 +12,7 @@ import { handleCronRound } from './endpoint-handlers/cron-handler.js';
 import { handlePush } from './endpoint-handlers/push-handler.js';
 import { handleBroadcastNow, handleBroadcastEnd, handleIsUserBroadcasting } from './endpoint-handlers/broadcast-handler.js';
 import { handleCallIntent, handleUndoCallIntent } from './endpoint-handlers/call-intent-handler.js';
+import { handleCallStart, handleCallEnd, handleCallError } from './endpoint-handlers/call-handler.js';
 import { handleAcceptSuggestion, handleCreateSampleSuggestion, handleCreateSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
 import { handleAddUserSignal, handleGetUserSignals, handleRemoveUserSignal } from './endpoint-handlers/user-signal-handler.js';
 
@@ -72,6 +73,11 @@ app.post('/api/is-user-broadcasting', handleIsUserBroadcasting);
 //CALL INTENT ENDPOINTS
 app.post('/api/call-intent', handleCallIntent);
 app.post('/api/undo-call-intent', handleUndoCallIntent);
+
+//CALL TRACKING ENDPOINTS
+app.post('/api/calls/start', handleCallStart);
+app.post('/api/calls/end', handleCallEnd);
+app.post('/api/calls/error', handleCallError);
 
 //USER SIGNAL ENDPOINTS
 app.post('/api/get-user-signals', handleGetUserSignals);

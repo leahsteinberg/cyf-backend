@@ -237,12 +237,25 @@ exports.Prisma.UserSignalScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.UserEventScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  eventType: 'eventType',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
 exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -325,7 +338,8 @@ exports.Prisma.ModelName = {
   Meeting: 'Meeting',
   BroadcastMetadata: 'BroadcastMetadata',
   Offer: 'Offer',
-  UserSignal: 'UserSignal'
+  UserSignal: 'UserSignal',
+  UserEvent: 'UserEvent'
 };
 
 /**
