@@ -13,6 +13,7 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
                     displayUsername: true,
                     username: true,
                     email: true,
+                    phoneNumber: true,
                 }
             },
             acceptedUser: {
@@ -21,7 +22,8 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 }
             },
             broadcastMetadata: {
@@ -34,7 +36,8 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -58,7 +61,8 @@ export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Pr
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 },
             },
             broadcastMetadata: {
@@ -71,7 +75,8 @@ export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Pr
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -99,7 +104,8 @@ export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: str
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 },
             },
             broadcastMetadata: {
@@ -112,7 +118,8 @@ export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: str
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -138,7 +145,8 @@ export const getAllSearchingMeetings = async (): Promise<Meeting[]> => {
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 }
             },
             broadcastMetadata: {
@@ -151,7 +159,8 @@ export const getAllSearchingMeetings = async (): Promise<Meeting[]> => {
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -183,7 +192,8 @@ export const getMeetingById = async ({meetingId}: {meetingId: string}): Promise<
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 }
             },
             acceptedUser: {
@@ -192,7 +202,8 @@ export const getMeetingById = async ({meetingId}: {meetingId: string}): Promise<
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 }
             },
             broadcastMetadata: {
@@ -205,7 +216,8 @@ export const getMeetingById = async ({meetingId}: {meetingId: string}): Promise<
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -232,7 +244,8 @@ export const getUserFromMeetingId = async (meetingId: string): Promise<User | nu
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -270,7 +283,8 @@ export const enrichMeetingsWithAcceptedUsers = async (meetings: Meeting[]): Prom
             name: true,
             email: true,
             username: true,
-            displayUsername: true
+            displayUsername: true,
+            phoneNumber: true,
         }
     });
 
@@ -314,7 +328,8 @@ export const enrichMeetingsWithTargetUsers = async (meetings: Meeting[]): Promis
             name: true,
             email: true,
             username: true,
-            displayUsername: true
+            displayUsername: true,
+            phoneNumber: true,
         }
     });
 
