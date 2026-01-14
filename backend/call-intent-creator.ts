@@ -1,4 +1,4 @@
-import { FRIEND_SPECIFIC_TARGET_TYPE, UNKNOWN_TIME_TYPE, USER_INTENT_SOURCE_TYPE } from "../types.js";
+import { FRIEND_SPECIFIC_TARGET_TYPE, FUTURE_TIME_TYPE, USER_INTENT_SOURCE_TYPE } from "../types.js";
 import { createDraftMeeting } from "./draft-meeting.js";
 
 
@@ -27,7 +27,7 @@ export const createCallIntent = async ({userId, targetUserId}: {userId: string, 
         scheduledEnd,
         backupScheduledTimes,
         title: 'Call intent',
-        timeType: UNKNOWN_TIME_TYPE,
+        timeType: FUTURE_TIME_TYPE,
         targetType: FRIEND_SPECIFIC_TARGET_TYPE,
         targetUserIds: [userToId],
         sourceType: USER_INTENT_SOURCE_TYPE,
