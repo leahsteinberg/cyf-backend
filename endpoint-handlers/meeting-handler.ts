@@ -3,10 +3,11 @@ import { getCreatedMeetings, getAcceptedMeetings, getMeetingById, enrichMeetings
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import { respawnMeeting } from "../backend/respawn-meeting.js";
 import type { Request, Response } from 'express';
-import { CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE, EXPIRED_MEETING_STATE, PAST_MEETING_STATE, isBroadcastMeeting } from "../types.js";
+import { CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE } from "../types.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
 import { transitionMeeting } from "../backend/transition-meeting.js";
 import { getMeetingOffers, setOffersExpired } from "../backend/offer.js";
+import { filterAndCleanMeetings } from "../backend/meeting-staleness.js";
 
 
 export const handleCreateMeeting = async (req: Request, res: Response) => {
@@ -89,21 +90,12 @@ export const handleGetMeetings = async (req: Request, res: Response) => {
 
   const allMeetings = [...meetings, ...acceptedMeetings];
 
-  // Filter out ALL invalid broadcasts (both OPEN and targeted) and dismissed drafts
-  const filteredMeetings = allMeetings.filter(m => {
-    if (m.meetingState === DISMISSED_DRAFT_MEETING_STATE) return false;
+  // Filter out dismissed drafts
+  const withoutDismissed = allMeetings.filter(m => m.meetingState !== DISMISSED_DRAFT_MEETING_STATE);
 
-    // Hide invalid broadcasts (any IMMEDIATE meeting, not just OPEN)
-    if (isBroadcastMeeting(m) && (
-      m.meetingState === PAST_MEETING_STATE ||
-      m.meetingState === EXPIRED_MEETING_STATE ||
-      m.meetingState === CANCELED_MEETING_STATE
-    )) {
-      return false;
-    }
-
-    return true;
-  });
+  // Use centralized filtering to hide terminal states and stale meetings
+  // transitionStale = true to opportunistically transition stale meetings to PAST
+  const filteredMeetings = await filterAndCleanMeetings(withoutDismissed, true);
 
   // Enrich meetings with acceptedUsers and targetUsers arrays
   const meetingsWithAcceptedUsers = await enrichMeetingsWithAcceptedUsers(filteredMeetings);

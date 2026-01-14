@@ -2,6 +2,7 @@ import { getEffectiveTimeType, IMMEDIATE_TIME_TYPE, SEARCHING_MEETING_STATE, ACC
 import { getOfferedMeetings } from "./meeting.js";
 import { getOffersForUser } from "./offer.js"
 import { getCreatedMeetings, getMeetingById } from "./query/meeting-lookup.js";
+import { shouldShowMeeting } from "./meeting-staleness.js";
 
 /**
  * Checks if a meeting is an active broadcast.
@@ -9,17 +10,16 @@ import { getCreatedMeetings, getMeetingById } from "./query/meeting-lookup.js";
  * A broadcast is "active" if:
  * - It's IMMEDIATE (broadcast)
  * - State is SEARCHING or ACCEPTED
- * - Not expired (scheduledEnd > now)
+ * - Should be shown (not stale or terminal) per centralized staleness logic
  *
  * @param meeting - Meeting to check
  * @returns true if meeting is an active broadcast
  */
-export const isActiveBroadcastMeeting = (meeting: Meeting): boolean => {
-    const now = new Date();
+export const isActiveBroadcastMeeting = async (meeting: Meeting): Promise<boolean> => {
     return (
         getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE &&
         (meeting.meetingState === SEARCHING_MEETING_STATE || meeting.meetingState === ACCEPTED_MEETING_STATE) &&
-        meeting.scheduledEnd > now
+        await shouldShowMeeting(meeting)
     );
 };
 
@@ -53,7 +53,14 @@ export const isBroadcastingToUser = async ({possibleBroadcasterId, userId}: {pos
 
     const offeredMeetings = await getOfferedMeetings(userId);
     const possibleBroadcasterMeetings = offeredMeetings.filter((o) => o.userFromId === possibleBroadcasterId);
-    return possibleBroadcasterMeetings.some(isActiveBroadcastMeeting);
+
+    // Check each meeting sequentially since isActiveBroadcastMeeting is now async
+    for (const meeting of possibleBroadcasterMeetings) {
+        if (await isActiveBroadcastMeeting(meeting)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
@@ -76,5 +83,12 @@ export const isBroadcastingToUser = async ({possibleBroadcasterId, userId}: {pos
  */
 export const isBroadcasting = async (userFromId: string): Promise<boolean> => {
     const meetings = await getCreatedMeetings({ userFromId });
-    return meetings.some(isActiveBroadcastMeeting);
+
+    // Check each meeting sequentially since isActiveBroadcastMeeting is now async
+    for (const meeting of meetings) {
+        if (await isActiveBroadcastMeeting(meeting)) {
+            return true;
+        }
+    }
+    return false;
 };

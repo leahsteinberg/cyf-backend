@@ -9,13 +9,13 @@ import { getIsBroadcasting } from '../backend/query/user-lookup.js';
 import { getMeetingOffers } from '../backend/query/offer-lookup.js';
 import {
     IMMEDIATE_TIME_TYPE,
-    PAST_MEETING_STATE,
     USER_INTENT_SOURCE_TYPE,
     SEARCHING_MEETING_STATE,
     CANCELED_MEETING_STATE,
     isOpenBroadcast
 } from '../types.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
+import { shouldShowMeeting } from '../backend/meeting-staleness.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId, targetUserIds, intentLabel } = req.body;
@@ -28,9 +28,16 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
     try {
         // Check if user already has an active OPEN broadcast (broadcasting to all friends)
         const createdMeetings = await getCreatedMeetings({userFromId: userId});
-        const activeBroadcast = createdMeetings.find(m => {
-            return isOpenBroadcast(m) && m.meetingState !== PAST_MEETING_STATE;
-        });
+
+        // Find active broadcasts - must be open broadcast and should be visible (not stale or terminal)
+        let activeBroadcast = null;
+        for (const m of createdMeetings) {
+            if (isOpenBroadcast(m) && await shouldShowMeeting(m)) {
+                activeBroadcast = m;
+                break;
+            }
+        }
+
         if (activeBroadcast) {
             // do not make a new broadcast and use the existing one.
             const offers = await getMeetingOffers({meetingId: activeBroadcast.id});
@@ -95,7 +102,8 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
         // should be just one meeting, but want to account for error state
         // where there are somehow two broadcast meetings.
         for (let broadcastMeeting of broadcastMeetings) {
-            if (broadcastMeeting.meetingState !== PAST_MEETING_STATE) {
+            // Only transition if meeting should still be visible (not already terminal or stale)
+            if (await shouldShowMeeting(broadcastMeeting)) {
                 const {meeting, events} = await transitionMeeting({
                     meetingId: broadcastMeeting.id,
                     toState: CANCELED_MEETING_STATE,
