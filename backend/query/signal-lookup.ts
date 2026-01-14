@@ -1,3 +1,5 @@
+// Only prisma logic should go here. No other business logic.
+
 import { prisma } from "../auth.js";
 import type { SignalType, UserSignal } from '../../types.js';
 

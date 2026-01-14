@@ -1,3 +1,5 @@
+// Only prisma logic should go here. No other business logic.
+
 import { prisma } from "../auth.js";
 import { getCreatedMeetings } from "./meeting-lookup.js";
 import { isActiveBroadcastMeeting } from "../broadcast-to-user.js";

@@ -1,3 +1,5 @@
+// Only prisma logic should go here. No other business logic.
+
 import { prisma } from "../auth.js";
 import type { Offer } from '../../types.js';
 import { ACCEPTED_OFFER_STATE, OPEN_OFFER_STATE } from "../../types.js";

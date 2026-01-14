@@ -1,3 +1,5 @@
+// Only prisma logic should go here. No other business logic.
+
 import type { Meeting, Offer, User } from "../../types.js";
 import { SEARCHING_MEETING_STATE } from "../../types.js";
 import { prisma } from "../auth.js";
