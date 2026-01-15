@@ -5,7 +5,9 @@ import { createDraftMeeting } from "./draft-meeting.js";
 export const createCallIntent = async ({userId, targetUserId}: {userId: string, targetUserId: string}) {
     const userToId = targetUserId;
     // Set scheduledFor to 4 days in the future (defacto expiry)
+    // Round down to the start of the current hour, then add 4 days
     const scheduledFor = new Date();
+    scheduledFor.setMinutes(0, 0, 0); // Set to start of hour (zero minutes, seconds, milliseconds)
     scheduledFor.setDate(scheduledFor.getDate() + 4);
 
     // scheduledEnd can be same or slightly after (doesn't matter for UNKNOWN time)
