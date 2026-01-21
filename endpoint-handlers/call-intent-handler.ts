@@ -36,9 +36,9 @@ export const handleCallIntent = async (req: Request, res: Response) => {
             });
         }
 
-        // Set scheduledFor to 4 days in the future (defacto expiry)
+        // Set scheduledFor to 0 days in the future (defacto expiry)
         const scheduledFor = new Date();
-        scheduledFor.setDate(scheduledFor.getDate() + 4);
+        scheduledFor.setDate(scheduledFor.getDate());
 
         // scheduledEnd can be same or slightly after (doesn't matter for UNKNOWN time)
         const scheduledEnd = new Date(scheduledFor);
