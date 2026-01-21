@@ -32,7 +32,7 @@ export const handlePush = async (req: Request, res: Response) => {
         res.json({
             success: true,
             user: updatedUser,
-            notification: notification
+            //notification: notification
         });
     } catch (error) {
         console.error("Error in push registration:", error);
