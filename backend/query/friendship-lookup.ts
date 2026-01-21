@@ -68,7 +68,13 @@ export const enrichFriendsWithBroadcastStatus = async ({
     const offeredMeetings = await getOfferedMeetings(viewerId);
 
     // Filter to only active broadcasts using shared helper
-    const broadcastMeetings = offeredMeetings.filter(isActiveBroadcastMeeting);
+    // Note: isActiveBroadcastMeeting is async, so we can't use .filter() directly
+    const broadcastMeetings = [];
+    for (const meeting of offeredMeetings) {
+        if (await isActiveBroadcastMeeting(meeting)) {
+            broadcastMeetings.push(meeting);
+        }
+    }
 
     // Create set of broadcaster IDs for O(1) lookup
     const broadcasterIds = new Set(
