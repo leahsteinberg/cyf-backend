@@ -1,0 +1,1 @@
+{"version":3,"file":"ai-config.js","sourceRoot":"","sources":["../../../backend/config/ai-config.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,MAAM,SAAS,GAAG;IACvB,KAAK,EAAE,OAAO,CAAC,GAAG,CAAC,YAAY,IAAI,aAAa;IAChD,WAAW,EAAE,GAAG,EAAG,sBAAsB;IACzC,SAAS,EAAE,GAAG,EAAK,wBAAwB;IAC3C,OAAO,EAAE,OAAO,CAAC,GAAG,CAAC,kBAAkB,KAAK,MAAM;CACnD,CAAC"}

@@ -19,4 +19,9 @@ export declare const getUserFromMeetingId: (meetingId: string) => Promise<User |
  * for all users in acceptedUserIds
  */
 export declare const enrichMeetingsWithAcceptedUsers: (meetings: Meeting[]) => Promise<Meeting[]>;
+/**
+ * Enriches meetings with targetUsers array containing full User objects
+ * for all users in targetUserIds
+ */
+export declare const enrichMeetingsWithTargetUsers: (meetings: Meeting[]) => Promise<Meeting[]>;
 //# sourceMappingURL=meeting-lookup.d.ts.map

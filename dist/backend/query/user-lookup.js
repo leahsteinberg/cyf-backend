@@ -1,4 +1,7 @@
+// Only prisma logic should go here. No other business logic.
 import { prisma } from "../auth.js";
+import { getCreatedMeetings } from "./meeting-lookup.js";
+import { isActiveBroadcastMeeting } from "../broadcast-to-user.js";
 export const getUsersFromIds = async (userIds) => {
     const users = await prisma.user.findMany({
         where: {
@@ -45,15 +48,8 @@ export const getUserTimezone = async ({ userId }) => {
     return user?.timezone ?? null;
 };
 export const getIsBroadcasting = async ({ userId }) => {
-    const user = await prisma.user.findUnique({
-        where: {
-            id: userId
-        },
-        select: {
-            isBroadcasting: true
-        }
-    });
-    return user?.isBroadcasting ?? false;
+    const meetings = await getCreatedMeetings({ userFromId: userId });
+    return meetings.some(isActiveBroadcastMeeting);
 };
 export const getUserPhoneNumber = async ({ userId }) => {
     const user = await prisma.user.findUnique({

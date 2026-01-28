@@ -1,7 +1,24 @@
-import { getEffectiveTimeType, IMMEDIATE_TIME_TYPE, SEARCHING_MEETING_STATE } from "../types.js";
+import { getEffectiveTimeType, IMMEDIATE_TIME_TYPE, SEARCHING_MEETING_STATE, ACCEPTED_MEETING_STATE } from "../types.js";
 import { getOfferedMeetings } from "./meeting.js";
 import { getOffersForUser } from "./offer.js";
 import { getCreatedMeetings, getMeetingById } from "./query/meeting-lookup.js";
+import { shouldShowMeeting } from "./meeting-staleness.js";
+/**
+ * Checks if a meeting is an active broadcast.
+ *
+ * A broadcast is "active" if:
+ * - It's IMMEDIATE (broadcast)
+ * - State is SEARCHING or ACCEPTED
+ * - Should be shown (not stale or terminal) per centralized staleness logic
+ *
+ * @param meeting - Meeting to check
+ * @returns true if meeting is an active broadcast
+ */
+export const isActiveBroadcastMeeting = async (meeting) => {
+    return (getEffectiveTimeType(meeting) === IMMEDIATE_TIME_TYPE &&
+        (meeting.meetingState === SEARCHING_MEETING_STATE || meeting.meetingState === ACCEPTED_MEETING_STATE) &&
+        await shouldShowMeeting(meeting));
+};
 /**
  * Checks if a specific user is broadcasting TO another user (viewer-specific).
  *
@@ -30,9 +47,11 @@ import { getCreatedMeetings, getMeetingById } from "./query/meeting-lookup.js";
 export const isBroadcastingToUser = async ({ possibleBroadcasterId, userId }) => {
     const offeredMeetings = await getOfferedMeetings(userId);
     const possibleBroadcasterMeetings = offeredMeetings.filter((o) => o.userFromId === possibleBroadcasterId);
-    const broadcastMeetings = possibleBroadcasterMeetings.filter((m) => getEffectiveTimeType(m) === IMMEDIATE_TIME_TYPE && m.meetingState === SEARCHING_MEETING_STATE);
-    if (broadcastMeetings.length) {
-        return true;
+    // Check each meeting sequentially since isActiveBroadcastMeeting is now async
+    for (const meeting of possibleBroadcasterMeetings) {
+        if (await isActiveBroadcastMeeting(meeting)) {
+            return true;
+        }
     }
     return false;
 };
@@ -56,7 +75,12 @@ export const isBroadcastingToUser = async ({ possibleBroadcasterId, userId }) =>
  */
 export const isBroadcasting = async (userFromId) => {
     const meetings = await getCreatedMeetings({ userFromId });
-    const broadcastMeetings = meetings.filter((m) => getEffectiveTimeType(m) === IMMEDIATE_TIME_TYPE && m.meetingState === SEARCHING_MEETING_STATE);
-    return !!broadcastMeetings.length;
+    // Check each meeting sequentially since isActiveBroadcastMeeting is now async
+    for (const meeting of meetings) {
+        if (await isActiveBroadcastMeeting(meeting)) {
+            return true;
+        }
+    }
+    return false;
 };
 //# sourceMappingURL=broadcast-to-user.js.map

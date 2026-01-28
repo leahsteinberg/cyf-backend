@@ -1,3 +1,4 @@
+// Only prisma logic should go here. No other business logic.
 import { prisma } from "../auth.js";
 export const findInvite = async (token, userToPhoneNumber) => {
     const invite = await prisma.invitation.findFirst({

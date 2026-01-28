@@ -1,3 +1,4 @@
+// Only prisma logic should go here. No other business logic.
 import { SEARCHING_MEETING_STATE } from "../../types.js";
 import { prisma } from "../auth.js";
 export const findMeetingWithUserFromOffer = async ({ offer }) => {
@@ -11,6 +12,7 @@ export const findMeetingWithUserFromOffer = async ({ offer }) => {
                     displayUsername: true,
                     username: true,
                     email: true,
+                    phoneNumber: true,
                 }
             },
             acceptedUser: {
@@ -19,7 +21,8 @@ export const findMeetingWithUserFromOffer = async ({ offer }) => {
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 }
             },
             broadcastMetadata: {
@@ -32,7 +35,8 @@ export const findMeetingWithUserFromOffer = async ({ offer }) => {
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -55,7 +59,8 @@ export const getCreatedMeetings = async ({ userFromId }) => {
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 },
             },
             broadcastMetadata: {
@@ -68,7 +73,8 @@ export const getCreatedMeetings = async ({ userFromId }) => {
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -93,7 +99,8 @@ export const getAcceptedMeetings = async ({ acceptedUserId }) => {
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 },
             },
             broadcastMetadata: {
@@ -106,7 +113,8 @@ export const getAcceptedMeetings = async ({ acceptedUserId }) => {
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -129,7 +137,8 @@ export const getAllSearchingMeetings = async () => {
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 }
             },
             broadcastMetadata: {
@@ -142,7 +151,8 @@ export const getAllSearchingMeetings = async () => {
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -172,7 +182,8 @@ export const getMeetingById = async ({ meetingId }) => {
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 }
             },
             acceptedUser: {
@@ -181,7 +192,8 @@ export const getMeetingById = async ({ meetingId }) => {
                     name: true,
                     email: true,
                     username: true,
-                    displayUsername: true
+                    displayUsername: true,
+                    phoneNumber: true,
                 }
             },
             broadcastMetadata: {
@@ -194,7 +206,8 @@ export const getMeetingById = async ({ meetingId }) => {
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -220,7 +233,8 @@ export const getUserFromMeetingId = async (meetingId) => {
                                     name: true,
                                     email: true,
                                     username: true,
-                                    displayUsername: true
+                                    displayUsername: true,
+                                    phoneNumber: true,
                                 }
                             }
                         }
@@ -255,7 +269,8 @@ export const enrichMeetingsWithAcceptedUsers = async (meetings) => {
             name: true,
             email: true,
             username: true,
-            displayUsername: true
+            displayUsername: true,
+            phoneNumber: true,
         }
     });
     // Create a map for quick lookup
@@ -264,6 +279,46 @@ export const enrichMeetingsWithAcceptedUsers = async (meetings) => {
     return meetings.map(meeting => ({
         ...meeting,
         acceptedUsers: meeting.acceptedUserIds
+            .map(userId => userMap.get(userId))
+            .filter((user) => user !== undefined)
+    }));
+};
+/**
+ * Enriches meetings with targetUsers array containing full User objects
+ * for all users in targetUserIds
+ */
+export const enrichMeetingsWithTargetUsers = async (meetings) => {
+    // Collect all unique targetUserIds across all meetings
+    const allTargetUserIds = new Set();
+    meetings.forEach(meeting => {
+        if (meeting.targetUserIds && meeting.targetUserIds.length > 0) {
+            meeting.targetUserIds.forEach(userId => allTargetUserIds.add(userId));
+        }
+    });
+    if (allTargetUserIds.size === 0) {
+        // No target users to fetch, return meetings as-is with empty targetUsers arrays
+        return meetings.map(m => ({ ...m, targetUsers: [] }));
+    }
+    // Fetch all target users in a single query
+    const targetUsers = await prisma.user.findMany({
+        where: {
+            id: { in: Array.from(allTargetUserIds) }
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            username: true,
+            displayUsername: true,
+            phoneNumber: true,
+        }
+    });
+    // Create a map for quick lookup
+    const userMap = new Map(targetUsers.map(user => [user.id, user]));
+    // Enrich each meeting with its targetUsers array
+    return meetings.map(meeting => ({
+        ...meeting,
+        targetUsers: (meeting.targetUserIds || [])
             .map(userId => userMap.get(userId))
             .filter((user) => user !== undefined)
     }));

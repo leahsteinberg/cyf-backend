@@ -1,3 +1,16 @@
+import { type Meeting } from "../types.js";
+/**
+ * Checks if a meeting is an active broadcast.
+ *
+ * A broadcast is "active" if:
+ * - It's IMMEDIATE (broadcast)
+ * - State is SEARCHING or ACCEPTED
+ * - Should be shown (not stale or terminal) per centralized staleness logic
+ *
+ * @param meeting - Meeting to check
+ * @returns true if meeting is an active broadcast
+ */
+export declare const isActiveBroadcastMeeting: (meeting: Meeting) => Promise<boolean>;
 /**
  * Checks if a specific user is broadcasting TO another user (viewer-specific).
  *

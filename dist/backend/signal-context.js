@@ -1,4 +1,4 @@
-import { getUserContextInfo } from "./query/user-lookup.js";
+import { getUserContextInfo, getIsBroadcasting } from "./query/user-lookup.js";
 import { getUserSignalsForUser } from "./query/signal-lookup.js";
 import { getFriendsWithDetails, enrichFriendsWithBroadcastStatus } from "./query/friendship-lookup.js";
 import { getCreatedMeetings, getAcceptedMeetings } from "./query/meeting-lookup.js";
@@ -25,7 +25,7 @@ export async function buildSuggestionContext(userId) {
             username: user.username,
             displayUsername: user.displayUsername,
             timezone: user.timezone,
-            isBroadcasting: user.isBroadcasting,
+            isBroadcasting: await getIsBroadcasting({ userId }),
             memberSince: user.createdAt
         },
         signals: {

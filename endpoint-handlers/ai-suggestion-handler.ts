@@ -4,14 +4,16 @@ import { AI_CONFIG } from '../backend/config/ai-config.js';
 
 export const handleGenerateSuggestions = async (req: Request, res: Response) => {
   const { userId } = req.body;
+  console.log("env is", process.env);
+  console.log("AI COFIG IS -", AI_CONFIG)
 
   if (!userId) {
     return res.status(400).json({ error: 'userId is required' });
   }
 
-  if (!AI_CONFIG.enabled) {
-    return res.json({ suggestions: [], message: 'AI suggestions disabled' });
-  }
+  // if (!AI_CONFIG.enabled) {
+  //   return res.json({ suggestions: [], message: 'AI suggestions disabled----' });
+  // }
 
   try {
     // Generate suggestions from AI
@@ -38,7 +40,7 @@ export const handleGenerateSuggestions = async (req: Request, res: Response) => 
     console.error('Error generating suggestions:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     return res.status(500).json({
-      error: 'Failed to generate suggestions',
+      error: 'Failed to generate suggestions!!!!!',
       details: errorMessage
     });
   }

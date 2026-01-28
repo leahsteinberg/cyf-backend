@@ -1,9 +1,8 @@
 import { getUserSignalsForUser } from '../backend/query/signal-lookup.js';
 import { addSignalForUser, removeSignalForUser } from '../backend/update/signal-update.js';
-import { CALL_INTENT_SIGNAL_TYPE, FRIEND_SPECIFIC_TARGET_TYPE, UNKNOWN_TIME_TYPE, USER_INTENT_SOURCE_TYPE } from '../types.js';
-import { prisma } from '../backend/auth.js';
-import { createDraftMeeting } from '../backend/draft-meeting.js';
+import { CALL_INTENT_SIGNAL_TYPE } from '../types.js';
 import { createCallIntent } from '../backend/call-intent-creator.js';
+import { onePerUserSignals } from '../backend/signal-utils.js';
 export const handleGetUserSignals = async (req, res) => {
     const { userId } = req.body;
     console.log("Get user signals:", { userId });
@@ -24,19 +23,15 @@ export const handleAddUserSignal = async (req, res) => {
     const { userId, payload, type } = req.body;
     console.log("Add user signal from ", userId, type);
     try {
+        const existingSignals = await getUserSignalsForUser({ userId });
         // Check for duplicate CALL_INTENT with same targetUserIds
         if (type === CALL_INTENT_SIGNAL_TYPE) {
             // Support both old format (targetUserId: string) and new format (targetUserIds: string[])
             const targetUserIds = payload?.targetUserIds || (payload?.targetUserId ? [payload.targetUserId] : null);
             if (targetUserIds && targetUserIds.length > 0) {
-                const existingSignals = await prisma.userSignal.findMany({
-                    where: {
-                        userId,
-                        type: CALL_INTENT_SIGNAL_TYPE,
-                    }
-                });
+                const existingCallIntentSignals = existingSignals.filter((signal) => signal.type === CALL_INTENT_SIGNAL_TYPE);
                 // Check if there's a duplicate with the same targetUserIds
-                const duplicate = existingSignals.find((signal) => {
+                const duplicate = existingCallIntentSignals.find((signal) => {
                     const existingTargetIds = signal.payload?.targetUserIds || (signal.payload?.targetUserId ? [signal.payload.targetUserId] : []);
                     return JSON.stringify(existingTargetIds.sort()) === JSON.stringify(targetUserIds.sort());
                 });
@@ -51,6 +46,14 @@ export const handleAddUserSignal = async (req, res) => {
                         await createCallIntent({ userId, targetUserId: targetUserIds[0] });
                     }
                 }
+            }
+        }
+        if (onePerUserSignals.includes(type)) {
+            // check if there are signals of this type for this user,
+            // if so, we need to overwrite it by removing old ones first
+            const duplicates = existingSignals.filter((signal) => signal.type === type);
+            for (const duplicate of duplicates) {
+                await removeSignalForUser({ userId, signalId: duplicate.id });
             }
         }
         const signal = await addSignalForUser({ userId, signalType: type, payload });

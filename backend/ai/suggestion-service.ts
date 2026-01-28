@@ -33,10 +33,11 @@ Bad reason examples (don't do these):
 - "Statistically optimal time..."`;
 
 export async function generateSuggestions(userId: string): Promise<AISuggestedMeeting[]> {
-  if (!AI_CONFIG.enabled) {
-    console.log('AI suggestions disabled');
-    return [];
-  }
+  console.log("AI CONFIG", AI_CONFIG)
+  // if (!AI_CONFIG.enabled) {
+  //   console.log('AI suggestions disabled');
+  //   return [];
+  // }
 
   // 1. Build context (already implemented!)
   const context = await buildSuggestionContext(userId);

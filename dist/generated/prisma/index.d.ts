@@ -63,6 +63,11 @@ export type Offer = $Result.DefaultSelection<Prisma.$OfferPayload>
  * 
  */
 export type UserSignal = $Result.DefaultSelection<Prisma.$UserSignalPayload>
+/**
+ * Model UserEvent
+ * 
+ */
+export type UserEvent = $Result.DefaultSelection<Prisma.$UserEventPayload>
 
 /**
  * Enums
@@ -396,6 +401,16 @@ export class PrismaClient<
     * ```
     */
   get userSignal(): Prisma.UserSignalDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userEvent`: Exposes CRUD operations for the **UserEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserEvents
+    * const userEvents = await prisma.userEvent.findMany()
+    * ```
+    */
+  get userEvent(): Prisma.UserEventDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -845,7 +860,8 @@ export namespace Prisma {
     Meeting: 'Meeting',
     BroadcastMetadata: 'BroadcastMetadata',
     Offer: 'Offer',
-    UserSignal: 'UserSignal'
+    UserSignal: 'UserSignal',
+    UserEvent: 'UserEvent'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -864,7 +880,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "friendship" | "invitation" | "meeting" | "broadcastMetadata" | "offer" | "userSignal"
+      modelProps: "user" | "session" | "account" | "verification" | "friendship" | "invitation" | "meeting" | "broadcastMetadata" | "offer" | "userSignal" | "userEvent"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1608,6 +1624,80 @@ export namespace Prisma {
           }
         }
       }
+      UserEvent: {
+        payload: Prisma.$UserEventPayload<ExtArgs>
+        fields: Prisma.UserEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload>
+          }
+          findFirst: {
+            args: Prisma.UserEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload>
+          }
+          findMany: {
+            args: Prisma.UserEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload>[]
+          }
+          create: {
+            args: Prisma.UserEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload>
+          }
+          createMany: {
+            args: Prisma.UserEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload>[]
+          }
+          delete: {
+            args: Prisma.UserEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload>
+          }
+          update: {
+            args: Prisma.UserEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserEventPayload>
+          }
+          aggregate: {
+            args: Prisma.UserEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserEvent>
+          }
+          groupBy: {
+            args: Prisma.UserEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserEventCountArgs<ExtArgs>
+            result: $Utils.Optional<UserEventCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1714,6 +1804,7 @@ export namespace Prisma {
     broadcastMetadata?: BroadcastMetadataOmit
     offer?: OfferOmit
     userSignal?: UserSignalOmit
+    userEvent?: UserEventOmit
   }
 
   /* Types for Logging */
@@ -1803,6 +1894,7 @@ export namespace Prisma {
     offersReceived: number
     meetingsAccepted: number
     userSignals: number
+    userEvents: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1815,6 +1907,7 @@ export namespace Prisma {
     offersReceived?: boolean | UserCountOutputTypeCountOffersReceivedArgs
     meetingsAccepted?: boolean | UserCountOutputTypeCountMeetingsAcceptedArgs
     userSignals?: boolean | UserCountOutputTypeCountUserSignalsArgs
+    userEvents?: boolean | UserCountOutputTypeCountUserEventsArgs
   }
 
   // Custom InputTypes
@@ -1889,6 +1982,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountUserSignalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserSignalWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountUserEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserEventWhereInput
   }
 
 
@@ -2203,6 +2303,7 @@ export namespace Prisma {
     offersReceived?: boolean | User$offersReceivedArgs<ExtArgs>
     meetingsAccepted?: boolean | User$meetingsAcceptedArgs<ExtArgs>
     userSignals?: boolean | User$userSignalsArgs<ExtArgs>
+    userEvents?: boolean | User$userEventsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2268,6 +2369,7 @@ export namespace Prisma {
     offersReceived?: boolean | User$offersReceivedArgs<ExtArgs>
     meetingsAccepted?: boolean | User$meetingsAcceptedArgs<ExtArgs>
     userSignals?: boolean | User$userSignalsArgs<ExtArgs>
+    userEvents?: boolean | User$userEventsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2285,6 +2387,7 @@ export namespace Prisma {
       offersReceived: Prisma.$OfferPayload<ExtArgs>[]
       meetingsAccepted: Prisma.$MeetingPayload<ExtArgs>[]
       userSignals: Prisma.$UserSignalPayload<ExtArgs>[]
+      userEvents: Prisma.$UserEventPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2704,6 +2807,7 @@ export namespace Prisma {
     offersReceived<T extends User$offersReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$offersReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     meetingsAccepted<T extends User$meetingsAcceptedArgs<ExtArgs> = {}>(args?: Subset<T, User$meetingsAcceptedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     userSignals<T extends User$userSignalsArgs<ExtArgs> = {}>(args?: Subset<T, User$userSignalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSignalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    userEvents<T extends User$userEventsArgs<ExtArgs> = {}>(args?: Subset<T, User$userEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3348,6 +3452,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserSignalScalarFieldEnum | UserSignalScalarFieldEnum[]
+  }
+
+  /**
+   * User.userEvents
+   */
+  export type User$userEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    where?: UserEventWhereInput
+    orderBy?: UserEventOrderByWithRelationInput | UserEventOrderByWithRelationInput[]
+    cursor?: UserEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserEventScalarFieldEnum | UserEventScalarFieldEnum[]
   }
 
   /**
@@ -13368,6 +13496,1060 @@ export namespace Prisma {
 
 
   /**
+   * Model UserEvent
+   */
+
+  export type AggregateUserEvent = {
+    _count: UserEventCountAggregateOutputType | null
+    _min: UserEventMinAggregateOutputType | null
+    _max: UserEventMaxAggregateOutputType | null
+  }
+
+  export type UserEventMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    eventType: string | null
+    createdAt: Date | null
+  }
+
+  export type UserEventMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    eventType: string | null
+    createdAt: Date | null
+  }
+
+  export type UserEventCountAggregateOutputType = {
+    id: number
+    userId: number
+    eventType: number
+    metadata: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type UserEventMinAggregateInputType = {
+    id?: true
+    userId?: true
+    eventType?: true
+    createdAt?: true
+  }
+
+  export type UserEventMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    eventType?: true
+    createdAt?: true
+  }
+
+  export type UserEventCountAggregateInputType = {
+    id?: true
+    userId?: true
+    eventType?: true
+    metadata?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type UserEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserEvent to aggregate.
+     */
+    where?: UserEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserEvents to fetch.
+     */
+    orderBy?: UserEventOrderByWithRelationInput | UserEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserEvents
+    **/
+    _count?: true | UserEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserEventMaxAggregateInputType
+  }
+
+  export type GetUserEventAggregateType<T extends UserEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserEvent[P]>
+      : GetScalarType<T[P], AggregateUserEvent[P]>
+  }
+
+
+
+
+  export type UserEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserEventWhereInput
+    orderBy?: UserEventOrderByWithAggregationInput | UserEventOrderByWithAggregationInput[]
+    by: UserEventScalarFieldEnum[] | UserEventScalarFieldEnum
+    having?: UserEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserEventCountAggregateInputType | true
+    _min?: UserEventMinAggregateInputType
+    _max?: UserEventMaxAggregateInputType
+  }
+
+  export type UserEventGroupByOutputType = {
+    id: string
+    userId: string
+    eventType: string
+    metadata: JsonValue | null
+    createdAt: Date
+    _count: UserEventCountAggregateOutputType | null
+    _min: UserEventMinAggregateOutputType | null
+    _max: UserEventMaxAggregateOutputType | null
+  }
+
+  type GetUserEventGroupByPayload<T extends UserEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserEventGroupByOutputType[P]>
+            : GetScalarType<T[P], UserEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    eventType?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userEvent"]>
+
+  export type UserEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    eventType?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userEvent"]>
+
+  export type UserEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    eventType?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userEvent"]>
+
+  export type UserEventSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    eventType?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }
+
+  export type UserEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "eventType" | "metadata" | "createdAt", ExtArgs["result"]["userEvent"]>
+  export type UserEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserEvent"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      eventType: string
+      metadata: Prisma.JsonValue | null
+      createdAt: Date
+    }, ExtArgs["result"]["userEvent"]>
+    composites: {}
+  }
+
+  type UserEventGetPayload<S extends boolean | null | undefined | UserEventDefaultArgs> = $Result.GetResult<Prisma.$UserEventPayload, S>
+
+  type UserEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserEventCountAggregateInputType | true
+    }
+
+  export interface UserEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserEvent'], meta: { name: 'UserEvent' } }
+    /**
+     * Find zero or one UserEvent that matches the filter.
+     * @param {UserEventFindUniqueArgs} args - Arguments to find a UserEvent
+     * @example
+     * // Get one UserEvent
+     * const userEvent = await prisma.userEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserEventFindUniqueArgs>(args: SelectSubset<T, UserEventFindUniqueArgs<ExtArgs>>): Prisma__UserEventClient<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserEventFindUniqueOrThrowArgs} args - Arguments to find a UserEvent
+     * @example
+     * // Get one UserEvent
+     * const userEvent = await prisma.userEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserEventFindUniqueOrThrowArgs>(args: SelectSubset<T, UserEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserEventClient<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEventFindFirstArgs} args - Arguments to find a UserEvent
+     * @example
+     * // Get one UserEvent
+     * const userEvent = await prisma.userEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserEventFindFirstArgs>(args?: SelectSubset<T, UserEventFindFirstArgs<ExtArgs>>): Prisma__UserEventClient<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEventFindFirstOrThrowArgs} args - Arguments to find a UserEvent
+     * @example
+     * // Get one UserEvent
+     * const userEvent = await prisma.userEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserEventFindFirstOrThrowArgs>(args?: SelectSubset<T, UserEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserEventClient<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserEvents
+     * const userEvents = await prisma.userEvent.findMany()
+     * 
+     * // Get first 10 UserEvents
+     * const userEvents = await prisma.userEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userEventWithIdOnly = await prisma.userEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserEventFindManyArgs>(args?: SelectSubset<T, UserEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserEvent.
+     * @param {UserEventCreateArgs} args - Arguments to create a UserEvent.
+     * @example
+     * // Create one UserEvent
+     * const UserEvent = await prisma.userEvent.create({
+     *   data: {
+     *     // ... data to create a UserEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserEventCreateArgs>(args: SelectSubset<T, UserEventCreateArgs<ExtArgs>>): Prisma__UserEventClient<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserEvents.
+     * @param {UserEventCreateManyArgs} args - Arguments to create many UserEvents.
+     * @example
+     * // Create many UserEvents
+     * const userEvent = await prisma.userEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserEventCreateManyArgs>(args?: SelectSubset<T, UserEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserEvents and returns the data saved in the database.
+     * @param {UserEventCreateManyAndReturnArgs} args - Arguments to create many UserEvents.
+     * @example
+     * // Create many UserEvents
+     * const userEvent = await prisma.userEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserEvents and only return the `id`
+     * const userEventWithIdOnly = await prisma.userEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserEventCreateManyAndReturnArgs>(args?: SelectSubset<T, UserEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserEvent.
+     * @param {UserEventDeleteArgs} args - Arguments to delete one UserEvent.
+     * @example
+     * // Delete one UserEvent
+     * const UserEvent = await prisma.userEvent.delete({
+     *   where: {
+     *     // ... filter to delete one UserEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserEventDeleteArgs>(args: SelectSubset<T, UserEventDeleteArgs<ExtArgs>>): Prisma__UserEventClient<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserEvent.
+     * @param {UserEventUpdateArgs} args - Arguments to update one UserEvent.
+     * @example
+     * // Update one UserEvent
+     * const userEvent = await prisma.userEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserEventUpdateArgs>(args: SelectSubset<T, UserEventUpdateArgs<ExtArgs>>): Prisma__UserEventClient<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserEvents.
+     * @param {UserEventDeleteManyArgs} args - Arguments to filter UserEvents to delete.
+     * @example
+     * // Delete a few UserEvents
+     * const { count } = await prisma.userEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserEventDeleteManyArgs>(args?: SelectSubset<T, UserEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserEvents
+     * const userEvent = await prisma.userEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserEventUpdateManyArgs>(args: SelectSubset<T, UserEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserEvents and returns the data updated in the database.
+     * @param {UserEventUpdateManyAndReturnArgs} args - Arguments to update many UserEvents.
+     * @example
+     * // Update many UserEvents
+     * const userEvent = await prisma.userEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserEvents and only return the `id`
+     * const userEventWithIdOnly = await prisma.userEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserEventUpdateManyAndReturnArgs>(args: SelectSubset<T, UserEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserEvent.
+     * @param {UserEventUpsertArgs} args - Arguments to update or create a UserEvent.
+     * @example
+     * // Update or create a UserEvent
+     * const userEvent = await prisma.userEvent.upsert({
+     *   create: {
+     *     // ... data to create a UserEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserEventUpsertArgs>(args: SelectSubset<T, UserEventUpsertArgs<ExtArgs>>): Prisma__UserEventClient<$Result.GetResult<Prisma.$UserEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEventCountArgs} args - Arguments to filter UserEvents to count.
+     * @example
+     * // Count the number of UserEvents
+     * const count = await prisma.userEvent.count({
+     *   where: {
+     *     // ... the filter for the UserEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserEventCountArgs>(
+      args?: Subset<T, UserEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserEventAggregateArgs>(args: Subset<T, UserEventAggregateArgs>): Prisma.PrismaPromise<GetUserEventAggregateType<T>>
+
+    /**
+     * Group by UserEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserEventGroupByArgs['orderBy'] }
+        : { orderBy?: UserEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserEvent model
+   */
+  readonly fields: UserEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserEvent model
+   */
+  interface UserEventFieldRefs {
+    readonly id: FieldRef<"UserEvent", 'String'>
+    readonly userId: FieldRef<"UserEvent", 'String'>
+    readonly eventType: FieldRef<"UserEvent", 'String'>
+    readonly metadata: FieldRef<"UserEvent", 'Json'>
+    readonly createdAt: FieldRef<"UserEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserEvent findUnique
+   */
+  export type UserEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEvent to fetch.
+     */
+    where: UserEventWhereUniqueInput
+  }
+
+  /**
+   * UserEvent findUniqueOrThrow
+   */
+  export type UserEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEvent to fetch.
+     */
+    where: UserEventWhereUniqueInput
+  }
+
+  /**
+   * UserEvent findFirst
+   */
+  export type UserEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEvent to fetch.
+     */
+    where?: UserEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserEvents to fetch.
+     */
+    orderBy?: UserEventOrderByWithRelationInput | UserEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserEvents.
+     */
+    cursor?: UserEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserEvents.
+     */
+    distinct?: UserEventScalarFieldEnum | UserEventScalarFieldEnum[]
+  }
+
+  /**
+   * UserEvent findFirstOrThrow
+   */
+  export type UserEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEvent to fetch.
+     */
+    where?: UserEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserEvents to fetch.
+     */
+    orderBy?: UserEventOrderByWithRelationInput | UserEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserEvents.
+     */
+    cursor?: UserEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserEvents.
+     */
+    distinct?: UserEventScalarFieldEnum | UserEventScalarFieldEnum[]
+  }
+
+  /**
+   * UserEvent findMany
+   */
+  export type UserEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEvents to fetch.
+     */
+    where?: UserEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserEvents to fetch.
+     */
+    orderBy?: UserEventOrderByWithRelationInput | UserEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserEvents.
+     */
+    cursor?: UserEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserEvents.
+     */
+    skip?: number
+    distinct?: UserEventScalarFieldEnum | UserEventScalarFieldEnum[]
+  }
+
+  /**
+   * UserEvent create
+   */
+  export type UserEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserEvent.
+     */
+    data: XOR<UserEventCreateInput, UserEventUncheckedCreateInput>
+  }
+
+  /**
+   * UserEvent createMany
+   */
+  export type UserEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserEvents.
+     */
+    data: UserEventCreateManyInput | UserEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserEvent createManyAndReturn
+   */
+  export type UserEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserEvents.
+     */
+    data: UserEventCreateManyInput | UserEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserEvent update
+   */
+  export type UserEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserEvent.
+     */
+    data: XOR<UserEventUpdateInput, UserEventUncheckedUpdateInput>
+    /**
+     * Choose, which UserEvent to update.
+     */
+    where: UserEventWhereUniqueInput
+  }
+
+  /**
+   * UserEvent updateMany
+   */
+  export type UserEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserEvents.
+     */
+    data: XOR<UserEventUpdateManyMutationInput, UserEventUncheckedUpdateManyInput>
+    /**
+     * Filter which UserEvents to update
+     */
+    where?: UserEventWhereInput
+    /**
+     * Limit how many UserEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserEvent updateManyAndReturn
+   */
+  export type UserEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * The data used to update UserEvents.
+     */
+    data: XOR<UserEventUpdateManyMutationInput, UserEventUncheckedUpdateManyInput>
+    /**
+     * Filter which UserEvents to update
+     */
+    where?: UserEventWhereInput
+    /**
+     * Limit how many UserEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserEvent upsert
+   */
+  export type UserEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserEvent to update in case it exists.
+     */
+    where: UserEventWhereUniqueInput
+    /**
+     * In case the UserEvent found by the `where` argument doesn't exist, create a new UserEvent with this data.
+     */
+    create: XOR<UserEventCreateInput, UserEventUncheckedCreateInput>
+    /**
+     * In case the UserEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserEventUpdateInput, UserEventUncheckedUpdateInput>
+  }
+
+  /**
+   * UserEvent delete
+   */
+  export type UserEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+    /**
+     * Filter which UserEvent to delete.
+     */
+    where: UserEventWhereUniqueInput
+  }
+
+  /**
+   * UserEvent deleteMany
+   */
+  export type UserEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserEvents to delete
+     */
+    where?: UserEventWhereInput
+    /**
+     * Limit how many UserEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserEvent without action
+   */
+  export type UserEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEvent
+     */
+    select?: UserEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserEvent
+     */
+    omit?: UserEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEventInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -13528,6 +14710,17 @@ export namespace Prisma {
   export type UserSignalScalarFieldEnum = (typeof UserSignalScalarFieldEnum)[keyof typeof UserSignalScalarFieldEnum]
 
 
+  export const UserEventScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    eventType: 'eventType',
+    metadata: 'metadata',
+    createdAt: 'createdAt'
+  };
+
+  export type UserEventScalarFieldEnum = (typeof UserEventScalarFieldEnum)[keyof typeof UserEventScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -13541,6 +14734,14 @@ export namespace Prisma {
   };
 
   export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -13792,6 +14993,7 @@ export namespace Prisma {
     offersReceived?: OfferListRelationFilter
     meetingsAccepted?: MeetingListRelationFilter
     userSignals?: UserSignalListRelationFilter
+    userEvents?: UserEventListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -13818,6 +15020,7 @@ export namespace Prisma {
     offersReceived?: OfferOrderByRelationAggregateInput
     meetingsAccepted?: MeetingOrderByRelationAggregateInput
     userSignals?: UserSignalOrderByRelationAggregateInput
+    userEvents?: UserEventOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -13847,6 +15050,7 @@ export namespace Prisma {
     offersReceived?: OfferListRelationFilter
     meetingsAccepted?: MeetingListRelationFilter
     userSignals?: UserSignalListRelationFilter
+    userEvents?: UserEventListRelationFilter
   }, "id" | "email" | "phoneNumber" | "username">
 
   export type UserOrderByWithAggregationInput = {
@@ -14544,6 +15748,61 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"UserSignal"> | Date | string
   }
 
+  export type UserEventWhereInput = {
+    AND?: UserEventWhereInput | UserEventWhereInput[]
+    OR?: UserEventWhereInput[]
+    NOT?: UserEventWhereInput | UserEventWhereInput[]
+    id?: StringFilter<"UserEvent"> | string
+    userId?: StringFilter<"UserEvent"> | string
+    eventType?: StringFilter<"UserEvent"> | string
+    metadata?: JsonNullableFilter<"UserEvent">
+    createdAt?: DateTimeFilter<"UserEvent"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserEventOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UserEventWhereInput | UserEventWhereInput[]
+    OR?: UserEventWhereInput[]
+    NOT?: UserEventWhereInput | UserEventWhereInput[]
+    userId?: StringFilter<"UserEvent"> | string
+    eventType?: StringFilter<"UserEvent"> | string
+    metadata?: JsonNullableFilter<"UserEvent">
+    createdAt?: DateTimeFilter<"UserEvent"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type UserEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: UserEventCountOrderByAggregateInput
+    _max?: UserEventMaxOrderByAggregateInput
+    _min?: UserEventMinOrderByAggregateInput
+  }
+
+  export type UserEventScalarWhereWithAggregatesInput = {
+    AND?: UserEventScalarWhereWithAggregatesInput | UserEventScalarWhereWithAggregatesInput[]
+    OR?: UserEventScalarWhereWithAggregatesInput[]
+    NOT?: UserEventScalarWhereWithAggregatesInput | UserEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserEvent"> | string
+    userId?: StringWithAggregatesFilter<"UserEvent"> | string
+    eventType?: StringWithAggregatesFilter<"UserEvent"> | string
+    metadata?: JsonNullableWithAggregatesFilter<"UserEvent">
+    createdAt?: DateTimeWithAggregatesFilter<"UserEvent"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     email: string
@@ -14568,6 +15827,7 @@ export namespace Prisma {
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalCreateNestedManyWithoutUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -14594,6 +15854,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -14620,6 +15881,7 @@ export namespace Prisma {
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -14646,6 +15908,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -15399,6 +16662,61 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserEventCreateInput = {
+    id?: string
+    eventType: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutUserEventsInput
+  }
+
+  export type UserEventUncheckedCreateInput = {
+    id?: string
+    userId: string
+    eventType: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type UserEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutUserEventsNestedInput
+  }
+
+  export type UserEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserEventCreateManyInput = {
+    id?: string
+    userId: string
+    eventType: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type UserEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -15492,6 +16810,12 @@ export namespace Prisma {
     none?: UserSignalWhereInput
   }
 
+  export type UserEventListRelationFilter = {
+    every?: UserEventWhereInput
+    some?: UserEventWhereInput
+    none?: UserEventWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -15522,6 +16846,10 @@ export namespace Prisma {
   }
 
   export type UserSignalOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserEventOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -16231,6 +17559,77 @@ export namespace Prisma {
     _min?: NestedJsonFilter<$PrismaModel>
     _max?: NestedJsonFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type UserEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    createdAt?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
 
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
@@ -16295,6 +17694,13 @@ export namespace Prisma {
     connect?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
   }
 
+  export type UserEventCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserEventCreateWithoutUserInput, UserEventUncheckedCreateWithoutUserInput> | UserEventCreateWithoutUserInput[] | UserEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserEventCreateOrConnectWithoutUserInput | UserEventCreateOrConnectWithoutUserInput[]
+    createMany?: UserEventCreateManyUserInputEnvelope
+    connect?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -16356,6 +17762,13 @@ export namespace Prisma {
     connectOrCreate?: UserSignalCreateOrConnectWithoutUserInput | UserSignalCreateOrConnectWithoutUserInput[]
     createMany?: UserSignalCreateManyUserInputEnvelope
     connect?: UserSignalWhereUniqueInput | UserSignalWhereUniqueInput[]
+  }
+
+  export type UserEventUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserEventCreateWithoutUserInput, UserEventUncheckedCreateWithoutUserInput> | UserEventCreateWithoutUserInput[] | UserEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserEventCreateOrConnectWithoutUserInput | UserEventCreateOrConnectWithoutUserInput[]
+    createMany?: UserEventCreateManyUserInputEnvelope
+    connect?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -16504,6 +17917,20 @@ export namespace Prisma {
     deleteMany?: UserSignalScalarWhereInput | UserSignalScalarWhereInput[]
   }
 
+  export type UserEventUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserEventCreateWithoutUserInput, UserEventUncheckedCreateWithoutUserInput> | UserEventCreateWithoutUserInput[] | UserEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserEventCreateOrConnectWithoutUserInput | UserEventCreateOrConnectWithoutUserInput[]
+    upsert?: UserEventUpsertWithWhereUniqueWithoutUserInput | UserEventUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserEventCreateManyUserInputEnvelope
+    set?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
+    disconnect?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
+    delete?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
+    connect?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
+    update?: UserEventUpdateWithWhereUniqueWithoutUserInput | UserEventUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserEventUpdateManyWithWhereWithoutUserInput | UserEventUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserEventScalarWhereInput | UserEventScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -16628,6 +18055,20 @@ export namespace Prisma {
     update?: UserSignalUpdateWithWhereUniqueWithoutUserInput | UserSignalUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserSignalUpdateManyWithWhereWithoutUserInput | UserSignalUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserSignalScalarWhereInput | UserSignalScalarWhereInput[]
+  }
+
+  export type UserEventUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserEventCreateWithoutUserInput, UserEventUncheckedCreateWithoutUserInput> | UserEventCreateWithoutUserInput[] | UserEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserEventCreateOrConnectWithoutUserInput | UserEventCreateOrConnectWithoutUserInput[]
+    upsert?: UserEventUpsertWithWhereUniqueWithoutUserInput | UserEventUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserEventCreateManyUserInputEnvelope
+    set?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
+    disconnect?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
+    delete?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
+    connect?: UserEventWhereUniqueInput | UserEventWhereUniqueInput[]
+    update?: UserEventUpdateWithWhereUniqueWithoutUserInput | UserEventUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserEventUpdateManyWithWhereWithoutUserInput | UserEventUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserEventScalarWhereInput | UserEventScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -16989,6 +18430,20 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserSignalsInput, UserUpdateWithoutUserSignalsInput>, UserUncheckedUpdateWithoutUserSignalsInput>
   }
 
+  export type UserCreateNestedOneWithoutUserEventsInput = {
+    create?: XOR<UserCreateWithoutUserEventsInput, UserUncheckedCreateWithoutUserEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserEventsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutUserEventsNestedInput = {
+    create?: XOR<UserCreateWithoutUserEventsInput, UserUncheckedCreateWithoutUserEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserEventsInput
+    upsert?: UserUpsertWithoutUserEventsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserEventsInput, UserUpdateWithoutUserEventsInput>, UserUncheckedUpdateWithoutUserEventsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -17334,6 +18789,29 @@ export namespace Prisma {
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type SessionCreateWithoutUserInput = {
     id: string
@@ -17639,6 +19117,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserEventCreateWithoutUserInput = {
+    id?: string
+    eventType: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type UserEventUncheckedCreateWithoutUserInput = {
+    id?: string
+    eventType: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type UserEventCreateOrConnectWithoutUserInput = {
+    where: UserEventWhereUniqueInput
+    create: XOR<UserEventCreateWithoutUserInput, UserEventUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserEventCreateManyUserInputEnvelope = {
+    data: UserEventCreateManyUserInput | UserEventCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
     where: SessionWhereUniqueInput
     update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
@@ -17887,6 +19389,33 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"UserSignal"> | Date | string
   }
 
+  export type UserEventUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserEventWhereUniqueInput
+    update: XOR<UserEventUpdateWithoutUserInput, UserEventUncheckedUpdateWithoutUserInput>
+    create: XOR<UserEventCreateWithoutUserInput, UserEventUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserEventUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserEventWhereUniqueInput
+    data: XOR<UserEventUpdateWithoutUserInput, UserEventUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserEventUpdateManyWithWhereWithoutUserInput = {
+    where: UserEventScalarWhereInput
+    data: XOR<UserEventUpdateManyMutationInput, UserEventUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserEventScalarWhereInput = {
+    AND?: UserEventScalarWhereInput | UserEventScalarWhereInput[]
+    OR?: UserEventScalarWhereInput[]
+    NOT?: UserEventScalarWhereInput | UserEventScalarWhereInput[]
+    id?: StringFilter<"UserEvent"> | string
+    userId?: StringFilter<"UserEvent"> | string
+    eventType?: StringFilter<"UserEvent"> | string
+    metadata?: JsonNullableFilter<"UserEvent">
+    createdAt?: DateTimeFilter<"UserEvent"> | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     email: string
@@ -17910,6 +19439,7 @@ export namespace Prisma {
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalCreateNestedManyWithoutUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -17935,6 +19465,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -17976,6 +19507,7 @@ export namespace Prisma {
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -18001,6 +19533,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -18026,6 +19559,7 @@ export namespace Prisma {
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalCreateNestedManyWithoutUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -18051,6 +19585,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -18092,6 +19627,7 @@ export namespace Prisma {
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -18117,6 +19653,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutFriendsOfInput = {
@@ -18142,6 +19679,7 @@ export namespace Prisma {
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalCreateNestedManyWithoutUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFriendsOfInput = {
@@ -18167,6 +19705,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFriendsOfInput = {
@@ -18197,6 +19736,7 @@ export namespace Prisma {
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalCreateNestedManyWithoutUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFriendsWithInput = {
@@ -18222,6 +19762,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFriendsWithInput = {
@@ -18263,6 +19804,7 @@ export namespace Prisma {
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendsOfInput = {
@@ -18288,6 +19830,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutFriendsWithInput = {
@@ -18324,6 +19867,7 @@ export namespace Prisma {
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendsWithInput = {
@@ -18349,6 +19893,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutInvitesSentInput = {
@@ -18374,6 +19919,7 @@ export namespace Prisma {
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalCreateNestedManyWithoutUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInvitesSentInput = {
@@ -18399,6 +19945,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInvitesSentInput = {
@@ -18440,6 +19987,7 @@ export namespace Prisma {
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitesSentInput = {
@@ -18465,6 +20013,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutMeetingsCreatedInput = {
@@ -18490,6 +20039,7 @@ export namespace Prisma {
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalCreateNestedManyWithoutUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMeetingsCreatedInput = {
@@ -18515,6 +20065,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMeetingsCreatedInput = {
@@ -18545,6 +20096,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     userSignals?: UserSignalCreateNestedManyWithoutUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMeetingsAcceptedInput = {
@@ -18570,6 +20122,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMeetingsAcceptedInput = {
@@ -18658,6 +20211,7 @@ export namespace Prisma {
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMeetingsCreatedInput = {
@@ -18683,6 +20237,7 @@ export namespace Prisma {
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutMeetingsAcceptedInput = {
@@ -18719,6 +20274,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMeetingsAcceptedInput = {
@@ -18744,6 +20300,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OfferUpsertWithWhereUniqueWithoutMeetingInput = {
@@ -19021,6 +20578,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalCreateNestedManyWithoutUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOffersReceivedInput = {
@@ -19046,6 +20604,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
     userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOffersReceivedInput = {
@@ -19168,6 +20727,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOffersReceivedInput = {
@@ -19193,6 +20753,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
     userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BroadcastMetadataUpsertWithWhereUniqueWithoutOfferClaimedInput = {
@@ -19245,6 +20806,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userEvents?: UserEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserSignalsInput = {
@@ -19270,6 +20832,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
     offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
     meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userEvents?: UserEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserSignalsInput = {
@@ -19311,6 +20874,7 @@ export namespace Prisma {
     meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userEvents?: UserEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserSignalsInput = {
@@ -19336,6 +20900,127 @@ export namespace Prisma {
     meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
     offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
     meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userEvents?: UserEventUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutUserEventsInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    pushToken?: string | null
+    timezone?: string | null
+    isBroadcasting?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutUserEventsInput = {
+    id: string
+    email: string
+    name?: string | null
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phoneNumber?: string | null
+    phoneNumberVerified?: boolean | null
+    pushToken?: string | null
+    timezone?: string | null
+    isBroadcasting?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
+    friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
+    invitesSent?: InvitationUncheckedCreateNestedManyWithoutUserFromInput
+    meetingsCreated?: MeetingUncheckedCreateNestedManyWithoutUserFromInput
+    offersReceived?: OfferUncheckedCreateNestedManyWithoutUserOfferedInput
+    meetingsAccepted?: MeetingUncheckedCreateNestedManyWithoutAcceptedUserInput
+    userSignals?: UserSignalUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUserEventsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserEventsInput, UserUncheckedCreateWithoutUserEventsInput>
+  }
+
+  export type UserUpsertWithoutUserEventsInput = {
+    update: XOR<UserUpdateWithoutUserEventsInput, UserUncheckedUpdateWithoutUserEventsInput>
+    create: XOR<UserCreateWithoutUserEventsInput, UserUncheckedCreateWithoutUserEventsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUserEventsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUserEventsInput, UserUncheckedUpdateWithoutUserEventsInput>
+  }
+
+  export type UserUpdateWithoutUserEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUserEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumberVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    pushToken?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
+    friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
+    invitesSent?: InvitationUncheckedUpdateManyWithoutUserFromNestedInput
+    meetingsCreated?: MeetingUncheckedUpdateManyWithoutUserFromNestedInput
+    offersReceived?: OfferUncheckedUpdateManyWithoutUserOfferedNestedInput
+    meetingsAccepted?: MeetingUncheckedUpdateManyWithoutAcceptedUserNestedInput
+    userSignals?: UserSignalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -19437,6 +21122,13 @@ export namespace Prisma {
     payload: JsonNullValueInput | InputJsonValue
     startsAt?: Date | string | null
     endsAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type UserEventCreateManyUserInput = {
+    id?: string
+    eventType: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
   }
 
@@ -19753,6 +21445,27 @@ export namespace Prisma {
     payload?: JsonNullValueInput | InputJsonValue
     startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserEventUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserEventUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserEventUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

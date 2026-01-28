@@ -11,9 +11,10 @@ import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoin
 import { handleCronRound } from './endpoint-handlers/cron-handler.js';
 import { handlePush } from './endpoint-handlers/push-handler.js';
 import { handleBroadcastNow, handleBroadcastEnd, handleIsUserBroadcasting } from './endpoint-handlers/broadcast-handler.js';
-import { handleCallIntent, handleUndoCallIntent } from './endpoint-handlers/call-intent-handler.js';
+import { handleCallStart, handleCallEnd, handleCallError } from './endpoint-handlers/call-handler.js';
 import { handleAcceptSuggestion, handleCreateSampleSuggestion, handleCreateSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
 import { handleAddUserSignal, handleGetUserSignals, handleRemoveUserSignal } from './endpoint-handlers/user-signal-handler.js';
+import { handleGenerateSuggestions } from './endpoint-handlers/ai-suggestion-handler.js';
 const app = express();
 const port = 3000;
 const hostname = '192.168.0.30';
@@ -54,9 +55,10 @@ app.post('/api/reject-offer', handleRejectOffer);
 app.post('/api/broadcast-now', handleBroadcastNow);
 app.post('/api/broadcast-end', handleBroadcastEnd);
 app.post('/api/is-user-broadcasting', handleIsUserBroadcasting);
-//CALL INTENT ENDPOINTS
-app.post('/api/call-intent', handleCallIntent);
-app.post('/api/undo-call-intent', handleUndoCallIntent);
+//CALL TRACKING ENDPOINTS
+app.post('/api/calls/start', handleCallStart);
+app.post('/api/calls/end', handleCallEnd);
+app.post('/api/calls/error', handleCallError);
 //USER SIGNAL ENDPOINTS
 app.post('/api/get-user-signals', handleGetUserSignals);
 app.post('/api/add-user-signal', handleAddUserSignal);
@@ -66,6 +68,7 @@ app.post('/api/accept-suggestion', handleAcceptSuggestion);
 app.post('/api/dismiss-suggestion', handleDismissSuggestion);
 app.post('/api/create-suggestion', handleCreateSuggestion);
 app.get('/api/create-sample-suggestion', handleCreateSampleSuggestion);
+app.post('/api/generate-suggestions', handleGenerateSuggestions);
 app.get('/api/simulate-cron-round', handleCronRound);
 app.get('/', (req, res) => {
     console.log("client IP address", req.ip);

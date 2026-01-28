@@ -13,18 +13,18 @@ export const handlePush = async (req, res) => {
     try {
         // Save the push token and timezone to the database
         const updatedUser = await updateUserPushToken({ userId, pushToken, timezone });
-        // Send a test "Hello World" notification
-        const notification = await sendPushNotification({
-            pushToken,
-            title: "Welcome to Call Your Friends! 🎉",
-            body: "Push notifications are now enabled. You'll receive updates about your meetings here!",
-            data: { type: "test", userId }
-        });
-        console.log("Test notification sent:", notification);
+        // No longer send a test "Hello World" notification (annoying to users)
+        // const notification = await sendPushNotification({
+        //     pushToken,
+        //     title: "Welcome to Call Your Friends! 🎉",
+        //     body: "Push notifications are now enabled. You'll receive updates about your meetings here!",
+        //     data: { type: "test", userId }
+        // });
+        // console.log("Test notification sent:", notification);
         res.json({
             success: true,
             user: updatedUser,
-            notification: notification
+            //notification: notification
         });
     }
     catch (error) {

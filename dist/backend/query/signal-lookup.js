@@ -1,3 +1,4 @@
+// Only prisma logic should go here. No other business logic.
 import { prisma } from "../auth.js";
 export const getUserSignalsForUser = async ({ userId }) => {
     const userSignals = await prisma.userSignal.findMany({

@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
+    "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
     "queries": "node ./queries.ts",
     "caching": "ts-node ./caching.ts",
     "build": "npm install && tsc || true && cp -r ./generated ./dist",
@@ -33,8 +34,11 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.10.0",
+    "jest": "^29.7.0",
     "prisma": "^6.16.3",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
   }
 }

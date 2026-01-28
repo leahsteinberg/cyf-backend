@@ -30,6 +30,7 @@ model User {
   meetingsAccepted    Meeting[]    @relation("meetingsAccepted")
   isBroadcasting      Boolean      @default(false)
   userSignals         UserSignal[] @relation("userSignals")
+  userEvents          UserEvent[]  @relation("userEvents")
 
   username        String?
   displayUsername String?
@@ -177,6 +178,19 @@ model UserSignal {
   createdAt DateTime   @default(now())
 
   @@map("userSignal")
+}
+
+model UserEvent {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation("userEvents", fields: [userId], references: [id], onDelete: Cascade)
+  eventType String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId, eventType])
+  @@index([eventType, createdAt])
+  @@map("userEvent")
 }
 
 enum OfferState {

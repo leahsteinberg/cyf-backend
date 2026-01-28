@@ -2,7 +2,7 @@ import { FRIEND_SPECIFIC_TARGET_TYPE, FUTURE_TIME_TYPE, USER_INTENT_SOURCE_TYPE 
 import { createDraftMeeting } from "./draft-meeting.js";
 
 
-export const createCallIntent = async ({userId, targetUserId}: {userId: string, targetUserId: string}) {
+export const createCallIntent = async ({userId, targetUserId}: {userId: string, targetUserId: string}): Promise<void> => {
     const userToId = targetUserId;
     // Set scheduledFor to 4 days in the future (defacto expiry)
     // Round down to the start of the current hour, then add 4 days
