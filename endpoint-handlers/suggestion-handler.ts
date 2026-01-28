@@ -235,7 +235,7 @@ export const handleCreateSuggestion = async (req: Request, res: Response) => {
 
 
 export const handleCreateSampleSuggestion = async (req: Request, res: Response) => {
-    // const { userId } = req.body;
+    const { userId } = req.body;
 
     console.log("Creating sample suggestion");
     

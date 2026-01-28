@@ -85,7 +85,7 @@ app.post('/api/accept-suggestion', handleAcceptSuggestion);
 app.post('/api/dismiss-suggestion', handleDismissSuggestion);
 app.post('/api/create-suggestion', handleCreateSuggestion);
 app.get('/api/create-sample-suggestion', handleCreateSampleSuggestion);
-app.post('/api/generate-suggestions', handleGenerateSuggestions);
+app.get('/api/generate-suggestions', handleGenerateSuggestions);
 
 app.get('/api/simulate-cron-round', handleCronRound)
 
