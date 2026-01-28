@@ -14,6 +14,7 @@ import { handleBroadcastNow, handleBroadcastEnd, handleIsUserBroadcasting } from
 import { handleCallStart, handleCallEnd, handleCallError } from './endpoint-handlers/call-handler.js';
 import { handleAcceptSuggestion, handleCreateSampleSuggestion, handleCreateSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
 import { handleAddUserSignal, handleGetUserSignals, handleRemoveUserSignal } from './endpoint-handlers/user-signal-handler.js';
+import { handleGenerateSuggestions } from './endpoint-handlers/ai-suggestion-handler.js';
 
 const app = express();
 const port = 3000;
@@ -84,6 +85,7 @@ app.post('/api/accept-suggestion', handleAcceptSuggestion);
 app.post('/api/dismiss-suggestion', handleDismissSuggestion);
 app.post('/api/create-suggestion', handleCreateSuggestion);
 app.get('/api/create-sample-suggestion', handleCreateSampleSuggestion);
+app.post('/api/generate-suggestions', handleGenerateSuggestions);
 
 app.get('/api/simulate-cron-round', handleCronRound)
 
