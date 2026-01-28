@@ -3,7 +3,8 @@ import { generateSuggestions, createMeetingFromSuggestion } from '../backend/ai/
 import { AI_CONFIG } from '../backend/config/ai-config.js';
 
 export const handleGenerateSuggestions = async (req: Request, res: Response) => {
-  const { userId } = req.body;
+  //const { userId } = req.body;
+  const userId = '8rvMiW2HudmXAOIHOfsNKo68BpEMKkzv';
   console.log("env is", process.env);
   console.log("AI COFIG IS -", AI_CONFIG)
 
