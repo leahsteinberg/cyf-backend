@@ -51,9 +51,9 @@ export const handleAddUserSignal = async (req: Request, res: Response) => {
                 } else {
                     // TODO: should be deprecated once Suggestion Engine is running.
                     // For backward compatibility, if single target, use createCallIntent
-                    if (targetUserIds.length === 1) {
-                        await createCallIntent({userId, targetUserId: targetUserIds[0]});
-                    }
+                    // if (targetUserIds.length === 1) {
+                    //     await createCallIntent({userId, targetUserId: targetUserIds[0]});
+                    // }
                 }
             }
         }
