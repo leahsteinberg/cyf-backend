@@ -126,7 +126,7 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
     incomingIntents.reduce((intents, signal) => {
         const targetId = (signal.payload as any)?.targetUserId;
         if (viewerId === targetId) {
-            return {...intents, ...{[targetId]: signal.id}};
+            return {...intents, ...{[signal.userId]: signal.id}};
         }
         return intents;
     }, {});
