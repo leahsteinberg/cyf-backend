@@ -1,5 +1,5 @@
 import { getFriends } from "../backend/friendship.js";
-import { enrichFriendsWithBroadcastStatus, enrichFriendsWithCallIntents } from "../backend/query/friendship-lookup.js";
+import { enrichFriendsWithBroadcastStatus, enrichFriendsWithCallIntents } from "../backend/friend-enrichment.js";
 import type { Request, Response } from 'express';
 
 export const handleGetFriends = async (req: Request, res: Response) => {

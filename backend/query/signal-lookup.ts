@@ -43,20 +43,13 @@ export const getIncomingCallIntents = async ({
 };
 
 /**
- * Gets CALL_INTENT signals from userId that target any of the friendIds.
- * In other words: "Which friends do I want to call?"
+ * Gets all CALL_INTENT signals for a user.
  */
-export const getOutgoingCallIntents = async ({
-    userId,
-    friendIds
+export const getCallIntentsForUser = async ({
+    userId
 }: {
     userId: string;
-    friendIds: string[];
 }): Promise<UserSignal<'CALL_INTENT'>[]> => {
-    if (friendIds.length === 0) {
-        return [];
-    }
-
     const signals = await prisma.userSignal.findMany({
         where: {
             type: CALL_INTENT_SIGNAL_TYPE,
@@ -64,10 +57,5 @@ export const getOutgoingCallIntents = async ({
         },
     });
 
-    // Filter to only those targeting friends
-    // (payload.targetUserIds may contain multiple IDs)
-    return signals.filter(signal => {
-        const targetIds = (signal.payload as any)?.targetUserIds || [];
-        return targetIds.some((id: string) => friendIds.includes(id));
-    }) as UserSignal<'CALL_INTENT'>[];
+    return signals as UserSignal<'CALL_INTENT'>[];
 };

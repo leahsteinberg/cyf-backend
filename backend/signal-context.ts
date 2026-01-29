@@ -1,6 +1,7 @@
 import { getUserContextInfo, getIsBroadcasting } from "./query/user-lookup.js";
 import { getUserSignalsForUser } from "./query/signal-lookup.js";
-import { getFriendsWithDetails, enrichFriendsWithBroadcastStatus, enrichFriendsWithCallIntents } from "./query/friendship-lookup.js";
+import { getFriendsWithDetails } from "./query/friendship-lookup.js";
+import { enrichFriendsWithBroadcastStatus, enrichFriendsWithCallIntents } from "./friend-enrichment.js";
 import { getCreatedMeetings, getAcceptedMeetings } from "./query/meeting-lookup.js";
 import {
     buildCallIntentContext,
