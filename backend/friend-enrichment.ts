@@ -24,7 +24,7 @@ export const getOutgoingCallIntents = async ({
     // Filter to only those targeting friends
     // (payload.targetUserIds may contain multiple IDs)
     const filteredSignals =  signals.filter(signal => {
-        
+        /// I fixed this just now.
         const targetId = (signal.payload as any)?.targetUserId;
         return friendIds.includes(targetId);//targetId.some((id: string) => friendIds.includes(id));
     });
@@ -108,12 +108,12 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
     // Outgoing: extract targetUserIds from each signal
     const friendsIWantToCall = new Set<string>();
     for (const signal of outgoingIntents) {
-        const targetIds = (signal.payload as any)?.targetUserIds || [];
-        for (const id of targetIds) {
-            if (friendIds.includes(id)) {
-                friendsIWantToCall.add(id);
+        const targetId = (signal.payload as any)?.targetUserId;
+        // for (const id of targetIds) {
+            if (friendIds.includes(targetId)) {
+                friendsIWantToCall.add(targetId);
             }
-        }
+        // }
     }
     console.log("friendsIWantToCall", friendsIWantToCall);
 
