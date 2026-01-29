@@ -115,7 +115,7 @@ ${context.friends.map(f => `- ${f.name} (${f.id})${f.isBroadcastingToMe ? ' [BRO
 ## Recent Meetings (past 30 days)
 ${context.recentMeetings.meetings.map(m => `- ${m.title} with role ${m.role} at ${m.scheduledFor}`).join('\n') || 'None'}
 
-Based on this context, suggest 0-3 possible meeting times. Return JSON matching this schema:
+Based on this context, suggest 1 possible meeting time. Return JSON matching this schema:
 {
   "suggestions": [
     {
