@@ -24,8 +24,9 @@ export const getOutgoingCallIntents = async ({
     // Filter to only those targeting friends
     // (payload.targetUserIds may contain multiple IDs)
     const filteredSignals =  signals.filter(signal => {
-        const targetIds = (signal.payload as any)?.targetUserIds || [];
-        return targetIds.some((id: string) => friendIds.includes(id));
+        
+        const targetId = (signal.payload as any)?.targetUserId;
+        return friendIds.includes(targetId);//targetId.some((id: string) => friendIds.includes(id));
     });
 
     console.log("filteredSignals", filteredSignals);
