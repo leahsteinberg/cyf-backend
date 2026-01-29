@@ -103,6 +103,7 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
         getIncomingCallIntents({ userId: viewerId, friendIds }),
     ]);
     console.log("outgoingIntents - ", outgoingIntents);
+    console.log("incoming intents", incomingIntents);
 
     // Build Sets for O(1) lookup
     // Outgoing: extract targetUserIds from each signal
@@ -126,7 +127,7 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
     return friends.map(friend => ({
         ...friend,
         hasOutgoingCallIntent: !!friendsIWantToCall[friend.id],
-        outgoingCallIntentSignalId: null,
+        outgoingCallIntentSignalId: friendsIWantToCall[friend.id],
         hasIncomingCallIntent: false,//!!friendsWhoWantToCallMe[friend.id],
         incomingCallIntentSignalId: null,
     }));

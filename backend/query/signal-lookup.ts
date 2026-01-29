@@ -33,7 +33,7 @@ export const getIncomingCallIntents = async ({
             type: CALL_INTENT_SIGNAL_TYPE,
             userId: { in: friendIds },
             payload: {
-                path: ['targetUserIds'],
+                path: ['targetUserId'],
                 array_contains: userId,
             },
         },
