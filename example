@@ -1,0 +1,31 @@
+{
+    "suggestions":
+        [
+            {
+                "id":"06390432-ea9c-4fe5-950e-464a7fd2ac78",
+                "userFromId":"8rvMiW2HudmXAOIHOfsNKo68BpEMKkzv",
+                "acceptedUserId":null,
+                "acceptedUserIds":[],
+                "createdAt":"2026-01-28T22:00:53.245Z",
+                "scheduledFor":"2026-01-28T22:00:53.082Z",
+                "scheduledEnd":"2026-01-28T22:30:53.082Z",
+                "backupScheduledTimes":[],
+                "title":"You wanted to catch up with Phyllis this week.",
+                "meetingState":"DRAFT",
+                "meetingType":"ADVANCE",
+                "timeType":"IMMEDIATE",
+                "targetType":"FRIEND_SPECIFIC",
+                "sourceType":"SYSTEM_PATTERN",
+                "intentLabel":null,
+                "targetUserIds":["Ex2afxVLh3luZQicSDbFLyCgebVDOOWh"],
+                "suggestionReason":"You wanted to catch up with Phyllis this week.",
+                "minParticipants":1,
+                "maxParticipants":1,
+                "broadcastMetadata":null
+            }
+        ],
+        "count":1
+}
+
+
+
