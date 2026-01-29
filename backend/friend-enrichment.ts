@@ -119,9 +119,18 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
     console.log("friendsIWantToCall", friendsIWantToCall);
 
     // Incoming: the signal's userId is the friend who wants to call me
-    const friendsWhoWantToCallMe = new Set(
-        incomingIntents.map(signal => signal.userId)
-    );
+    // const friendsWhoWantToCallMe = new Set(
+    //     incomingIntents.map(signal => signal.userId)
+    // );
+    const friendsWhoWantToCallMe: Record<string, string> = 
+    incomingIntents.reduce((intents, signal) => {
+        const targetId = (signal.payload as any)?.targetUserId;
+        if (friendIds.includes(targetId)) {
+            return {...intents, ...{[targetId]: signal.id}};
+        }
+        return intents;
+    }, {});
+    console.log("friends who want to call me obj", friendsWhoWantToCallMe);
 
     // Enrich each friend
     return friends.map(friend => ({

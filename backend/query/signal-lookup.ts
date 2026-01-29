@@ -34,7 +34,7 @@ export const getIncomingCallIntents = async ({
             userId: { in: friendIds },
             payload: {
                 path: ['targetUserId'],
-                array_contains: userId,
+                equals: userId,
             },
         },
     });
