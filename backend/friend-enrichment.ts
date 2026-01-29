@@ -106,15 +106,15 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
 
     // Build Sets for O(1) lookup
     // Outgoing: extract targetUserIds from each signal
-    const friendsIWantToCall = new Set<string>();
-    for (const signal of outgoingIntents) {
+    const friendsIWantToCall: Record<string, string> = 
+    outgoingIntents.reduce((intents, signal) => {
         const targetId = (signal.payload as any)?.targetUserId;
-        // for (const id of targetIds) {
-            if (friendIds.includes(targetId)) {
-                friendsIWantToCall.add(targetId);
-            }
-        // }
-    }
+        if (friendIds.includes(targetId)) {
+            return {...intents, ...{targetId: signal.id}};
+        }
+        return intents;
+    }, {});
+
     console.log("friendsIWantToCall", friendsIWantToCall);
 
     // Incoming: the signal's userId is the friend who wants to call me
@@ -125,7 +125,9 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
     // Enrich each friend
     return friends.map(friend => ({
         ...friend,
-        hasOutgoingCallIntent: friendsIWantToCall.has(friend.id),
-        hasIncomingCallIntent: friendsWhoWantToCallMe.has(friend.id),
+        hasOutgoingCallIntent: !!friendsIWantToCall[friend.id],
+        outgoingCallIntentSignalId: null,
+        hasIncomingCallIntent: false,//!!friendsWhoWantToCallMe[friend.id],
+        incomingCallIntentSignalId: null,
     }));
 };
