@@ -12,20 +12,22 @@ const SYSTEM_PROMPT = `You are a meeting suggestion assistant for a social calli
 Your job is to propose meeting times between friends based on:
 - User signals (walking patterns, call intents, time preferences)
 - Friend availability (who is broadcasting, recent interactions)
+- Mutual interest (both parties want to call each other)
 - Time context (current time, timezone)
 
 Rules:
-1. ONLY suggest meetings with friends the user has expressed intent to call
-2. Prefer times that match user's patterns (e.g., walking time)
-3. Keep reasons SHORT and friendly (max 1 sentence)
-4. Never mention "AI" or "algorithm" in reasons
-5. Confidence should reflect how well signals support the suggestion
-6. If no good suggestions, return empty array - don't force bad ones
+1. PRIORITIZE friends with mutual interest (both want to call each other)
+2. Also consider friends the user has expressed intent to call
+3. Prefer times that match user's patterns (e.g., walking time)
+4. Keep reasons SHORT and friendly (max 1 sentence)
+5. Never mention "AI" or "algorithm" in reasons
+6. Confidence should reflect how well signals support the suggestion
+7. If no good suggestions, return empty array - don't force bad ones
 
 Good reason examples:
+- "You both want to catch up - now's a good time"
 - "You usually walk around this time, and Alex is free"
 - "You wanted to catch up with Sam this week"
-- "Good time for a quick call before your work hours"
 
 Bad reason examples (don't do these):
 - "Based on my analysis of your patterns..."
@@ -110,7 +112,14 @@ Work hours (unavailable times):
 ${JSON.stringify(context.signals.workHours, null, 2)}
 
 ## Friends
-${context.friends.map(f => `- ${f.name} (${f.id})${f.isBroadcastingToMe ? ' [BROADCASTING NOW]' : ''}`).join('\n')}
+${context.friends.map(f => {
+    const flags = [];
+    if (f.hasOutgoingCallIntent && f.hasIncomingCallIntent) flags.push('[MUTUAL INTEREST]');
+    else if (f.hasOutgoingCallIntent) flags.push('[I WANT TO CALL]');
+    else if (f.hasIncomingCallIntent) flags.push('[WANTS TO CALL ME]');
+    if (f.isBroadcastingToMe) flags.push('[BROADCASTING NOW]');
+    return `- ${f.name} (${f.id})${flags.length > 0 ? ' ' + flags.join(' ') : ''}`;
+  }).join('\n')}
 
 ## Recent Meetings (past 30 days)
 ${context.recentMeetings.meetings.map(m => `- ${m.title} with role ${m.role} at ${m.scheduledFor}`).join('\n') || 'None'}

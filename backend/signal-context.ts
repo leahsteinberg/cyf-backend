@@ -1,6 +1,6 @@
 import { getUserContextInfo, getIsBroadcasting } from "./query/user-lookup.js";
 import { getUserSignalsForUser } from "./query/signal-lookup.js";
-import { getFriendsWithDetails, enrichFriendsWithBroadcastStatus } from "./query/friendship-lookup.js";
+import { getFriendsWithDetails, enrichFriendsWithBroadcastStatus, enrichFriendsWithCallIntents } from "./query/friendship-lookup.js";
 import { getCreatedMeetings, getAcceptedMeetings } from "./query/meeting-lookup.js";
 import {
     buildCallIntentContext,
@@ -23,8 +23,14 @@ export async function buildSuggestionContext(userId: string) {
     const acceptedMeetings = await getAcceptedMeetings({ acceptedUserId: userId });
 
     // Enrich friends with viewer-specific broadcast status
-    const enrichedFriends = await enrichFriendsWithBroadcastStatus({
+    const withBroadcastStatus = await enrichFriendsWithBroadcastStatus({
         friends,
+        viewerId: userId
+    });
+
+    // Enrich with call intent status (both directions)
+    const enrichedFriends = await enrichFriendsWithCallIntents({
+        friends: withBroadcastStatus,
         viewerId: userId
     });
 

@@ -3,6 +3,7 @@ import type { Friendship, User } from "../../types.js";
 import { prisma } from "../auth.js";
 import { getOfferedMeetings } from "../meeting.js";
 import { isActiveBroadcastMeeting } from "../broadcast-to-user.js";
+import { getIncomingCallIntents, getOutgoingCallIntents } from "./signal-lookup.js";
 
 export const getFriendshipsUser1Side = async (id: string): Promise<Friendship[]> => {
     const friendships = await prisma.friendship.findMany({
@@ -85,5 +86,56 @@ export const enrichFriendsWithBroadcastStatus = async ({
     return friends.map(friend => ({
         ...friend,
         isBroadcastingToMe: broadcasterIds.has(friend.id)
+    }));
+};
+
+/**
+ * Enriches friends list with call intent status (both directions).
+ *
+ * For each friend, adds:
+ * - `hasOutgoingCallIntent`: true if the viewer wants to call this friend
+ * - `hasIncomingCallIntent`: true if this friend wants to call the viewer
+ *
+ * @param friends - Array of friend User objects to enrich
+ * @param viewerId - ID of the user viewing the friend list
+ * @returns Friends with added call intent boolean fields
+ */
+export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
+    friends,
+    viewerId
+}: {
+    friends: T[],
+    viewerId: string
+}): Promise<Array<T & { hasOutgoingCallIntent: boolean; hasIncomingCallIntent: boolean }>> => {
+    const friendIds = friends.map(f => f.id);
+
+    // Batch fetch both directions
+    const [outgoingIntents, incomingIntents] = await Promise.all([
+        getOutgoingCallIntents({ userId: viewerId, friendIds }),
+        getIncomingCallIntents({ userId: viewerId, friendIds }),
+    ]);
+
+    // Build Sets for O(1) lookup
+    // Outgoing: extract targetUserIds from each signal
+    const friendsIWantToCall = new Set<string>();
+    for (const signal of outgoingIntents) {
+        const targetIds = (signal.payload as any)?.targetUserIds || [];
+        for (const id of targetIds) {
+            if (friendIds.includes(id)) {
+                friendsIWantToCall.add(id);
+            }
+        }
+    }
+
+    // Incoming: the signal's userId is the friend who wants to call me
+    const friendsWhoWantToCallMe = new Set(
+        incomingIntents.map(signal => signal.userId)
+    );
+
+    // Enrich each friend
+    return friends.map(friend => ({
+        ...friend,
+        hasOutgoingCallIntent: friendsIWantToCall.has(friend.id),
+        hasIncomingCallIntent: friendsWhoWantToCallMe.has(friend.id),
     }));
 };
