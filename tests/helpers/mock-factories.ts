@@ -6,6 +6,13 @@
  */
 
 import type { Meeting, Offer, User } from '../../types.js';
+import type {
+  OfferCreatedEvent,
+  OfferAcceptedEvent,
+  CallIntentCreatedEvent,
+  BroadcastEndedEvent,
+} from '../../backend/events/event-types.js';
+import { EVENT_TYPES } from '../../backend/events/event-types.js';
 
 /**
  * Creates a mock user for testing
@@ -119,4 +126,75 @@ export function createTerminalMeeting(
     meetingState: state,
     ...overrides,
   });
+}
+
+// ========== Event Factories ==========
+
+/**
+ * Creates a mock OFFER_CREATED event
+ */
+export function createMockOfferCreatedEvent(
+  overrides: Partial<Omit<OfferCreatedEvent, 'type'>> = {}
+): OfferCreatedEvent {
+  return {
+    type: EVENT_TYPES.OFFER_CREATED,
+    offerId: 'offer-test-123',
+    meetingId: 'meeting-test-123',
+    userOfferedId: 'user-offered-123',
+    broadcasterDisplayName: 'Test Broadcaster',
+    meetingTitle: 'Test Meeting',
+    scheduledFor: new Date(),
+    ...overrides,
+  };
+}
+
+/**
+ * Creates a mock OFFER_ACCEPTED event
+ */
+export function createMockOfferAcceptedEvent(
+  overrides: Partial<Omit<OfferAcceptedEvent, 'type'>> = {}
+): OfferAcceptedEvent {
+  return {
+    type: EVENT_TYPES.OFFER_ACCEPTED,
+    offerId: 'offer-test-123',
+    meetingId: 'meeting-test-123',
+    acceptedByUserId: 'user-accepted-123',
+    meetingCreatorId: 'user-creator-123',
+    acceptedByDisplayName: 'Test Accepter',
+    meetingTitle: 'Test Meeting',
+    scheduledFor: new Date(),
+    ...overrides,
+  };
+}
+
+/**
+ * Creates a mock CALL_INTENT_CREATED event
+ */
+export function createMockCallIntentCreatedEvent(
+  overrides: Partial<Omit<CallIntentCreatedEvent, 'type'>> = {}
+): CallIntentCreatedEvent {
+  return {
+    type: EVENT_TYPES.CALL_INTENT_CREATED,
+    signalId: 'signal-test-123',
+    fromUserId: 'user-from-123',
+    targetUserId: 'user-target-123',
+    fromUserDisplayName: 'Test User',
+    ...overrides,
+  };
+}
+
+/**
+ * Creates a mock BROADCAST_ENDED event
+ */
+export function createMockBroadcastEndedEvent(
+  overrides: Partial<Omit<BroadcastEndedEvent, 'type'>> = {}
+): BroadcastEndedEvent {
+  return {
+    type: EVENT_TYPES.BROADCAST_ENDED,
+    meetingId: 'meeting-test-123',
+    broadcasterId: 'user-broadcaster-123',
+    broadcasterDisplayName: 'Test Broadcaster',
+    offerRecipientIds: ['user-1', 'user-2'],
+    ...overrides,
+  };
 }
