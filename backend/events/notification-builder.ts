@@ -1,4 +1,5 @@
 import type {
+    OfferCreatedEvent,
     OfferAcceptedEvent,
     CallIntentCreatedEvent,
     BroadcastEndedEvent,
@@ -11,6 +12,32 @@ interface NotificationContent {
     body: string;
     data: PushPayload;
 }
+
+export const buildOfferCreatedNotification = (
+    event: OfferCreatedEvent,
+    timezone: string | null
+): NotificationContent => {
+    const relativeDateString = getRelativeDateString(
+        new Date(event.scheduledFor),
+        timezone
+    );
+
+    return {
+        title: `${event.broadcasterDisplayName} wants to talk!`,
+        body: event.meetingTitle
+            ? `${relativeDateString} - ${event.meetingTitle}`
+            : relativeDateString,
+        data: {
+            type: 'OFFER_CREATED',
+            action: 'navigate',
+            screen: 'OfferDetail',
+            data: {
+                offerId: event.offerId,
+                meetingId: event.meetingId,
+            }
+        }
+    };
+};
 
 export const buildOfferAcceptedNotification = (
     event: OfferAcceptedEvent,

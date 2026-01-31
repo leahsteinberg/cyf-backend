@@ -1,11 +1,22 @@
 // Event type constants
 export const EVENT_TYPES = {
+    OFFER_CREATED: 'OFFER_CREATED',
     OFFER_ACCEPTED: 'OFFER_ACCEPTED',
     CALL_INTENT_CREATED: 'CALL_INTENT_CREATED',
     BROADCAST_ENDED: 'BROADCAST_ENDED',
 } as const;
 
 // Event payloads
+export interface OfferCreatedEvent {
+    type: typeof EVENT_TYPES.OFFER_CREATED;
+    offerId: string;
+    meetingId: string;
+    userOfferedId: string;
+    broadcasterDisplayName: string;
+    meetingTitle: string | null;
+    scheduledFor: Date;
+}
+
 export interface OfferAcceptedEvent {
     type: typeof EVENT_TYPES.OFFER_ACCEPTED;
     offerId: string;
@@ -35,6 +46,7 @@ export interface BroadcastEndedEvent {
 
 // Union type for all events
 export type AppEvent =
+    | OfferCreatedEvent
     | OfferAcceptedEvent
     | CallIntentCreatedEvent
     | BroadcastEndedEvent;

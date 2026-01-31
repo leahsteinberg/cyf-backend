@@ -16,7 +16,8 @@ import {
     REJECTED_OFFER_STATE,
     EXPIRED_OFFER_STATE
 } from '../types.js';
-import { createAndSendOfferPush } from './create-push.js';
+import { eventBus, EVENT_TYPES } from './events/index.js';
+import { getUserContextInfo } from './query/user-lookup.js';
 
 
 /**
@@ -97,7 +98,7 @@ async function createParallelOffers(meeting: Meeting): Promise<Meeting> {
 
 /**
  * Core offer creation function.
- * Creates an offer in the database and sends a push notification.
+ * Creates an offer in the database and emits an event for push notification.
  */
 export const makeOffer = async ({meeting, userOfferedId, expiresAt }:
     {meeting: Meeting; userOfferedId: string, expiresAt: Date
@@ -106,7 +107,23 @@ export const makeOffer = async ({meeting, userOfferedId, expiresAt }:
     const offer = await createOffer({meetingId, userOfferedId, expiresAt});
     console.log("New Offer", offer)
     if (offer) {
-        await createAndSendOfferPush({ offer });
+        // Get broadcaster info for the notification
+        const broadcaster = await getUserContextInfo({ userId: meeting.userFromId });
+        const broadcasterDisplayName = broadcaster?.displayUsername
+            || broadcaster?.username
+            || broadcaster?.name
+            || 'A friend';
+
+        // Emit event for push notification
+        eventBus.emitEvent({
+            type: EVENT_TYPES.OFFER_CREATED,
+            offerId: offer.id,
+            meetingId: meeting.id,
+            userOfferedId: offer.userOfferedId,
+            broadcasterDisplayName,
+            meetingTitle: meeting.title,
+            scheduledFor: meeting.scheduledFor,
+        });
     }
     return offer;
 }
