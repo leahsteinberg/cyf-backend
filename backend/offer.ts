@@ -5,6 +5,8 @@ import { getOfferById, getMeetingOffers } from './query/offer-lookup.js';
 import { setOfferAccepted, setOfferExpired, setOfferRejected } from './update/offer-update.js';
 import { setMeetingAcceptors, updateMeetingState } from './update/meeting-update.js';
 import { getMeetingById, getUserFromMeetingId } from './query/meeting-lookup.js';
+import { eventBus, EVENT_TYPES } from './events/index.js';
+import { getUserContextInfo } from './query/user-lookup.js';
 
 // Re-export pure Prisma functions for backward compatibility
 export { createOffer, setOfferExpired } from './update/offer-update.js';
@@ -62,6 +64,22 @@ export const acceptOffer = async ({ userId, offerId }
         const openOffers = offers.filter(o => o.offerState === OPEN_OFFER_STATE);
         await setOffersExpired(openOffers);
     }
+
+    // Emit event to notify meeting creator
+    const acceptingUser = await getUserContextInfo({ userId });
+    eventBus.emitEvent({
+        type: EVENT_TYPES.OFFER_ACCEPTED,
+        offerId,
+        meetingId,
+        acceptedByUserId: userId,
+        meetingCreatorId: meeting.userFromId,
+        acceptedByDisplayName: acceptingUser?.displayUsername
+            || acceptingUser?.username
+            || acceptingUser?.name
+            || 'A friend',
+        meetingTitle: meeting.title,
+        scheduledFor: meeting.scheduledFor,
+    });
 
     return acceptedOffer;
 };

@@ -1,6 +1,6 @@
-import {auth } from './backend/auth.js';  
+import {auth } from './backend/auth.js';
 import express from 'express';
-import { toNodeHandler } from "better-auth/node"; 
+import { toNodeHandler } from "better-auth/node";
 import cors from 'cors';
 import { handleMe, handleSignIn, handleSignUpPhone, handleSignOut } from './endpoint-handlers/auth-handler.js';
 import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites, handleGetFriendInvites, handleAcceptInvite } from './endpoint-handlers/invite-handler.js';
@@ -15,6 +15,9 @@ import { handleCallStart, handleCallEnd, handleCallError } from './endpoint-hand
 import { handleAcceptSuggestion, handleCreateSampleSuggestion, handleCreateSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
 import { handleAddUserSignal, handleGetUserSignals, handleRemoveUserSignal } from './endpoint-handlers/user-signal-handler.js';
 import { handleGenerateSuggestions } from './endpoint-handlers/ai-suggestion-handler.js';
+
+// Import event system to register handlers (side effect import)
+import './backend/events/index.js';
 
 const app = express();
 const port = 3000;

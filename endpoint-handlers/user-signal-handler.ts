@@ -4,6 +4,8 @@ import { addSignalForUser, removeSignalForUser } from '../backend/update/signal-
 import { CALL_INTENT_SIGNAL_TYPE } from '../types.js';
 import { createCallIntent } from '../backend/call-intent-creator.js';
 import { onePerUserSignals } from '../backend/signal-utils.js';
+import { eventBus, EVENT_TYPES } from '../backend/events/index.js';
+import { getUserContextInfo } from '../backend/query/user-lookup.js';
 
 
 export const handleGetUserSignals = async (req: Request, res: Response) => {
@@ -68,6 +70,21 @@ export const handleAddUserSignal = async (req: Request, res: Response) => {
         }
 
         const signal = await addSignalForUser({userId, signalType: type, payload});
+
+        // Emit event for CALL_INTENT to notify target user
+        if (type === CALL_INTENT_SIGNAL_TYPE && payload?.targetUserId && signal[0]) {
+            const fromUser = await getUserContextInfo({ userId });
+            eventBus.emitEvent({
+                type: EVENT_TYPES.CALL_INTENT_CREATED,
+                signalId: signal[0].id,
+                fromUserId: userId,
+                targetUserId: payload.targetUserId,
+                fromUserDisplayName: fromUser?.displayUsername
+                    || fromUser?.username
+                    || fromUser?.name
+                    || 'A friend',
+            });
+        }
 
         res.json(signal);
     } catch (error) {

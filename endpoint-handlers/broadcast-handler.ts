@@ -5,7 +5,7 @@ import { processOffersForNewMeeting } from '../backend/process-meeting.js';
 import { setOffersExpired } from '../backend/offer.js';
 import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
 import { findBroadcastedMeetings } from '../backend/meeting.js';
-import { getIsBroadcasting } from '../backend/query/user-lookup.js';
+import { getIsBroadcasting, getUserContextInfo } from '../backend/query/user-lookup.js';
 import { getMeetingOffers } from '../backend/query/offer-lookup.js';
 import {
     IMMEDIATE_TIME_TYPE,
@@ -16,6 +16,7 @@ import {
 } from '../types.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
 import { shouldShowMeeting } from '../backend/meeting-staleness.js';
+import { eventBus, EVENT_TYPES } from '../backend/events/index.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
     const { userId, targetUserIds, intentLabel } = req.body;
@@ -112,6 +113,22 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
             }
             const offers = await getMeetingOffers({meetingId: broadcastMeeting.id});
             await setOffersExpired(offers);
+
+            // Emit event to notify offer recipients
+            const broadcaster = await getUserContextInfo({ userId });
+            const recipientIds = offers.map(o => o.userOfferedId);
+            if (recipientIds.length > 0) {
+                eventBus.emitEvent({
+                    type: EVENT_TYPES.BROADCAST_ENDED,
+                    meetingId: broadcastMeeting.id,
+                    broadcasterId: userId,
+                    broadcasterDisplayName: broadcaster?.displayUsername
+                        || broadcaster?.username
+                        || broadcaster?.name
+                        || 'A friend',
+                    offerRecipientIds: recipientIds,
+                });
+            }
         }
 
 
