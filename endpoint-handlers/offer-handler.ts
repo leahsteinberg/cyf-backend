@@ -35,7 +35,6 @@ export const handleGetOffers = async (req: Request, res: Response) => {
 
       return true;
     });
-    console.log("offers ---", offers);
     res.json(offers);
   } catch (error) {
     console.error("Error fetching offers:", error);

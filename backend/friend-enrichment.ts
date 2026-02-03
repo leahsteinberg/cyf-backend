@@ -19,7 +19,6 @@ export const getOutgoingCallIntents = async ({
     }
 
     const signals = await getCallIntentsForUser({ userId });
-    console.log("signals", signals);
 
     // Filter to only those targeting friends
     // (payload.targetUserIds may contain multiple IDs)
@@ -29,7 +28,6 @@ export const getOutgoingCallIntents = async ({
         return friendIds.includes(targetId);//targetId.some((id: string) => friendIds.includes(id));
     });
 
-    console.log("filteredSignals", filteredSignals);
     return filteredSignals;
 };
 
@@ -102,9 +100,6 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
         getOutgoingCallIntents({ userId: viewerId, friendIds }),
         getIncomingCallIntents({ userId: viewerId, friendIds }),
     ]);
-    console.log("outgoingIntents - ", outgoingIntents);
-    console.log("incoming intents", incomingIntents);
-
     // Build Sets for O(1) lookup
     // Outgoing: extract targetUserIds from each signal
     const friendsIWantToCall: Record<string, string> = 

@@ -36,11 +36,4 @@ export const createCallIntent = async ({userId, targetUserId}: {userId: string, 
         intentLabel: 'call intent label'
     });
 
-    console.log("Call intent created:", {
-        meetingId: draftMeeting.id,
-        userId,
-        userToId,
-        expiresAt: scheduledFor,
-        backupTimes: backupScheduledTimes
-    });
 }
