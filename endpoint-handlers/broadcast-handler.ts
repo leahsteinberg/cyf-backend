@@ -103,31 +103,33 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
         // should be just one meeting, but want to account for error state
         // where there are somehow two broadcast meetings.
         for (let broadcastMeeting of broadcastMeetings) {
-            // Only transition if meeting should still be visible (not already terminal or stale)
+            // Only process if meeting should still be visible (not already terminal or stale)
             if (await shouldShowMeeting(broadcastMeeting)) {
                 const {meeting, events} = await transitionMeeting({
                     meetingId: broadcastMeeting.id,
                     toState: CANCELED_MEETING_STATE,
                     actorId: userId,
                 });
-            }
-            const offers = await getMeetingOffers({meetingId: broadcastMeeting.id});
-            await setOffersExpired(offers);
 
-            // Emit event to notify offer recipients
-            const broadcaster = await getUserContextInfo({ userId });
-            const recipientIds = offers.map(o => o.userOfferedId);
-            if (recipientIds.length > 0) {
-                eventBus.emitEvent({
-                    type: EVENT_TYPES.BROADCAST_ENDED,
-                    meetingId: broadcastMeeting.id,
-                    broadcasterId: userId,
-                    broadcasterDisplayName: broadcaster?.displayUsername
-                        || broadcaster?.username
-                        || broadcaster?.name
-                        || 'A friend',
-                    offerRecipientIds: recipientIds,
-                });
+                const offers = await getMeetingOffers({meetingId: broadcastMeeting.id});
+                await setOffersExpired(offers);
+
+                // Emit event to notify offer recipients
+                const broadcaster = await getUserContextInfo({ userId });
+                const recipientIds = offers.map(o => o.userOfferedId);
+                if (recipientIds.length > 0) {
+                    console.log("Triggering emitting the event (broadcast ended).")
+                    eventBus.emitEvent({
+                        type: EVENT_TYPES.BROADCAST_ENDED,
+                        meetingId: broadcastMeeting.id,
+                        broadcasterId: userId,
+                        broadcasterDisplayName: broadcaster?.displayUsername
+                            || broadcaster?.username
+                            || broadcaster?.name
+                            || 'A friend',
+                        offerRecipientIds: recipientIds,
+                    });
+                }
             }
         }
 

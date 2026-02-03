@@ -24,6 +24,7 @@ export const sendPushNotification = async ({
     body: string;
     data?: Record<string, any>;
 }) => {
+    console.log("sendPushNotification()");
     // Check that the push token is valid
     if (!isValidExpoPushToken(pushToken)) {
         throw new Error(`Push token ${pushToken} is not a valid Expo push token`);
@@ -63,6 +64,8 @@ export const sendPushNotifications = async ({
     body: string;
     data?: Record<string, any>;
 }) => {
+    console.log("sendPushNotifications() - plural");
+
     // Filter out invalid tokens
     const validTokens = pushTokens.filter(token => isValidExpoPushToken(token));
 
