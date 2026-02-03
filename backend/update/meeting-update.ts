@@ -34,8 +34,6 @@ type CreateMeetingParams = {
 export const createMeeting = async (params: CreateMeetingParams): Promise<Meeting> => {
     const { userFromId, scheduledFor, scheduledEnd, backupScheduledTimes, title, meetingState } = params;
 
-    console.log("making a meeting SF- ", scheduledFor);
-
     // DUAL-WRITE LOGIC: Determine values for both old and new systems
     let finalMeetingType: MeetingType;
     let finalTimeType: TimeType;

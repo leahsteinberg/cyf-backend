@@ -105,7 +105,6 @@ export const makeOffer = async ({meeting, userOfferedId, expiresAt }:
     }): Promise<Offer | undefined> => {
     const meetingId = meeting.id
     const offer = await createOffer({meetingId, userOfferedId, expiresAt});
-    console.log("New Offer", offer)
     if (offer) {
         // Get broadcaster info for the notification
         const broadcaster = await getUserContextInfo({ userId: meeting.userFromId });
