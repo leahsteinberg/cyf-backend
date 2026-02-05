@@ -47,6 +47,24 @@ export const handleGetFriendInvites = async(req: Request, res: Response) => {
     res.json(friendInvites);
 };
 
+export const handleRemoveInvite = async (req: Request, res: Response) => {
+    const { inviteId } = req.body;
+    console.log("/api/remove-invite", { inviteId });
+
+    if (!inviteId) {
+        return res.status(400).json({ error: "inviteId is required" });
+    }
+
+    try {
+        await deleteInvite({ inviteId });
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error removing invite:", error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        return res.status(500).json({ error: "Internal server error", details: errorMessage });
+    }
+};
+
 export const handleAcceptInvite = async(req: Request, res: Response) => {
     const {userId, token} = req.body;
     console.log("/api/accept-invite", {userId, token});
