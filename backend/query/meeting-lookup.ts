@@ -13,6 +13,7 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
                     id: true,
                     name: true,
                     displayUsername: true,
+                    avatarUrl: true,
                     username: true,
                     email: true,
                     phoneNumber: true,
@@ -25,6 +26,7 @@ export const findMeetingWithUserFromOffer = async ({offer}: {offer: Offer}): Pro
                     email: true,
                     username: true,
                     displayUsername: true,
+                    avatarUrl: true,
                     phoneNumber: true,
                 }
             },
@@ -64,6 +66,7 @@ export const getCreatedMeetings = async ({userFromId}: {userFromId: string}): Pr
                     email: true,
                     username: true,
                     displayUsername: true,
+                    avatarUrl: true,
                     phoneNumber: true,
                 },
             },
@@ -107,6 +110,7 @@ export const getAcceptedMeetings = async ({acceptedUserId}: {acceptedUserId: str
                     email: true,
                     username: true,
                     displayUsername: true,
+                    avatarUrl: true,
                     phoneNumber: true,
                 },
             },
@@ -148,6 +152,7 @@ export const getAllSearchingMeetings = async (): Promise<Meeting[]> => {
                     email: true,
                     username: true,
                     displayUsername: true,
+                    avatarUrl: true,
                     phoneNumber: true,
                 }
             },
@@ -195,6 +200,7 @@ export const getMeetingById = async ({meetingId}: {meetingId: string}): Promise<
                     email: true,
                     username: true,
                     displayUsername: true,
+                    avatarUrl: true,
                     phoneNumber: true,
                 }
             },
@@ -205,6 +211,7 @@ export const getMeetingById = async ({meetingId}: {meetingId: string}): Promise<
                     email: true,
                     username: true,
                     displayUsername: true,
+                    avatarUrl: true,
                     phoneNumber: true,
                 }
             },

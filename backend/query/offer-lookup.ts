@@ -19,7 +19,8 @@ export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offe
                             name: true,
                             email: true,
                             username: true,
-                            displayUsername: true
+                            displayUsername: true,
+                            avatarUrl: true
                         }
                     },
                     acceptedUser: {
@@ -28,7 +29,8 @@ export const getOffersForUser = async ({userId}: {userId: string}): Promise<Offe
                             name: true,
                             email: true,
                             username: true,
-                            displayUsername: true
+                            displayUsername: true,
+                            avatarUrl: true
                         }
                     },
                     broadcastMetadata: true,
@@ -57,7 +59,8 @@ export const getOfferById = async ({offerId}: {offerId: string}): Promise<Offer 
                             name: true,
                             email: true,
                             username: true,
-                            displayUsername: true
+                            displayUsername: true,
+                            avatarUrl: true
                         }
                     },
                     acceptedUser: {
@@ -66,7 +69,8 @@ export const getOfferById = async ({offerId}: {offerId: string}): Promise<Offer 
                             name: true,
                             email: true,
                             username: true,
-                            displayUsername: true
+                            displayUsername: true,
+                            avatarUrl: true
                         }
                     },
                     broadcastMetadata: true
@@ -121,7 +125,8 @@ export const getAcceptedOfferByMeetingId = async ({meetingId}: {meetingId: strin
                             name: true,
                             email: true,
                             username: true,
-                            displayUsername: true
+                            displayUsername: true,
+                            avatarUrl: true
                         }
                     },
                     acceptedUser: {
@@ -130,7 +135,8 @@ export const getAcceptedOfferByMeetingId = async ({meetingId}: {meetingId: strin
                             name: true,
                             email: true,
                             username: true,
-                            displayUsername: true
+                            displayUsername: true,
+                            avatarUrl: true
                         }
                     },
                     broadcastMetadata: true

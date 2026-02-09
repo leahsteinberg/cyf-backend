@@ -1,5 +1,13 @@
 import { prisma } from "../auth.js";
 
+export const updateUserAvatarUrl = async ({ userId, avatarUrl }: { userId: string; avatarUrl: string }) => {
+    const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { avatarUrl },
+    });
+    return updatedUser;
+};
+
 export const updateUserPushToken = async ({ userId, pushToken, timezone }: { userId: string, pushToken: string, timezone?: string }) => {
     const updatedUser = await prisma.user.update({
         where: {

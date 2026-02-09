@@ -81,6 +81,7 @@ export const getUserContextInfo = async ({ userId }: { userId: string }) => {
             email: true,
             username: true,
             displayUsername: true,
+            avatarUrl: true,
             timezone: true,
             isBroadcasting: true,
             createdAt: true

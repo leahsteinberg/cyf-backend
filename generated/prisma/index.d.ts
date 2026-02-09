@@ -2083,6 +2083,7 @@ export namespace Prisma {
     isBroadcasting: boolean | null
     username: string | null
     displayUsername: string | null
+    avatarUrl: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -2100,6 +2101,7 @@ export namespace Prisma {
     isBroadcasting: boolean | null
     username: string | null
     displayUsername: string | null
+    avatarUrl: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -2117,6 +2119,7 @@ export namespace Prisma {
     isBroadcasting: number
     username: number
     displayUsername: number
+    avatarUrl: number
     _all: number
   }
 
@@ -2136,6 +2139,7 @@ export namespace Prisma {
     isBroadcasting?: true
     username?: true
     displayUsername?: true
+    avatarUrl?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -2153,6 +2157,7 @@ export namespace Prisma {
     isBroadcasting?: true
     username?: true
     displayUsername?: true
+    avatarUrl?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -2170,6 +2175,7 @@ export namespace Prisma {
     isBroadcasting?: true
     username?: true
     displayUsername?: true
+    avatarUrl?: true
     _all?: true
   }
 
@@ -2260,6 +2266,7 @@ export namespace Prisma {
     isBroadcasting: boolean
     username: string | null
     displayUsername: string | null
+    avatarUrl: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -2294,6 +2301,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: boolean
     displayUsername?: boolean
+    avatarUrl?: boolean
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     friendsWith?: boolean | User$friendsWithArgs<ExtArgs>
@@ -2322,6 +2330,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: boolean
     displayUsername?: boolean
+    avatarUrl?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2339,6 +2348,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: boolean
     displayUsername?: boolean
+    avatarUrl?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2356,9 +2366,10 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: boolean
     displayUsername?: boolean
+    avatarUrl?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "phoneNumber" | "phoneNumberVerified" | "pushToken" | "timezone" | "isBroadcasting" | "username" | "displayUsername", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "phoneNumber" | "phoneNumberVerified" | "pushToken" | "timezone" | "isBroadcasting" | "username" | "displayUsername" | "avatarUrl", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
@@ -2404,6 +2415,7 @@ export namespace Prisma {
       isBroadcasting: boolean
       username: string | null
       displayUsername: string | null
+      avatarUrl: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2851,6 +2863,7 @@ export namespace Prisma {
     readonly isBroadcasting: FieldRef<"User", 'Boolean'>
     readonly username: FieldRef<"User", 'String'>
     readonly displayUsername: FieldRef<"User", 'String'>
+    readonly avatarUrl: FieldRef<"User", 'String'>
   }
     
 
@@ -14577,7 +14590,8 @@ export namespace Prisma {
     timezone: 'timezone',
     isBroadcasting: 'isBroadcasting',
     username: 'username',
-    displayUsername: 'displayUsername'
+    displayUsername: 'displayUsername',
+    avatarUrl: 'avatarUrl'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -14984,6 +14998,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFilter<"User"> | boolean
     username?: StringNullableFilter<"User"> | string | null
     displayUsername?: StringNullableFilter<"User"> | string | null
+    avatarUrl?: StringNullableFilter<"User"> | string | null
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     friendsWith?: FriendshipListRelationFilter
@@ -15011,6 +15026,7 @@ export namespace Prisma {
     isBroadcasting?: SortOrder
     username?: SortOrderInput | SortOrder
     displayUsername?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     sessions?: SessionOrderByRelationAggregateInput
     accounts?: AccountOrderByRelationAggregateInput
     friendsWith?: FriendshipOrderByRelationAggregateInput
@@ -15041,6 +15057,7 @@ export namespace Prisma {
     timezone?: StringNullableFilter<"User"> | string | null
     isBroadcasting?: BoolFilter<"User"> | boolean
     displayUsername?: StringNullableFilter<"User"> | string | null
+    avatarUrl?: StringNullableFilter<"User"> | string | null
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     friendsWith?: FriendshipListRelationFilter
@@ -15068,6 +15085,7 @@ export namespace Prisma {
     isBroadcasting?: SortOrder
     username?: SortOrderInput | SortOrder
     displayUsername?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -15091,6 +15109,7 @@ export namespace Prisma {
     isBroadcasting?: BoolWithAggregatesFilter<"User"> | boolean
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     displayUsername?: StringNullableWithAggregatesFilter<"User"> | string | null
+    avatarUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type SessionWhereInput = {
@@ -15818,6 +15837,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
@@ -15845,6 +15865,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
@@ -15872,6 +15893,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
@@ -15899,6 +15921,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
@@ -15926,6 +15949,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -15943,6 +15967,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -15960,6 +15985,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SessionCreateInput = {
@@ -16868,6 +16894,7 @@ export namespace Prisma {
     isBroadcasting?: SortOrder
     username?: SortOrder
     displayUsername?: SortOrder
+    avatarUrl?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -16885,6 +16912,7 @@ export namespace Prisma {
     isBroadcasting?: SortOrder
     username?: SortOrder
     displayUsername?: SortOrder
+    avatarUrl?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -16902,6 +16930,7 @@ export namespace Prisma {
     isBroadcasting?: SortOrder
     username?: SortOrder
     displayUsername?: SortOrder
+    avatarUrl?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -19431,6 +19460,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
@@ -19457,6 +19487,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
@@ -19499,6 +19530,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
@@ -19525,6 +19557,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
@@ -19551,6 +19584,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
@@ -19577,6 +19611,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
@@ -19619,6 +19654,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
@@ -19645,6 +19681,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
@@ -19671,6 +19708,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
@@ -19697,6 +19735,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
@@ -19728,6 +19767,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsOf?: FriendshipCreateNestedManyWithoutUser1Input
@@ -19754,6 +19794,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsOf?: FriendshipUncheckedCreateNestedManyWithoutUser1Input
@@ -19796,6 +19837,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
@@ -19822,6 +19864,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
@@ -19859,6 +19902,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsOf?: FriendshipUpdateManyWithoutUser1NestedInput
@@ -19885,6 +19929,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsOf?: FriendshipUncheckedUpdateManyWithoutUser1NestedInput
@@ -19911,6 +19956,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
@@ -19937,6 +19983,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
@@ -19979,6 +20026,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
@@ -20005,6 +20053,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
@@ -20031,6 +20080,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
@@ -20057,6 +20107,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
@@ -20088,6 +20139,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
@@ -20114,6 +20166,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
@@ -20203,6 +20256,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
@@ -20229,6 +20283,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
@@ -20266,6 +20321,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
@@ -20292,6 +20348,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
@@ -20570,6 +20627,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
@@ -20596,6 +20654,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
@@ -20719,6 +20778,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
@@ -20745,6 +20805,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
@@ -20798,6 +20859,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
@@ -20824,6 +20886,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
@@ -20866,6 +20929,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
@@ -20892,6 +20956,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput
@@ -20918,6 +20983,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipCreateNestedManyWithoutUser2Input
@@ -20944,6 +21010,7 @@ export namespace Prisma {
     isBroadcasting?: boolean
     username?: string | null
     displayUsername?: string | null
+    avatarUrl?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     friendsWith?: FriendshipUncheckedCreateNestedManyWithoutUser2Input
@@ -20986,6 +21053,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUpdateManyWithoutUser2NestedInput
@@ -21012,6 +21080,7 @@ export namespace Prisma {
     isBroadcasting?: BoolFieldUpdateOperationsInput | boolean
     username?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     friendsWith?: FriendshipUncheckedUpdateManyWithoutUser2NestedInput

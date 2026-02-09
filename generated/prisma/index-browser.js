@@ -134,7 +134,8 @@ exports.Prisma.UserScalarFieldEnum = {
   timezone: 'timezone',
   isBroadcasting: 'isBroadcasting',
   username: 'username',
-  displayUsername: 'displayUsername'
+  displayUsername: 'displayUsername',
+  avatarUrl: 'avatarUrl'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {

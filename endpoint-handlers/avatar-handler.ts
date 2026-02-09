@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { uploadAvatar, getAvatarUrl } from '../backend/avatar/upload-avatar.js';
+import { updateUserAvatarUrl } from '../backend/update/user-update.js';
 
 export const handleUploadAvatar = async (req: Request, res: Response) => {
     const { userId, imageBase64, mimeType } = req.body;
@@ -11,6 +12,7 @@ export const handleUploadAvatar = async (req: Request, res: Response) => {
 
     try {
         const result = await uploadAvatar({ userId, imageBase64, mimeType });
+        await updateUserAvatarUrl({ userId, avatarUrl: result.url });
         res.json({ success: true, url: result.url });
     } catch (error) {
         console.error("Error uploading avatar:", error);

@@ -13,6 +13,7 @@ export const findInvite = async (token: string, userToPhoneNumber: string) => {
                     email: true,
                     username: true,
                     displayUsername: true,
+                    avatarUrl: true,
                     phoneNumber: true
                 }
             }
@@ -35,6 +36,7 @@ export const getSentInvites = async ({userFromId}: {userFromId: string}) => {
                     email: true,
                     username: true,
                     displayUsername: true,
+                    avatarUrl: true,
                     phoneNumber: true
                 }
             }

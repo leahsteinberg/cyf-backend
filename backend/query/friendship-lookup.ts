@@ -35,6 +35,7 @@ export const getFriendsWithDetails = async ({ userId }: { userId: string }) => {
             email: true,
             username: true,
             displayUsername: true,
+            avatarUrl: true,
             timezone: true
         }
     });
