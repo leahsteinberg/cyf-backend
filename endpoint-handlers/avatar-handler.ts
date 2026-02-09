@@ -13,7 +13,7 @@ export const handleUploadAvatar = async (req: Request, res: Response) => {
     try {
         const result = await uploadAvatar({ userId, imageBase64, mimeType });
         await updateUserAvatarUrl({ userId, avatarUrl: result.url });
-        res.json({ success: true, url: result.url });
+        res.json({ success: true, avatarUrl: result.url });
     } catch (error) {
         console.error("Error uploading avatar:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);

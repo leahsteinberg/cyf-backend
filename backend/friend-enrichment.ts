@@ -111,7 +111,6 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
         return intents;
     }, {});
 
-    console.log("friendsIWantToCall", friendsIWantToCall);
 
     // Incoming: the signal's userId is the friend who wants to call me
     // const friendsWhoWantToCallMe = new Set(
@@ -125,7 +124,6 @@ export const enrichFriendsWithCallIntents = async <T extends { id: string }>({
         }
         return intents;
     }, {});
-    console.log("friends who want to call me obj", friendsWhoWantToCallMe);
 
     // Enrich each friend
     return friends.map(friend => ({
