@@ -27,7 +27,7 @@ app.use(cors({
   origin: ['https://call-your-friends.expo.app', 'http://localhost:8081']
 }));
 app.all("/api/auth/*splat", toNodeHandler(auth));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // SAMPLE ENDPOINTS
 app.post("/api/register-push", handlePush);
