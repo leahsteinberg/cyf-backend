@@ -19,7 +19,6 @@ export const createOffer = async ({meetingId, userOfferedId, expiresAt }
             expiresAt,
         }
     })
-    console.log("Meeting ID:" , meetingId, "Made a new offer: ", offer);
     return offer;
 };
 

@@ -19,6 +19,12 @@ const handleOfferCreated = async (event: OfferCreatedEvent): Promise<void> => {
         }
     });
 
+    // Skip push notification if suppressed (e.g. respawned offer for canceller)
+    if (event.suppressNotification) {
+        console.log(`[Handler] Notification suppressed for user ${event.userOfferedId}`);
+        return;
+    }
+
     // Get push token for the user receiving the offer
     const pushToken = await getUserPushToken({ userId: event.userOfferedId });
     if (!pushToken) {

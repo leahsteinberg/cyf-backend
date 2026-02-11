@@ -3,7 +3,7 @@ import { getCreatedMeetings, getAcceptedMeetings, getMeetingById, enrichMeetings
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import { respawnMeeting } from "../backend/respawn-meeting.js";
 import type { Request, Response } from 'express';
-import { CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE } from "../types.js";
+import { CANCELED_MEETING_STATE, DISMISSED_DRAFT_MEETING_STATE, REJECTED_OFFER_STATE } from "../types.js";
 import { findMeetingTimeConflict } from "../backend/meeting-conflict.js";
 import { transitionMeeting } from "../backend/transition-meeting.js";
 import { getMeetingOffers, setOffersExpired } from "../backend/offer.js";
@@ -139,9 +139,14 @@ export const handleCancelMeeting = async (req: Request, res: Response) => {
 
     if (isAcceptor) {
       // ACCEPTOR CANCELS: Respawn for ALL meeting types
-      // This returns the meeting to circulation, giving the creator and all recipients (including canceller) another chance
-      console.log("Acceptor cancelled - respawning meeting");
-      await respawnMeeting(meeting);
+      // Suppress notifications for the canceller and anyone who already rejected
+      const rejectorIds = offers
+        .filter(o => o.offerState === REJECTED_OFFER_STATE)
+        .map(o => o.userOfferedId);
+      const suppressNotificationUserIds = [...new Set([userId, ...rejectorIds])];
+
+      console.log("Acceptor cancelled - respawning meeting, suppressing notifications for:", suppressNotificationUserIds);
+      await respawnMeeting(meeting, suppressNotificationUserIds);
 
       const [enrichedMeeting] = await enrichMeetingsWithAcceptedUsers([meeting]);
       return res.json(enrichedMeeting);

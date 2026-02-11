@@ -29,7 +29,7 @@ import { getUserContextInfo } from './query/user-lookup.js';
  *
  * Handles all meeting types: OPEN, FRIEND_SPECIFIC, GROUP, IMMEDIATE, FUTURE
  */
-export const processOffersForNewMeeting = async (meeting: Meeting): Promise<Meeting> => {
+export const processOffersForNewMeeting = async (meeting: Meeting, suppressNotificationUserIds: string[] = []): Promise<Meeting> => {
     // Validate meeting exists and has required fields
     if (!meeting || !meeting.id || !meeting.userFromId) {
         throw new Error("Invalid meeting: missing required fields");
@@ -44,7 +44,7 @@ export const processOffersForNewMeeting = async (meeting: Meeting): Promise<Meet
     }
 
     // Use unified parallel offer creation for all meeting types
-    return createParallelOffers(meeting);
+    return createParallelOffers(meeting, suppressNotificationUserIds);
 }
 
 /**
@@ -60,7 +60,7 @@ export const processOffersForNewMeeting = async (meeting: Meeting): Promise<Meet
  * - processNewFutureOpenMeeting (FUTURE + OPEN)
  * - processNewFriendSpecificMeeting (FUTURE + FRIEND_SPECIFIC)
  */
-async function createParallelOffers(meeting: Meeting): Promise<Meeting> {
+async function createParallelOffers(meeting: Meeting, suppressNotificationUserIds: string[] = []): Promise<Meeting> {
     // 1. Determine recipients based on targetUserIds
     const allFriendIds = await getFriendIds(meeting.userFromId);
     const recipientIds = meeting.targetUserIds?.length > 0
@@ -87,7 +87,12 @@ async function createParallelOffers(meeting: Meeting): Promise<Meeting> {
 
     // 4. Create all offers in parallel
     const offerPromises = recipientIds.map(friendId =>
-        makeOffer({ meeting, userOfferedId: friendId, expiresAt })
+        makeOffer({
+            meeting,
+            userOfferedId: friendId,
+            expiresAt,
+            suppressNotification: suppressNotificationUserIds.includes(friendId),
+        })
     );
     await Promise.all(offerPromises);
 
@@ -100,8 +105,8 @@ async function createParallelOffers(meeting: Meeting): Promise<Meeting> {
  * Core offer creation function.
  * Creates an offer in the database and emits an event for push notification.
  */
-export const makeOffer = async ({meeting, userOfferedId, expiresAt }:
-    {meeting: Meeting; userOfferedId: string, expiresAt: Date
+export const makeOffer = async ({meeting, userOfferedId, expiresAt, suppressNotification = false }:
+    {meeting: Meeting; userOfferedId: string, expiresAt: Date, suppressNotification?: boolean
     }): Promise<Offer | undefined> => {
     const meetingId = meeting.id
     const offer = await createOffer({meetingId, userOfferedId, expiresAt});
@@ -122,6 +127,7 @@ export const makeOffer = async ({meeting, userOfferedId, expiresAt }:
             broadcasterDisplayName,
             meetingTitle: meeting.title,
             scheduledFor: meeting.scheduledFor,
+            suppressNotification,
         });
     }
     return offer;

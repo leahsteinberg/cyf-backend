@@ -15,6 +15,7 @@ export interface OfferCreatedEvent {
     broadcasterDisplayName: string;
     meetingTitle: string | null;
     scheduledFor: Date;
+    suppressNotification?: boolean;
 }
 
 export interface OfferAcceptedEvent {

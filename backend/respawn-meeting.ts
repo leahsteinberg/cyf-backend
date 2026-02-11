@@ -26,12 +26,14 @@ import type { CreateDraftMeetingParams } from './draft-meeting.js';
  * - FUTURE + FRIEND_SPECIFIC (1-on-1 scheduled meeting)
  * - FUTURE + GROUP (scheduled meeting with multiple specific users)
  *
- * The acceptor who cancelled will receive a new offer (they get another chance).
+ * Users who cancelled or rejected the original meeting will still receive
+ * offers but won't get push notifications about them.
  *
  * @param cancelledMeeting - The meeting that was just cancelled
+ * @param suppressNotificationUserIds - User IDs to suppress push notifications for
  * @returns The newly created meeting in SEARCHING state
  */
-export const respawnMeeting = async (cancelledMeeting: Meeting): Promise<Meeting> => {
+export const respawnMeeting = async (cancelledMeeting: Meeting, suppressNotificationUserIds: string[] = []): Promise<Meeting> => {
     console.log("Respawning meeting:", cancelledMeeting.id);
 
     // Create new meeting with same properties, but in SEARCHING state
@@ -50,8 +52,8 @@ export const respawnMeeting = async (cancelledMeeting: Meeting): Promise<Meeting
         ...(cancelledMeeting.intentLabel && {intentLabel: cancelledMeeting.intentLabel}),
     } as CreateDraftMeetingParams);
 
-    // Process offers using unified logic (handles all target types)
-    await processOffersForNewMeeting(respawnedMeeting);
+    // Process offers using unified logic, excluding users who already interacted with original
+    await processOffersForNewMeeting(respawnedMeeting, suppressNotificationUserIds);
 
 
     return respawnedMeeting;
