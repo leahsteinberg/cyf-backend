@@ -294,6 +294,7 @@ export const enrichMeetingsWithAcceptedUsers = async (meetings: Meeting[]): Prom
             username: true,
             displayUsername: true,
             phoneNumber: true,
+            avatarUrl: true,
         }
     });
 
@@ -339,6 +340,7 @@ export const enrichMeetingsWithTargetUsers = async (meetings: Meeting[]): Promis
             username: true,
             displayUsername: true,
             phoneNumber: true,
+            avatarUrl: true,
         }
     });
 
