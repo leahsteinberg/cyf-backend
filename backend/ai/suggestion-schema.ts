@@ -29,3 +29,14 @@ export const AISuggestionResponseSchema = z.object({
 
 export type AISuggestedMeeting = z.infer<typeof AISuggestedMeetingSchema>;
 export type AISuggestionResponse = z.infer<typeof AISuggestionResponseSchema>;
+
+// Schema for suggest-new-time AI response
+export const SuggestNewTimeResponseSchema = z.object({
+  suggestedTime: z.object({
+    startsAt: z.string().datetime(),
+    endsAt: z.string().datetime(),
+  }),
+  reason: z.string().max(200).optional(),
+});
+
+export type SuggestNewTimeResponse = z.infer<typeof SuggestNewTimeResponseSchema>;

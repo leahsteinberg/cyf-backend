@@ -1,10 +1,10 @@
-import { getOpenAIClient } from './openai-client.js';
 import { AISuggestionResponseSchema, type AISuggestedMeeting } from './suggestion-schema.js';
-import { AI_CONFIG } from '../config/ai-config.js';
+import { callAI } from './ai-client.js';
+import { formatContextForPrompt } from './ai-context.js';
 import { buildSuggestionContext } from '../signal-context.js';
 import { createDraftMeeting } from '../draft-meeting.js';
 import type { Meeting } from '../../types.js';
-import { IMMEDIATE_TIME_TYPE, FUTURE_TIME_TYPE, FRIEND_SPECIFIC_TARGET_TYPE, SYSTEM_PATTERN_SOURCE_TYPE } from '../../types.js';
+import { FUTURE_TIME_TYPE, FRIEND_SPECIFIC_TARGET_TYPE, SYSTEM_PATTERN_SOURCE_TYPE } from '../../types.js';
 
 // System prompt - the "personality" of your suggestion engine
 const SYSTEM_PROMPT = `You are a meeting suggestion assistant for a social calling app.
@@ -23,9 +23,11 @@ Rules:
 5. Never mention "AI" or "algorithm" in reasons
 6. Confidence should reflect how well signals support the suggestion
 7. If no good suggestions, return empty array - don't force bad ones
+8. NEVER suggest meetings starting NOW or at the current time. All suggested meetings MUST be scheduled for the future (time.kind must be "FUTURE")
+9. All suggestions must have a specific startsAt and endsAt time in the future
 
 Good reason examples:
-- "You both want to catch up - now's a good time"
+- "You both want to catch up - how about later today?"
 - "You usually walk around this time, and Alex is free"
 - "You wanted to catch up with Sam this week"
 
@@ -35,94 +37,13 @@ Bad reason examples (don't do these):
 - "Statistically optimal time..."`;
 
 export async function generateSuggestions(userId: string): Promise<AISuggestedMeeting[]> {
-  console.log("AI CONFIG", AI_CONFIG)
-  // if (!AI_CONFIG.enabled) {
-  //   console.log('AI suggestions disabled');
-  //   return [];
-  // }
-
-  // 1. Build context (already implemented!)
+  // 1. Build context
   const context = await buildSuggestionContext(userId);
 
   // 2. Format context for the prompt
-  const userPrompt = formatContextForPrompt(context);
+  const baseContext = formatContextForPrompt(context);
 
-  // 3. Call OpenAI
-  const client = getOpenAIClient();
-
-  try {
-    const response = await client.chat.completions.create({
-      model: AI_CONFIG.model,
-      temperature: AI_CONFIG.temperature,
-      max_tokens: AI_CONFIG.maxTokens,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt },
-      ],
-      response_format: { type: 'json_object' },
-    });
-
-    const content = response.choices[0]?.message?.content;
-    if (!content) {
-      console.error('Empty response from OpenAI');
-      return [];
-    }
-
-    // 4. Parse and validate
-    const parsed = JSON.parse(content);
-    const validated = AISuggestionResponseSchema.safeParse(parsed);
-
-    if (!validated.success) {
-      console.error('AI response validation failed:', validated.error);
-      return [];
-    }
-
-    // 5. Additional business validation
-    const validSuggestions = validated.data.suggestions.filter(s =>
-      validateSuggestion(s, context)
-    );
-
-    return validSuggestions;
-
-  } catch (error) {
-    console.error('OpenAI API error:', error);
-    return [];
-  }
-}
-
-function formatContextForPrompt(context: Awaited<ReturnType<typeof buildSuggestionContext>>): string {
-  const now = new Date().toISOString();
-
-  return `
-Current time: ${now}
-User timezone: ${context.user.timezone || 'Unknown'}
-
-## User Signals
-
-Call intents (who they want to call):
-${JSON.stringify(context.signals.callIntents, null, 2)}
-
-Walking patterns:
-${JSON.stringify(context.signals.walkPatterns, null, 2)}
-
-Time preferences:
-${JSON.stringify(context.signals.timeOfDayPreferences, null, 2)}
-
-Work hours (unavailable times):
-${JSON.stringify(context.signals.workHours, null, 2)}
-
-## Friends
-${context.friends.map(f => {
-    const flags = [];
-    if (f.hasOutgoingCallIntent && f.hasIncomingCallIntent) flags.push('[MUTUAL INTEREST]');
-    else if (f.hasOutgoingCallIntent) flags.push('[I WANT TO CALL]');
-    else if (f.hasIncomingCallIntent) flags.push('[WANTS TO CALL ME]');
-    if (f.isBroadcastingToMe) flags.push('[BROADCASTING NOW]');
-    return `- ${f.name} (${f.id})${flags.length > 0 ? ' ' + flags.join(' ') : ''}`;
-  }).join('\n')}
-
-## Recent Meetings (past 30 days)
-${context.recentMeetings.meetings.map(m => `- ${m.title} with role ${m.role} at ${m.scheduledFor}`).join('\n') || 'None'}
+  const userPrompt = `${baseContext}
 
 Based on this context, suggest 1 possible meeting time. Return JSON matching this schema:
 {
@@ -130,20 +51,51 @@ Based on this context, suggest 1 possible meeting time. Return JSON matching thi
     {
       "confidence": 0.8,
       "reason": "Short user-facing reason",
-      "time": { "kind": "NOW" | "FUTURE", "startsAt": "ISO", "endsAt": "ISO" },
+      "time": { "kind": "FUTURE", "startsAt": "ISO", "endsAt": "ISO" },
       "target": { "kind": "FRIEND", "friendId": "uuid" },
       "metadata": { "signalTypesUsed": ["CALL_INTENT"], "tags": ["walk"] }
     }
   ],
   "reasoning": "Internal notes (optional)"
 }
-`.trim();
+
+IMPORTANT: time.kind MUST be "FUTURE" with specific startsAt and endsAt times. Never use "NOW".`;
+
+  // 3. Call AI with shared client
+  const result = await callAI(SYSTEM_PROMPT, userPrompt, AISuggestionResponseSchema);
+
+  if (!result) {
+    return [];
+  }
+
+  // 4. Additional business validation
+  const validSuggestions = result.suggestions.filter(s =>
+    validateSuggestion(s, context)
+  );
+
+  return validSuggestions;
 }
 
 function validateSuggestion(
   suggestion: AISuggestedMeeting,
   context: Awaited<ReturnType<typeof buildSuggestionContext>>
 ): boolean {
+  // Reject NOW/IMMEDIATE suggestions - AI should never suggest broadcast meetings
+  if (suggestion.time.kind === 'NOW') {
+    console.warn('Filtered out NOW/IMMEDIATE suggestion - AI should only suggest FUTURE meetings');
+    return false;
+  }
+
+  // Reject suggestions starting within 15 minutes of now (effectively "now" meetings)
+  if (suggestion.time.startsAt) {
+    const startsAt = new Date(suggestion.time.startsAt);
+    const fifteenMinutesFromNow = new Date(Date.now() + 15 * 60 * 1000);
+    if (startsAt <= fifteenMinutesFromNow) {
+      console.warn('Filtered out suggestion starting too soon (within 15 minutes)');
+      return false;
+    }
+  }
+
   // Ensure suggested friend exists in user's friend list
   const friendExists = context.friends.some(f => f.id === suggestion.target.friendId);
   if (!friendExists) {
@@ -165,24 +117,17 @@ export async function createMeetingFromSuggestion(
   userId: string,
   suggestion: AISuggestedMeeting
 ): Promise<Meeting> {
-  const now = new Date();
-
-  const scheduledFor = suggestion.time.kind === 'NOW'
-    ? now
-    : new Date(suggestion.time.startsAt!);
-
-  const scheduledEnd = suggestion.time.kind === 'NOW'
-    ? new Date(now.getTime() + 30 * 60 * 1000)  // 30 min default
-    : new Date(suggestion.time.endsAt!);
+  const scheduledFor = new Date(suggestion.time.startsAt!);
+  const scheduledEnd = new Date(suggestion.time.endsAt!);
 
   return createDraftMeeting({
     userFromId: userId,
     scheduledFor,
     scheduledEnd,
     title: suggestion.reason,
-    timeType: suggestion.time.kind === 'NOW' ? IMMEDIATE_TIME_TYPE : FUTURE_TIME_TYPE,
+    timeType: FUTURE_TIME_TYPE,
     targetType: FRIEND_SPECIFIC_TARGET_TYPE,
-    sourceType: SYSTEM_PATTERN_SOURCE_TYPE,  // AI-generated
+    sourceType: SYSTEM_PATTERN_SOURCE_TYPE,
     targetUserIds: [suggestion.target.friendId],
     suggestionReason: suggestion.reason,
     minParticipants: 1,

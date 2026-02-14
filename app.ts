@@ -15,6 +15,7 @@ import { handleCallStart, handleCallEnd, handleCallError } from './endpoint-hand
 import { handleAcceptSuggestion, handleCreateSampleSuggestion, handleCreateSuggestion, handleDismissSuggestion } from './endpoint-handlers/suggestion-handler.js';
 import { handleAddUserSignal, handleGetUserSignals, handleRemoveUserSignal } from './endpoint-handlers/user-signal-handler.js';
 import { handleGenerateSuggestions } from './endpoint-handlers/ai-suggestion-handler.js';
+import { handleSuggestNewTime } from './endpoint-handlers/suggest-new-time-handler.js';
 import { handleUploadAvatar, handleGetAvatar } from './endpoint-handlers/avatar-handler.js';
 
 // Import event system to register handlers (side effect import)
@@ -92,6 +93,7 @@ app.post('/api/dismiss-suggestion', handleDismissSuggestion);
 app.post('/api/create-suggestion', handleCreateSuggestion);
 app.get('/api/create-sample-suggestion', handleCreateSampleSuggestion);
 app.get('/api/generate-suggestions', handleGenerateSuggestions);
+app.post('/api/suggest-new-time', handleSuggestNewTime);
 
 app.get('/api/simulate-cron-round', handleCronRound)
 
