@@ -21,14 +21,59 @@ import {
 
 describe('Notification Builder', () => {
   describe('buildOfferCreatedNotification', () => {
-    it('creates notification with broadcaster name in title', () => {
+    it('uses friendly default title when no vibe is set', () => {
       const event = createMockOfferCreatedEvent({
         broadcasterDisplayName: 'Alice',
+        intentLabel: null,
       });
 
       const notification = buildOfferCreatedNotification(event, null);
 
-      expect(notification.title).toBe('Alice wants to talk!');
+      expect(notification.title).toBe('Alice is free to talk!');
+    });
+
+    it('uses vibe-specific title for "hi" intent', () => {
+      const event = createMockOfferCreatedEvent({
+        broadcasterDisplayName: 'Alice',
+        intentLabel: 'hi',
+      });
+
+      const notification = buildOfferCreatedNotification(event, null);
+
+      expect(notification.title).toBe('Alice says hi!');
+    });
+
+    it('uses vibe-specific title for "catchup" intent', () => {
+      const event = createMockOfferCreatedEvent({
+        broadcasterDisplayName: 'Alice',
+        intentLabel: 'catchup',
+      });
+
+      const notification = buildOfferCreatedNotification(event, null);
+
+      expect(notification.title).toBe('Alice wants to catch up!');
+    });
+
+    it('uses vibe-specific title for "miss" intent', () => {
+      const event = createMockOfferCreatedEvent({
+        broadcasterDisplayName: 'Alice',
+        intentLabel: 'miss',
+      });
+
+      const notification = buildOfferCreatedNotification(event, null);
+
+      expect(notification.title).toBe('Alice misses you!');
+    });
+
+    it('uses vibe-specific title for "yap" intent', () => {
+      const event = createMockOfferCreatedEvent({
+        broadcasterDisplayName: 'Alice',
+        intentLabel: 'yap',
+      });
+
+      const notification = buildOfferCreatedNotification(event, null);
+
+      expect(notification.title).toBe('Alice is ready to yap!');
     });
 
     it('includes meeting title in body when present', () => {
@@ -42,15 +87,38 @@ describe('Notification Builder', () => {
       expect(notification.body).toContain('Quick catch-up');
     });
 
-    it('shows only date when meeting title is null', () => {
+    it('includes vibe noun in body when no meeting title', () => {
       const event = createMockOfferCreatedEvent({
         meetingTitle: null,
+        intentLabel: 'catchup',
         scheduledFor: new Date('2025-03-18T15:00:00Z'),
       });
 
       const notification = buildOfferCreatedNotification(event, null);
 
-      expect(notification.body).not.toContain(' - ');
+      expect(notification.body).toContain('catch up');
+    });
+
+    it('shows tap to join when no meeting title and no vibe', () => {
+      const event = createMockOfferCreatedEvent({
+        meetingTitle: null,
+        intentLabel: null,
+        scheduledFor: new Date('2025-03-18T15:00:00Z'),
+      });
+
+      const notification = buildOfferCreatedNotification(event, null);
+
+      expect(notification.body).toContain('Tap to join');
+    });
+
+    it('uses middle dot separator between detail and date', () => {
+      const event = createMockOfferCreatedEvent({
+        meetingTitle: 'Coffee chat',
+      });
+
+      const notification = buildOfferCreatedNotification(event, null);
+
+      expect(notification.body).toContain('·');
     });
 
     it('sets correct push payload structure', () => {
@@ -78,25 +146,23 @@ describe('Notification Builder', () => {
         scheduledFor: new Date('2025-03-18T15:00:00Z'),
       });
 
-      // With timezone vs without should produce different formatted dates
       const withTimezone = buildOfferCreatedNotification(event, 'America/New_York');
       const withoutTimezone = buildOfferCreatedNotification(event, null);
 
-      // Both should have a body (date string)
       expect(withTimezone.body).toBeDefined();
       expect(withoutTimezone.body).toBeDefined();
     });
   });
 
   describe('buildOfferAcceptedNotification', () => {
-    it('creates notification with accepter name in title', () => {
+    it('creates notification with accepter name', () => {
       const event = createMockOfferAcceptedEvent({
         acceptedByDisplayName: 'Bob',
       });
 
       const notification = buildOfferAcceptedNotification(event, null);
 
-      expect(notification.title).toBe('Bob accepted your call!');
+      expect(notification.title).toBe('Bob is in!');
     });
 
     it('includes meeting title in body when present', () => {
@@ -108,6 +174,29 @@ describe('Notification Builder', () => {
       const notification = buildOfferAcceptedNotification(event, null);
 
       expect(notification.body).toContain('Weekly sync');
+      expect(notification.body).toContain('is happening');
+    });
+
+    it('uses vibe noun in body when no meeting title', () => {
+      const event = createMockOfferAcceptedEvent({
+        meetingTitle: null,
+        intentLabel: 'yap',
+      });
+
+      const notification = buildOfferAcceptedNotification(event, null);
+
+      expect(notification.body).toContain('Your yap session is happening');
+    });
+
+    it('falls back to "Your call" when no title and no vibe', () => {
+      const event = createMockOfferAcceptedEvent({
+        meetingTitle: null,
+        intentLabel: null,
+      });
+
+      const notification = buildOfferAcceptedNotification(event, null);
+
+      expect(notification.body).toContain('Your call is happening');
     });
 
     it('sets navigate action to MeetingDetail screen', () => {
@@ -130,22 +219,22 @@ describe('Notification Builder', () => {
   });
 
   describe('buildCallIntentNotification', () => {
-    it('creates notification with caller name in title', () => {
+    it('creates warm notification with caller name', () => {
       const event = createMockCallIntentCreatedEvent({
         fromUserDisplayName: 'Charlie',
       });
 
       const notification = buildCallIntentNotification(event);
 
-      expect(notification.title).toBe('Charlie wants to call you!');
+      expect(notification.title).toBe('Charlie is thinking of you');
     });
 
-    it('has instructional body text', () => {
+    it('has friendly body text', () => {
       const event = createMockCallIntentCreatedEvent();
 
       const notification = buildCallIntentNotification(event);
 
-      expect(notification.body).toBe('Tap to see when they are available');
+      expect(notification.body).toBe("They'd love to find a time to talk");
     });
 
     it('sets navigate action to Suggestions screen', () => {
@@ -174,22 +263,22 @@ describe('Notification Builder', () => {
   });
 
   describe('buildBroadcastEndedNotification', () => {
-    it('creates notification with broadcaster name in title', () => {
+    it('creates notification with broadcaster name', () => {
       const event = createMockBroadcastEndedEvent({
         broadcasterDisplayName: 'Diana',
       });
 
       const notification = buildBroadcastEndedNotification(event);
 
-      expect(notification.title).toBe('Diana is no longer available');
+      expect(notification.title).toBe('Diana is no longer free');
     });
 
-    it('has informational body text', () => {
+    it('has encouraging body text', () => {
       const event = createMockBroadcastEndedEvent();
 
       const notification = buildBroadcastEndedNotification(event);
 
-      expect(notification.body).toBe('Their broadcast has ended');
+      expect(notification.body).toBe('Maybe next time!');
     });
 
     it('sets refresh action to Home screen', () => {

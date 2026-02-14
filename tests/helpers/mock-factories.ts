@@ -144,6 +144,7 @@ export function createMockOfferCreatedEvent(
     broadcasterDisplayName: 'Test Broadcaster',
     meetingTitle: 'Test Meeting',
     scheduledFor: new Date(),
+    intentLabel: null,
     ...overrides,
   };
 }
@@ -163,6 +164,7 @@ export function createMockOfferAcceptedEvent(
     acceptedByDisplayName: 'Test Accepter',
     meetingTitle: 'Test Meeting',
     scheduledFor: new Date(),
+    intentLabel: null,
     ...overrides,
   };
 }

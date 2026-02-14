@@ -79,6 +79,7 @@ export const acceptOffer = async ({ userId, offerId }
             || 'A friend',
         meetingTitle: meeting.title,
         scheduledFor: meeting.scheduledFor,
+        intentLabel: meeting.intentLabel || null,
     });
 
     return acceptedOffer;

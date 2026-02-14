@@ -127,6 +127,7 @@ export const makeOffer = async ({meeting, userOfferedId, expiresAt, suppressNoti
             broadcasterDisplayName,
             meetingTitle: meeting.title,
             scheduledFor: meeting.scheduledFor,
+            intentLabel: meeting.intentLabel || null,
             suppressNotification,
         });
     }
