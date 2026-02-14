@@ -1,6 +1,5 @@
 
-import type { Meeting, Offer } from '../types.js';
-import { isActiveBroadcastMeeting } from './broadcast-to-user.js';
+import { isBroadcastMeeting, type Meeting, type Offer } from '../types.js';
 import { getMeetingOffers } from './offer.js';
 import { getMeetingById } from './query/meeting-lookup.js';
 import { getAcceptedOfferByMeetingId, getOffersForUser } from './query/offer-lookup.js';
@@ -9,7 +8,7 @@ import { setOfferOpen } from './update/offer-update.js';
 
 
 export const findBroadcastedMeetings = (meetings: Meeting[]): Meeting[] => {
-    return meetings.filter(meeting => isActiveBroadcastMeeting(meeting));
+    return meetings.filter(meeting => isBroadcastMeeting(meeting));
 }
 
 export const deleteBroadcastedMeeting = async (meeting: Meeting) => {

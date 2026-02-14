@@ -12,7 +12,8 @@ import {
     USER_INTENT_SOURCE_TYPE,
     SEARCHING_MEETING_STATE,
     CANCELED_MEETING_STATE,
-    isOpenBroadcast
+    isOpenBroadcast,
+    DRAFT_MEETING_STATE
 } from '../types.js';
 import { transitionMeeting } from '../backend/transition-meeting.js';
 import { shouldShowMeeting } from '../backend/meeting-staleness.js';
@@ -100,9 +101,10 @@ export const handleBroadcastEnd = async (req: Request, res: Response) => {
     try {
         const meetings = await getCreatedMeetings({userFromId: userId});
         const broadcastMeetings = await findBroadcastedMeetings(meetings);
+        const filteredBroadcastMeetings = broadcastMeetings.filter(m => m.meetingState !== DRAFT_MEETING_STATE);
         // should be just one meeting, but want to account for error state
         // where there are somehow two broadcast meetings.
-        for (let broadcastMeeting of broadcastMeetings) {
+        for (let broadcastMeeting of filteredBroadcastMeetings) {
             // Only process if meeting should still be visible (not already terminal or stale)
             if (await shouldShowMeeting(broadcastMeeting)) {
                 const {meeting, events} = await transitionMeeting({
