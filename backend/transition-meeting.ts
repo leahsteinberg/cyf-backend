@@ -82,12 +82,13 @@ export const transitionMeeting = async ({meetingId, toState, actorId, scheduledF
 }):
     Promise<{meeting: Meeting, events: DomainEvent[]}> => {
     const meeting = await getMeetingById({meetingId});
-
+    console.log("Transition Meeting - ", meetingId);
     if (!meeting) {
-        throw new Error("Cannot find meeting.")
+        throw new Error(`Cannot find meeting: ${meetingId}`)
     }
 
     const meetingState = meeting.meetingState;
+    console.log("transition: ", meetingId, "from : ", meeting.meetingState, "to: ", toState)
 
     if (meetingState === toState) {
         if (idempotentStates.has(meetingState)) {
