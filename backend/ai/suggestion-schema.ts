@@ -7,14 +7,16 @@ export const AISuggestedMeetingSchema = z.object({
 
   time: z.object({
     kind: z.enum(['NOW', 'FUTURE']),
-    startsAt: z.string().datetime().optional(),  // ISO format
-    endsAt: z.string().datetime().optional(),
+    startsAt: z.string().datetime({ offset: true }).optional(),  // ISO format with timezone offset
+    endsAt: z.string().datetime({ offset: true }).optional(),
   }),
 
   target: z.object({
     kind: z.literal('FRIEND'),  // v0: single friend only
     friendId: z.string(),
   }),
+
+  timezone: z.string().optional(),  // Timezone the AI used (e.g. "America/Los_Angeles")
 
   metadata: z.object({
     signalTypesUsed: z.array(z.string()).optional(),
@@ -33,9 +35,10 @@ export type AISuggestionResponse = z.infer<typeof AISuggestionResponseSchema>;
 // Schema for suggest-new-time AI response
 export const SuggestNewTimeResponseSchema = z.object({
   suggestedTime: z.object({
-    startsAt: z.string().datetime(),
-    endsAt: z.string().datetime(),
+    startsAt: z.string().datetime({ offset: true }),  // ISO format with timezone offset
+    endsAt: z.string().datetime({ offset: true }),
   }),
+  timezone: z.string().optional(),  // Timezone the AI used (e.g. "America/Los_Angeles")
   reason: z.string().max(200).optional(),
 });
 

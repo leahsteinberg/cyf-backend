@@ -20,10 +20,11 @@ Rules:
 4. Prefer times that match user's patterns (e.g., walking time, preferred hours)
 5. Avoid times that conflict with work hours signals for any participant
 6. The meeting duration should match the original meeting's duration
-7. All times must be in ISO 8601 format
+7. All times must be in ISO 8601 format WITH the UTC offset for the user's timezone (e.g. "2025-01-15T20:00:00-08:00" for 8pm PST, NOT "2025-01-15T20:00:00Z"). Never use "Z" suffix - always include the explicit offset.
 8. NEVER suggest a time at or before the current time
 9. Keep the reason SHORT and friendly (max 1 sentence)
-10. Never mention "AI" or "algorithm" in the reason`;
+10. Never mention "AI" or "algorithm" in the reason
+11. Include the "timezone" field in your response with the IANA timezone name you used (e.g. "America/Los_Angeles")`;
 
 export async function suggestNewTime(
   meeting: Meeting,
@@ -55,13 +56,17 @@ The user wants to reschedule this meeting to: "${modifier}"
 Suggest a new time that satisfies the "${modifier}" constraint. Return JSON matching this schema:
 {
   "suggestedTime": {
-    "startsAt": "ISO 8601 datetime",
-    "endsAt": "ISO 8601 datetime"
+    "startsAt": "ISO 8601 datetime with UTC offset (e.g. 2025-01-15T20:00:00-08:00)",
+    "endsAt": "ISO 8601 datetime with UTC offset (e.g. 2025-01-15T20:30:00-08:00)"
   },
+  "timezone": "IANA timezone name (e.g. America/Los_Angeles)",
   "reason": "Short friendly reason for this time (optional)"
 }
 
-IMPORTANT: The suggested time MUST be in the future and MUST match the "${modifier}" constraint. Keep the same duration (${durationMinutes} minutes).`;
+IMPORTANT:
+- The suggested time MUST be in the future and MUST match the "${modifier}" constraint.
+- Keep the same duration (${durationMinutes} minutes).
+- Times MUST include the UTC offset for the user's timezone (e.g. -08:00 for PST, -05:00 for EST). Do NOT use "Z".`;
 
   const result = await callAI(SYSTEM_PROMPT, userPrompt, SuggestNewTimeResponseSchema);
 

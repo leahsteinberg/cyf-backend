@@ -25,6 +25,8 @@ Rules:
 7. If no good suggestions, return empty array - don't force bad ones
 8. NEVER suggest meetings starting NOW or at the current time. All suggested meetings MUST be scheduled for the future (time.kind must be "FUTURE")
 9. All suggestions must have a specific startsAt and endsAt time in the future
+10. All times must be in ISO 8601 format WITH the UTC offset for the user's timezone (e.g. "2025-01-15T20:00:00-08:00" for 8pm PST). Never use "Z" suffix - always include the explicit UTC offset.
+11. Include the "timezone" field in each suggestion with the IANA timezone name you used (e.g. "America/Los_Angeles")
 
 Good reason examples:
 - "You both want to catch up - how about later today?"
@@ -51,15 +53,18 @@ Based on this context, suggest 1 possible meeting time. Return JSON matching thi
     {
       "confidence": 0.8,
       "reason": "Short user-facing reason",
-      "time": { "kind": "FUTURE", "startsAt": "ISO", "endsAt": "ISO" },
+      "time": { "kind": "FUTURE", "startsAt": "ISO with offset (e.g. 2025-01-15T20:00:00-08:00)", "endsAt": "ISO with offset" },
       "target": { "kind": "FRIEND", "friendId": "uuid" },
+      "timezone": "IANA timezone (e.g. America/Los_Angeles)",
       "metadata": { "signalTypesUsed": ["CALL_INTENT"], "tags": ["walk"] }
     }
   ],
   "reasoning": "Internal notes (optional)"
 }
 
-IMPORTANT: time.kind MUST be "FUTURE" with specific startsAt and endsAt times. Never use "NOW".`;
+IMPORTANT:
+- time.kind MUST be "FUTURE" with specific startsAt and endsAt times. Never use "NOW".
+- Times MUST include the UTC offset for the user's timezone (e.g. -08:00 for PST). Do NOT use "Z".`;
 
   // 3. Call AI with shared client
   const result = await callAI(SYSTEM_PROMPT, userPrompt, AISuggestionResponseSchema);
