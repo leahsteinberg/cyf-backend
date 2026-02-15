@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { getMeetingById, enrichMeetingsWithAcceptedUsers } from '../backend/query/meeting-lookup.js';
-import { suggestNewTime, type TimeModifier } from '../backend/ai/suggest-new-time-service.js';
+import { suggestNewTime } from '../backend/ai/suggest-new-time-service.js';
 import { createDraftMeeting } from '../backend/draft-meeting.js';
 import { createMeeting } from '../backend/update/meeting-update.js';
 import { processOffersForNewMeeting } from '../backend/process-meeting.js';
@@ -17,7 +17,7 @@ import {
     SYSTEM_PATTERN_SOURCE_TYPE,
 } from '../types.js';
 
-const VALID_MODIFIERS: TimeModifier[] = ['tomorrow', 'later_today', 'next_week'];
+const MAX_MODIFIER_LENGTH = 200;
 
 const TERMINAL_STATES = [
     PAST_MEETING_STATE,
@@ -34,9 +34,13 @@ export const handleSuggestNewTime = async (req: Request, res: Response) => {
         return res.status(400).json({ error: 'meetingId, userId, and modifier are required' });
     }
 
-    if (!VALID_MODIFIERS.includes(modifier)) {
+    if (typeof modifier !== 'string' || modifier.trim().length === 0) {
+        return res.status(400).json({ error: 'modifier must be a non-empty string' });
+    }
+
+    if (modifier.length > MAX_MODIFIER_LENGTH) {
         return res.status(400).json({
-            error: `Invalid modifier. Must be one of: ${VALID_MODIFIERS.join(', ')}`,
+            error: `modifier must be ${MAX_MODIFIER_LENGTH} characters or fewer`,
         });
     }
 
@@ -53,7 +57,7 @@ export const handleSuggestNewTime = async (req: Request, res: Response) => {
         }
 
         // 3. Get AI-suggested new time
-        const suggestion = await suggestNewTime(originalMeeting, modifier as TimeModifier, userId);
+        const suggestion = await suggestNewTime(originalMeeting, modifier.trim(), userId);
         if (!suggestion) {
             return res.status(500).json({ error: 'Failed to generate a new time suggestion' });
         }

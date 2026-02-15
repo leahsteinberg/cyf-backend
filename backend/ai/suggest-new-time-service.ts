@@ -4,32 +4,30 @@ import { formatContextForPrompt } from './ai-context.js';
 import { buildSuggestionContext } from '../signal-context.js';
 import type { Meeting } from '../../types.js';
 
-export type TimeModifier = 'tomorrow' | 'later_today' | 'next_week';
-
 const SYSTEM_PROMPT = `You are a meeting rescheduling assistant for a social calling app.
 
 Your job is to suggest a new time for an existing meeting based on:
 - The original meeting details (who it's with, what it was about)
-- A time modifier constraint (tomorrow, later today, or next week)
+- A user-provided time preference (e.g. "tomorrow", "later today", "next week", "this weekend", "Friday evening", etc.)
 - User signals (walking patterns, call intents, time preferences)
+- Friend availability and work hours
 - The current time and user timezone
 
 Rules:
-1. The suggested time MUST satisfy the modifier constraint:
-   - "tomorrow": Pick a time tomorrow during reasonable hours (9am-9pm in user's timezone)
-   - "later_today": Pick a time later today (at least 1 hour from now, before midnight)
-   - "next_week": Pick a time next week (Monday-Sunday of the following week)
-2. Prefer times that match user's patterns (e.g., walking time, preferred hours)
-3. Avoid times that conflict with work hours signals
-4. The meeting duration should match the original meeting's duration
-5. All times must be in ISO 8601 format
-6. NEVER suggest a time at or before the current time
-7. Keep the reason SHORT and friendly (max 1 sentence)
-8. Never mention "AI" or "algorithm" in the reason`;
+1. The suggested time MUST follow the user's time preference as closely as possible
+2. Interpret the preference naturally - e.g. "this weekend" means Saturday or Sunday, "Friday evening" means Friday after 5pm
+3. Pick a time that has a good chance of working for all parties involved, considering their signals and availability patterns
+4. Prefer times that match user's patterns (e.g., walking time, preferred hours)
+5. Avoid times that conflict with work hours signals for any participant
+6. The meeting duration should match the original meeting's duration
+7. All times must be in ISO 8601 format
+8. NEVER suggest a time at or before the current time
+9. Keep the reason SHORT and friendly (max 1 sentence)
+10. Never mention "AI" or "algorithm" in the reason`;
 
 export async function suggestNewTime(
   meeting: Meeting,
-  modifier: TimeModifier,
+  modifier: string,
   userId: string
 ): Promise<SuggestNewTimeResponse | null> {
   const context = await buildSuggestionContext(userId);
