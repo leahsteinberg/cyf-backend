@@ -55,6 +55,7 @@ export const getFriendInvites = async ({userToPhoneNumber}: {userToPhoneNumber: 
                 select: {
                     name: true,
                     phoneNumber: true,
+                    avatarUrl: true,
                 },
             },
         },
