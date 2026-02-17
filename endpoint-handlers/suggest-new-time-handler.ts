@@ -51,10 +51,10 @@ export const handleSuggestNewTime = async (req: Request, res: Response) => {
             return res.status(404).json({ error: 'Meeting not found' });
         }
 
-        // 2. Validate ownership - only the creator can suggest a new time
-        if (originalMeeting.userFromId !== userId) {
-            return res.status(403).json({ error: 'Only the meeting creator can suggest a new time' });
-        }
+        // // 2. Validate ownership - only the creator can suggest a new time
+        // if (originalMeeting.userFromId !== userId) {
+        //     return res.status(403).json({ error: 'Only the meeting creator can suggest a new time' });
+        // }
 
         // 3. Get AI-suggested new time
         const suggestion = await suggestNewTime(originalMeeting, modifier.trim(), userId);
