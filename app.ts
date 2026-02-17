@@ -17,6 +17,7 @@ import { handleAddUserSignal, handleGetUserSignals, handleRemoveUserSignal } fro
 import { handleGenerateSuggestions } from './endpoint-handlers/ai-suggestion-handler.js';
 import { handleSuggestNewTime } from './endpoint-handlers/suggest-new-time-handler.js';
 import { handleUploadAvatar, handleGetAvatar } from './endpoint-handlers/avatar-handler.js';
+import { handleUploadMeetingPhoto, handleDeleteMeetingPhoto, handleUpdateMeetingTextContent } from './endpoint-handlers/meeting-content-handler.js';
 
 // Import event system to register handlers (side effect import)
 import './backend/events/index.js';
@@ -101,6 +102,10 @@ app.get('/api/simulate-cron-round', handleCronRound)
 app.post('/api/upload-avatar', handleUploadAvatar);
 app.post('/api/get-avatar', handleGetAvatar);
 
+//MEETING CONTENT ENDPOINTS
+app.post('/api/upload-meeting-photo', handleUploadMeetingPhoto);
+app.post('/api/delete-meeting-photo', handleDeleteMeetingPhoto);
+app.post('/api/update-meeting-text', handleUpdateMeetingTextContent);
 
 app.get('/', (req, res) => {
   console.log("client IP address", req.ip)

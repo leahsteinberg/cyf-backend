@@ -220,6 +220,22 @@ export const deleteMeetingAndOffers = async ({meetingId}: {meetingId: string}): 
 };
 
 
+export const updateMeetingPhotoUrl = async ({ meetingId, photoUrl }: { meetingId: string; photoUrl: string | null }) => {
+    const updatedMeeting = await prisma.meeting.update({
+        where: { id: meetingId },
+        data: { photoUrl },
+    });
+    return updatedMeeting;
+};
+
+export const updateMeetingTextContent = async ({ meetingId, textContent }: { meetingId: string; textContent: string | null }) => {
+    const updatedMeeting = await prisma.meeting.update({
+        where: { id: meetingId },
+        data: { textContent },
+    });
+    return updatedMeeting;
+};
+
 export const updateMeetingState = async (
     meeting: Meeting,
     toState: MeetingState,

@@ -122,6 +122,8 @@ model Meeting {
   backupScheduledTimes DateTime[]
   offers               Offer[]      @relation("offers")
   title                String?
+  textContent          String?
+  photoUrl             String?
   meetingState         MeetingState @default(SEARCHING)
 
   // OLD FIELD - Keep for backwards compatibility during migration

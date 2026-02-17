@@ -8918,6 +8918,8 @@ export namespace Prisma {
     scheduledFor: Date | null
     scheduledEnd: Date | null
     title: string | null
+    textContent: string | null
+    photoUrl: string | null
     meetingState: $Enums.MeetingState | null
     meetingType: $Enums.MeetingType | null
     timeType: $Enums.TimeType | null
@@ -8937,6 +8939,8 @@ export namespace Prisma {
     scheduledFor: Date | null
     scheduledEnd: Date | null
     title: string | null
+    textContent: string | null
+    photoUrl: string | null
     meetingState: $Enums.MeetingState | null
     meetingType: $Enums.MeetingType | null
     timeType: $Enums.TimeType | null
@@ -8958,6 +8962,8 @@ export namespace Prisma {
     scheduledEnd: number
     backupScheduledTimes: number
     title: number
+    textContent: number
+    photoUrl: number
     meetingState: number
     meetingType: number
     timeType: number
@@ -8990,6 +8996,8 @@ export namespace Prisma {
     scheduledFor?: true
     scheduledEnd?: true
     title?: true
+    textContent?: true
+    photoUrl?: true
     meetingState?: true
     meetingType?: true
     timeType?: true
@@ -9009,6 +9017,8 @@ export namespace Prisma {
     scheduledFor?: true
     scheduledEnd?: true
     title?: true
+    textContent?: true
+    photoUrl?: true
     meetingState?: true
     meetingType?: true
     timeType?: true
@@ -9030,6 +9040,8 @@ export namespace Prisma {
     scheduledEnd?: true
     backupScheduledTimes?: true
     title?: true
+    textContent?: true
+    photoUrl?: true
     meetingState?: true
     meetingType?: true
     timeType?: true
@@ -9139,6 +9151,8 @@ export namespace Prisma {
     scheduledEnd: Date
     backupScheduledTimes: Date[]
     title: string | null
+    textContent: string | null
+    photoUrl: string | null
     meetingState: $Enums.MeetingState
     meetingType: $Enums.MeetingType
     timeType: $Enums.TimeType | null
@@ -9180,6 +9194,8 @@ export namespace Prisma {
     scheduledEnd?: boolean
     backupScheduledTimes?: boolean
     title?: boolean
+    textContent?: boolean
+    photoUrl?: boolean
     meetingState?: boolean
     meetingType?: boolean
     timeType?: boolean
@@ -9207,6 +9223,8 @@ export namespace Prisma {
     scheduledEnd?: boolean
     backupScheduledTimes?: boolean
     title?: boolean
+    textContent?: boolean
+    photoUrl?: boolean
     meetingState?: boolean
     meetingType?: boolean
     timeType?: boolean
@@ -9231,6 +9249,8 @@ export namespace Prisma {
     scheduledEnd?: boolean
     backupScheduledTimes?: boolean
     title?: boolean
+    textContent?: boolean
+    photoUrl?: boolean
     meetingState?: boolean
     meetingType?: boolean
     timeType?: boolean
@@ -9255,6 +9275,8 @@ export namespace Prisma {
     scheduledEnd?: boolean
     backupScheduledTimes?: boolean
     title?: boolean
+    textContent?: boolean
+    photoUrl?: boolean
     meetingState?: boolean
     meetingType?: boolean
     timeType?: boolean
@@ -9267,7 +9289,7 @@ export namespace Prisma {
     maxParticipants?: boolean
   }
 
-  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "acceptedUserId" | "acceptedUserIds" | "createdAt" | "scheduledFor" | "scheduledEnd" | "backupScheduledTimes" | "title" | "meetingState" | "meetingType" | "timeType" | "targetType" | "sourceType" | "intentLabel" | "targetUserIds" | "suggestionReason" | "minParticipants" | "maxParticipants", ExtArgs["result"]["meeting"]>
+  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "acceptedUserId" | "acceptedUserIds" | "createdAt" | "scheduledFor" | "scheduledEnd" | "backupScheduledTimes" | "title" | "textContent" | "photoUrl" | "meetingState" | "meetingType" | "timeType" | "targetType" | "sourceType" | "intentLabel" | "targetUserIds" | "suggestionReason" | "minParticipants" | "maxParticipants", ExtArgs["result"]["meeting"]>
   export type MeetingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
@@ -9302,6 +9324,8 @@ export namespace Prisma {
       scheduledEnd: Date
       backupScheduledTimes: Date[]
       title: string | null
+      textContent: string | null
+      photoUrl: string | null
       meetingState: $Enums.MeetingState
       meetingType: $Enums.MeetingType
       timeType: $Enums.TimeType | null
@@ -9748,6 +9772,8 @@ export namespace Prisma {
     readonly scheduledEnd: FieldRef<"Meeting", 'DateTime'>
     readonly backupScheduledTimes: FieldRef<"Meeting", 'DateTime[]'>
     readonly title: FieldRef<"Meeting", 'String'>
+    readonly textContent: FieldRef<"Meeting", 'String'>
+    readonly photoUrl: FieldRef<"Meeting", 'String'>
     readonly meetingState: FieldRef<"Meeting", 'MeetingState'>
     readonly meetingType: FieldRef<"Meeting", 'MeetingType'>
     readonly timeType: FieldRef<"Meeting", 'TimeType'>
@@ -14673,6 +14699,8 @@ export namespace Prisma {
     scheduledEnd: 'scheduledEnd',
     backupScheduledTimes: 'backupScheduledTimes',
     title: 'title',
+    textContent: 'textContent',
+    photoUrl: 'photoUrl',
     meetingState: 'meetingState',
     meetingType: 'meetingType',
     timeType: 'timeType',
@@ -15455,6 +15483,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
     backupScheduledTimes?: DateTimeNullableListFilter<"Meeting">
     title?: StringNullableFilter<"Meeting"> | string | null
+    textContent?: StringNullableFilter<"Meeting"> | string | null
+    photoUrl?: StringNullableFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateFilter<"Meeting"> | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFilter<"Meeting"> | $Enums.MeetingType
     timeType?: EnumTimeTypeNullableFilter<"Meeting"> | $Enums.TimeType | null
@@ -15481,6 +15511,8 @@ export namespace Prisma {
     scheduledEnd?: SortOrder
     backupScheduledTimes?: SortOrder
     title?: SortOrderInput | SortOrder
+    textContent?: SortOrderInput | SortOrder
+    photoUrl?: SortOrderInput | SortOrder
     meetingState?: SortOrder
     meetingType?: SortOrder
     timeType?: SortOrderInput | SortOrder
@@ -15510,6 +15542,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
     backupScheduledTimes?: DateTimeNullableListFilter<"Meeting">
     title?: StringNullableFilter<"Meeting"> | string | null
+    textContent?: StringNullableFilter<"Meeting"> | string | null
+    photoUrl?: StringNullableFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateFilter<"Meeting"> | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFilter<"Meeting"> | $Enums.MeetingType
     timeType?: EnumTimeTypeNullableFilter<"Meeting"> | $Enums.TimeType | null
@@ -15536,6 +15570,8 @@ export namespace Prisma {
     scheduledEnd?: SortOrder
     backupScheduledTimes?: SortOrder
     title?: SortOrderInput | SortOrder
+    textContent?: SortOrderInput | SortOrder
+    photoUrl?: SortOrderInput | SortOrder
     meetingState?: SortOrder
     meetingType?: SortOrder
     timeType?: SortOrderInput | SortOrder
@@ -15566,6 +15602,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeWithAggregatesFilter<"Meeting"> | Date | string
     backupScheduledTimes?: DateTimeNullableListFilter<"Meeting">
     title?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
+    textContent?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
+    photoUrl?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateWithAggregatesFilter<"Meeting"> | $Enums.MeetingState
     meetingType?: EnumMeetingTypeWithAggregatesFilter<"Meeting"> | $Enums.MeetingType
     timeType?: EnumTimeTypeNullableWithAggregatesFilter<"Meeting"> | $Enums.TimeType | null
@@ -16348,6 +16386,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -16374,6 +16414,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -16396,6 +16438,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -16422,6 +16466,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -16446,6 +16492,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -16466,6 +16514,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -16488,6 +16538,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -17264,6 +17316,8 @@ export namespace Prisma {
     scheduledEnd?: SortOrder
     backupScheduledTimes?: SortOrder
     title?: SortOrder
+    textContent?: SortOrder
+    photoUrl?: SortOrder
     meetingState?: SortOrder
     meetingType?: SortOrder
     timeType?: SortOrder
@@ -17289,6 +17343,8 @@ export namespace Prisma {
     scheduledFor?: SortOrder
     scheduledEnd?: SortOrder
     title?: SortOrder
+    textContent?: SortOrder
+    photoUrl?: SortOrder
     meetingState?: SortOrder
     meetingType?: SortOrder
     timeType?: SortOrder
@@ -17308,6 +17364,8 @@ export namespace Prisma {
     scheduledFor?: SortOrder
     scheduledEnd?: SortOrder
     title?: SortOrder
+    textContent?: SortOrder
+    photoUrl?: SortOrder
     meetingState?: SortOrder
     meetingType?: SortOrder
     timeType?: SortOrder
@@ -18986,6 +19044,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -19010,6 +19070,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -19070,6 +19132,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -19094,6 +19158,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -19333,6 +19399,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFilter<"Meeting"> | Date | string
     backupScheduledTimes?: DateTimeNullableListFilter<"Meeting">
     title?: StringNullableFilter<"Meeting"> | string | null
+    textContent?: StringNullableFilter<"Meeting"> | string | null
+    photoUrl?: StringNullableFilter<"Meeting"> | string | null
     meetingState?: EnumMeetingStateFilter<"Meeting"> | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFilter<"Meeting"> | $Enums.MeetingType
     timeType?: EnumTimeTypeNullableFilter<"Meeting"> | $Enums.TimeType | null
@@ -20409,6 +20477,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -20434,6 +20504,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -20494,6 +20566,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -20519,6 +20593,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -20569,6 +20645,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -20594,6 +20672,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -20714,6 +20794,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -20739,6 +20821,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -21144,6 +21228,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -21173,6 +21259,8 @@ export namespace Prisma {
     scheduledEnd: Date | string
     backupScheduledTimes?: MeetingCreatebackupScheduledTimesInput | Date[] | string[]
     title?: string | null
+    textContent?: string | null
+    photoUrl?: string | null
     meetingState?: $Enums.MeetingState
     meetingType?: $Enums.MeetingType
     timeType?: $Enums.TimeType | null
@@ -21338,6 +21426,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -21362,6 +21452,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -21385,6 +21477,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -21431,6 +21525,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -21455,6 +21551,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null
@@ -21478,6 +21576,8 @@ export namespace Prisma {
     scheduledEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     backupScheduledTimes?: MeetingUpdatebackupScheduledTimesInput | Date[] | string[]
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    textContent?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     meetingState?: EnumMeetingStateFieldUpdateOperationsInput | $Enums.MeetingState
     meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
     timeType?: NullableEnumTimeTypeFieldUpdateOperationsInput | $Enums.TimeType | null

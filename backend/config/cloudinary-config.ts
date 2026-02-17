@@ -3,4 +3,5 @@ export const CLOUDINARY_CONFIG = {
     apiKey: process.env.CLOUDINARY_API_KEY || '',
     apiSecret: process.env.CLOUDINARY_API_SECRET || '',
     folder: 'cyf-avatars',
+    meetingPhotosFolder: 'cyf-meeting-photos',
 };

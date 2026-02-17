@@ -199,6 +199,8 @@ exports.Prisma.MeetingScalarFieldEnum = {
   scheduledEnd: 'scheduledEnd',
   backupScheduledTimes: 'backupScheduledTimes',
   title: 'title',
+  textContent: 'textContent',
+  photoUrl: 'photoUrl',
   meetingState: 'meetingState',
   meetingType: 'meetingType',
   timeType: 'timeType',
