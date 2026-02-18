@@ -6,10 +6,6 @@ interface UploadResult {
     publicId: string;
 }
 
-/**
- * Uploads a base64 image to Cloudinary for a meeting.
- * Uses the meetingId as the public_id so uploading again replaces the old photo.
- */
 export async function uploadMeetingPhoto({
     meetingId,
     imageBase64,
@@ -39,9 +35,6 @@ export async function uploadMeetingPhoto({
     };
 }
 
-/**
- * Deletes a meeting photo from Cloudinary.
- */
 export async function deleteMeetingPhoto(meetingId: string): Promise<void> {
     const cloudinary = getCloudinary();
 

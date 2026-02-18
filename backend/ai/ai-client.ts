@@ -2,10 +2,6 @@ import { z } from 'zod';
 import { getOpenAIClient } from './openai-client.js';
 import { AI_CONFIG } from '../config/ai-config.js';
 
-/**
- * Generic AI call function that handles OpenAI interaction, JSON parsing, and Zod validation.
- * Used by both generate-suggestions and suggest-new-time (and future AI features).
- */
 export async function callAI<T>(
   systemPrompt: string,
   userPrompt: string,

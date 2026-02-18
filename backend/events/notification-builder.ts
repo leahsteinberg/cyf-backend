@@ -33,7 +33,6 @@ export const buildOfferCreatedNotification = (
         ? vibe.title(name)
         : `${name} is free to talk!`;
 
-    // Body: combine vibe noun or meeting title with relative date
     const relativeDateString = getRelativeDateString(
         new Date(event.scheduledFor),
         timezone

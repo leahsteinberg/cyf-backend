@@ -271,18 +271,15 @@ export const getUserFromMeetingId = async (meetingId: string): Promise<User | nu
  * for all users in acceptedUserIds
  */
 export const enrichMeetingsWithAcceptedUsers = async (meetings: Meeting[]): Promise<Meeting[]> => {
-    // Collect all unique acceptedUserIds across all meetings
     const allAcceptedUserIds = new Set<string>();
     meetings.forEach(meeting => {
         meeting.acceptedUserIds.forEach(userId => allAcceptedUserIds.add(userId));
     });
 
     if (allAcceptedUserIds.size === 0) {
-        // No accepted users to fetch, return meetings as-is with empty acceptedUsers arrays
         return meetings.map(m => ({ ...m, acceptedUsers: [] }));
     }
 
-    // Fetch all accepted users in a single query
     const acceptedUsers = await prisma.user.findMany({
         where: {
             id: { in: Array.from(allAcceptedUserIds) }
@@ -310,10 +307,6 @@ export const enrichMeetingsWithAcceptedUsers = async (meetings: Meeting[]): Prom
     }));
 };
 
-/**
- * Enriches meetings with targetUsers array containing full User objects
- * for all users in targetUserIds
- */
 export const enrichMeetingsWithTargetUsers = async (meetings: Meeting[]): Promise<Meeting[]> => {
     // Collect all unique targetUserIds across all meetings
     const allTargetUserIds = new Set<string>();

@@ -1,9 +1,6 @@
 import { buildSuggestionContext } from '../signal-context.js';
 
-/**
- * Formats the user suggestion context into a prompt string for AI consumption.
- * Shared between generate-suggestions and suggest-new-time.
- */
+
 export function formatContextForPrompt(context: Awaited<ReturnType<typeof buildSuggestionContext>>): string {
   const now = new Date().toISOString();
 

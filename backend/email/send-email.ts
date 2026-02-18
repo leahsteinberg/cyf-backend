@@ -3,10 +3,6 @@ import { EMAIL_CONFIG } from '../config/email-config.js';
 
 type OTPType = 'sign-in' | 'email-verification' | 'forget-password';
 
-/**
- * Sends an OTP email via Resend.
- * Called by the better-auth emailOTP plugin's sendVerificationOTP callback.
- */
 export async function sendOTPEmail({
     email,
     otp,
@@ -34,9 +30,6 @@ export async function sendOTPEmail({
     console.log(`Sent ${type} OTP email to ${email}`);
 }
 
-/**
- * Returns subject and HTML body for an OTP email based on its type.
- */
 function getEmailContent(
     otp: string,
     type: OTPType,
@@ -76,9 +69,6 @@ function getEmailContent(
     }
 }
 
-/**
- * Builds a simple HTML email with a large, centered OTP code.
- */
 function buildOTPEmailHTML({
     heading,
     message,
