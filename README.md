@@ -1,4 +1,4 @@
-Backend for the [call-your-friends](https://github.com/leahsteinberg/call-your-friends) React Native app — a tool for scheduling spontaneous phone calls with friends.
+Backend for the [call-your-friends](https://github.com/leahsteinberg/call-your-friends) React Native app — a tool for coordinating on-the-fly phone calls with friends.
 
 ---
 
