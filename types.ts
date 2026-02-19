@@ -114,6 +114,9 @@ export interface Meeting extends BaseEntity {
     maxParticipants: number;
 
     broadcastMetadata?: BroadcastMetadata | null;
+
+    groupId?: string | null;
+    groupName?: string | null;
 }
 
 export interface Offer extends BaseEntity {
@@ -127,6 +130,20 @@ export interface Offer extends BaseEntity {
 export interface Friendship extends BaseEntity {
     userId1 : string;
     userId2: string;
+}
+
+export interface GroupMember extends BaseEntity {
+    groupId: string;
+    userId: string;
+    joinedAt: Date;
+    user?: User;
+}
+
+export interface FriendGroup extends BaseEntity {
+    name: string;
+    ownerId: string;
+    createdAt: Date;
+    members: GroupMember[];
 }
 
 type WalkPatternPayload = {};

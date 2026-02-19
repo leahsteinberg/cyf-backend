@@ -31,6 +31,8 @@ model User {
   isBroadcasting      Boolean       @default(false)
   userSignals         UserSignal[]  @relation("userSignals")
   userEvents          UserEvent[]   @relation("userEvents")
+  ownedGroups         FriendGroup[] @relation("ownedGroups")
+  groupMemberships    GroupMember[] @relation("groupMemberships")
 
   username        String?
   displayUsername String?
@@ -139,9 +141,38 @@ model Meeting {
   minParticipants   Int                 @default(1)
   maxParticipants   Int                 @default(1)
 
+  // GROUP FIELDS
+  groupId           String?
+  group             FriendGroup?        @relation(fields: [groupId], references: [id])
+  groupName         String?             // Denormalized — readable even if group is later deleted
+
   broadcastMetadata BroadcastMetadata?
 
   @@map("meeting")
+}
+
+model FriendGroup {
+  id        String        @id @default(uuid())
+  name      String
+  ownerId   String
+  owner     User          @relation("ownedGroups", fields: [ownerId], references: [id])
+  members   GroupMember[]
+  meetings  Meeting[]
+  createdAt DateTime      @default(now())
+
+  @@map("friend_group")
+}
+
+model GroupMember {
+  id       String      @id @default(uuid())
+  groupId  String
+  group    FriendGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User        @relation("groupMemberships", fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt DateTime    @default(now())
+
+  @@unique([groupId, userId])
+  @@map("group_member")
 }
 
 model BroadcastMetadata {

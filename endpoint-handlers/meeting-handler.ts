@@ -1,4 +1,5 @@
 import { createMeeting } from "../backend/update/meeting-update.js";
+import { resolveGroupForMeeting } from "../backend/group.js";
 import { getCreatedMeetings, getAcceptedMeetings, getMeetingById, enrichMeetingsWithAcceptedUsers, enrichMeetingsWithTargetUsers } from "../backend/query/meeting-lookup.js";
 import { processOffersForNewMeeting } from "../backend/process-meeting.js";
 import { respawnMeeting } from "../backend/respawn-meeting.js";
@@ -24,12 +25,23 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
     targetType,
     sourceType,
     intentLabel,
-    targetUserIds  // NEW: array of user IDs
+    targetUserIds,  // NEW: array of user IDs
+    groupId,        // NEW: resolve to targetUserIds + groupName
   } = req.body;
   console.log("in createMeeting, got target user ids", targetUserIds)
 
   try {
+    // Resolve group → targetUserIds + groupName when a groupId is provided
+    let resolvedTargetUserIds = targetUserIds || (targetUserId ? [targetUserId] : undefined);
+    let resolvedGroupName: string | undefined;
+    let resolvedTargetType = targetType;
 
+    if (groupId) {
+      const { memberIds, groupName } = await resolveGroupForMeeting({ groupId, requesterId: userFromId });
+      resolvedTargetUserIds = memberIds;
+      resolvedGroupName = groupName;
+      resolvedTargetType = 'GROUP';
+    }
 
     // Check if user already has any active meetings (created or accepted) that overlap with the requested time
     const createdMeetings = await getCreatedMeetings({userFromId});
@@ -62,11 +74,12 @@ export const handleCreateMeeting = async (req: Request, res: Response) => {
       // Support both old and new API
       meetingType: meetingType || undefined,
       timeType: timeType || undefined,
-      targetType: targetType || undefined,
+      targetType: resolvedTargetType || undefined,
       sourceType: sourceType || undefined,
       intentLabel: intentLabel || undefined,
-      // Handle both old (targetUserId: string) and new (targetUserIds: string[]) formats
-      targetUserIds: targetUserIds || (targetUserId ? [targetUserId] : undefined)
+      targetUserIds: resolvedTargetUserIds,
+      groupId: groupId || undefined,
+      ...(resolvedGroupName ? { groupName: resolvedGroupName } : {}),
     });
 
     // Validate meeting was created successfully

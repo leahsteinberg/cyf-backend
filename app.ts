@@ -18,6 +18,7 @@ import { handleGenerateSuggestions } from './endpoint-handlers/ai-suggestion-han
 import { handleSuggestNewTime } from './endpoint-handlers/suggest-new-time-handler.js';
 import { handleUploadAvatar, handleGetAvatar } from './endpoint-handlers/avatar-handler.js';
 import { handleUploadMeetingPhoto, handleDeleteMeetingPhoto, handleUpdateMeetingTextContent } from './endpoint-handlers/meeting-content-handler.js';
+import { handleCreateGroup, handleGetGroups, handleAddGroupMember, handleRemoveGroupMember, handleDeleteGroup } from './endpoint-handlers/group-handler.js';
 
 // Import event system to register handlers (side effect import)
 import './backend/events/index.js';
@@ -61,6 +62,13 @@ app.post('/api/remove-invite', handleRemoveInvite);
 
 // FRIEND ENDPOINTS
 app.post('/api/get-friends', handleGetFriends);
+
+// GROUP ENDPOINTS
+app.post('/api/create-group', handleCreateGroup);
+app.post('/api/get-groups', handleGetGroups);
+app.post('/api/add-group-member', handleAddGroupMember);
+app.post('/api/remove-group-member', handleRemoveGroupMember);
+app.post('/api/delete-group', handleDeleteGroup);
 
 
 //MEETING ENDPOINTS

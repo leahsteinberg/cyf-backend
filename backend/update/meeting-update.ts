@@ -29,6 +29,9 @@ type CreateMeetingParams = {
     meetingState?: MeetingState;
     minParticipants?: number;
     maxParticipants?: number;
+
+    groupId?: string;
+    groupName?: string;
 };
 
 export const createMeeting = async (params: CreateMeetingParams): Promise<Meeting> => {
@@ -101,6 +104,8 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             suggestionReason: params.suggestionReason || null,
             minParticipants,
             maxParticipants,
+            groupId: params.groupId || null,
+            groupName: params.groupName || null,
 
             // Create broadcast metadata for immediate + open meetings (broadcasts)
             ...(needsBroadcastMetadata && {

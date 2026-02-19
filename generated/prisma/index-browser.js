@@ -210,7 +210,23 @@ exports.Prisma.MeetingScalarFieldEnum = {
   targetUserIds: 'targetUserIds',
   suggestionReason: 'suggestionReason',
   minParticipants: 'minParticipants',
-  maxParticipants: 'maxParticipants'
+  maxParticipants: 'maxParticipants',
+  groupId: 'groupId',
+  groupName: 'groupName'
+};
+
+exports.Prisma.FriendGroupScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  ownerId: 'ownerId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.GroupMemberScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  userId: 'userId',
+  joinedAt: 'joinedAt'
 };
 
 exports.Prisma.BroadcastMetadataScalarFieldEnum = {
@@ -339,6 +355,8 @@ exports.Prisma.ModelName = {
   Friendship: 'Friendship',
   Invitation: 'Invitation',
   Meeting: 'Meeting',
+  FriendGroup: 'FriendGroup',
+  GroupMember: 'GroupMember',
   BroadcastMetadata: 'BroadcastMetadata',
   Offer: 'Offer',
   UserSignal: 'UserSignal',
