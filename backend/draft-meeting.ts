@@ -14,7 +14,7 @@ export interface CreateDraftMeetingParams {
     scheduledFor: Date;
     scheduledEnd: Date;
     backupScheduledTimes?: Date[];
-    title: string;
+    title?: string;
     timeType: TimeType;
     targetType: TargetType;
     sourceType?: SourceType;
