@@ -23,6 +23,8 @@ export interface CreateDraftMeetingParams {
     suggestionReason?: string;
     minParticipants?: number;
     maxParticipants?: number;
+    groupId?: string;
+    groupName?: string;
 }
 
 /**
@@ -91,7 +93,9 @@ export async function createDraftMeeting(params: CreateDraftMeetingParams): Prom
         ...(targetUserIds && { targetUserIds }),
         ...(suggestionReason && { suggestionReason }),
         ...(minParticipants && { minParticipants }),
-        ...(maxParticipants && { maxParticipants })
+        ...(maxParticipants && { maxParticipants }),
+        ...(params.groupId && { groupId: params.groupId }),
+        ...(params.groupName && { groupName: params.groupName })
     });
 
     if (!meeting || !meeting.id) {

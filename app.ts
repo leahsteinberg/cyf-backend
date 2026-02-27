@@ -7,6 +7,7 @@ import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites, handleGet
 import { handleGetUserByPhone, handleGetProfile } from './endpoint-handlers/user-handler.js';
 import { handleGetFriends } from './endpoint-handlers/friend-handler.js';
 import { handleCreateMeeting, handleGetMeetings, handleCancelMeeting } from './endpoint-handlers/meeting-handler.js';
+import { handleCreateSmartMeeting } from './endpoint-handlers/smart-meeting-handler.js';
 import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoint-handlers/offer-handler.js';
 import { handleCronRound } from './endpoint-handlers/cron-handler.js';
 import { handlePush } from './endpoint-handlers/push-handler.js';
@@ -73,6 +74,7 @@ app.post('/api/delete-group', handleDeleteGroup);
 
 //MEETING ENDPOINTS
 app.post('/api/create-meeting', handleCreateMeeting);
+app.post('/api/create-smart-meeting', handleCreateSmartMeeting);
 app.post('/api/get-meetings', handleGetMeetings);
 app.post('/api/cancel-meeting', handleCancelMeeting);
 
