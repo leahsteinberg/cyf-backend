@@ -7,7 +7,8 @@ import {
     UNKNOWN_TIME_TYPE,
     getEffectiveTimeType,
     REJECTED_MEETING_STATE,
-    SEARCHING_MEETING_STATE
+    SEARCHING_MEETING_STATE,
+    CANCELED_MEETING_STATE
 } from '../types.js';
 
 /**
@@ -61,7 +62,8 @@ export const findMeetingTimeConflict = ({
             meeting.meetingState === DRAFT_MEETING_STATE ||
             meeting.meetingState === DISMISSED_DRAFT_MEETING_STATE ||
             meeting.meetingState === REJECTED_MEETING_STATE ||
-            meeting.meetingState === SEARCHING_MEETING_STATE
+            meeting.meetingState === SEARCHING_MEETING_STATE ||
+            meeting.meetingState === CANCELED_MEETING_STATE
         ) {
             return true;
         }
