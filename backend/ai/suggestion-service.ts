@@ -129,6 +129,7 @@ export async function createMeetingFromSuggestion(
     userFromId: userId,
     scheduledFor,
     scheduledEnd,
+    title: 'Suggested phone call',
     timeType: FUTURE_TIME_TYPE,
     targetType: FRIEND_SPECIFIC_TARGET_TYPE,
     sourceType: SYSTEM_PATTERN_SOURCE_TYPE,
