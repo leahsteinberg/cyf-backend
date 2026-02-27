@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { uploadMeetingPhoto, deleteMeetingPhoto } from '../backend/meeting-photo/upload-meeting-photo.js';
-import { updateMeetingPhotoUrl, updateMeetingTextContent } from '../backend/update/meeting-update.js';
+import { updateMeetingPhotoUrl, updateMeetingMeta } from '../backend/update/meeting-update.js';
 
 export const handleUploadMeetingPhoto = async (req: Request, res: Response) => {
     const { meetingId, imageBase64, mimeType } = req.body;
@@ -42,24 +42,25 @@ export const handleDeleteMeetingPhoto = async (req: Request, res: Response) => {
     }
 };
 
-export const handleUpdateMeetingTextContent = async (req: Request, res: Response) => {
-    const { meetingId, textContent } = req.body;
-    console.log("/api/update-meeting-text", { meetingId, textContentLength: textContent?.length });
+// Accepts any combination of title, textContent, intentLabel.
+// At least one field must be present; each field, if provided, may be null to clear it.
+export const handleUpdateMeetingMeta = async (req: Request, res: Response) => {
+    const { meetingId, title, textContent, intentLabel } = req.body;
 
     if (!meetingId) {
         return res.status(400).json({ error: "meetingId is required" });
     }
 
-    if (textContent === undefined) {
-        return res.status(400).json({ error: "textContent is required (can be null to clear)" });
+    if (title === undefined && textContent === undefined && intentLabel === undefined) {
+        return res.status(400).json({ error: "At least one of title, textContent, or intentLabel is required" });
     }
 
     try {
-        const updated = await updateMeetingTextContent({ meetingId, textContent });
-        res.json({ success: true, textContent: updated.textContent });
+        const updated = await updateMeetingMeta({ meetingId, title, textContent, intentLabel });
+        res.json({ success: true, title: updated.title, textContent: updated.textContent, intentLabel: updated.intentLabel });
     } catch (error) {
-        console.error("Error updating meeting text content:", error);
+        console.error("Error updating meeting meta:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);
-        return res.status(500).json({ error: "Failed to update meeting text content", details: errorMessage });
+        return res.status(500).json({ error: "Failed to update meeting", details: errorMessage });
     }
 };

@@ -233,10 +233,21 @@ export const updateMeetingPhotoUrl = async ({ meetingId, photoUrl }: { meetingId
     return updatedMeeting;
 };
 
-export const updateMeetingTextContent = async ({ meetingId, textContent }: { meetingId: string; textContent: string | null }) => {
+type UpdateMeetingMetaParams = {
+    meetingId: string;
+    title?: string | null;
+    textContent?: string | null;
+    intentLabel?: string | null;
+};
+
+export const updateMeetingMeta = async ({ meetingId, title, textContent, intentLabel }: UpdateMeetingMetaParams) => {
     const updatedMeeting = await prisma.meeting.update({
         where: { id: meetingId },
-        data: { textContent },
+        data: {
+            ...(title !== undefined && { title }),
+            ...(textContent !== undefined && { textContent }),
+            ...(intentLabel !== undefined && { intentLabel }),
+        },
     });
     return updatedMeeting;
 };
