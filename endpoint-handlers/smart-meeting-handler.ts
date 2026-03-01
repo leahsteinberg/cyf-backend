@@ -102,7 +102,7 @@ export const handleCreateSmartMeeting = async (req: Request, res: Response) => {
                 userFromId,
                 scheduledFor: new Date(scheduledFor),
                 scheduledEnd: new Date(scheduledEnd),
-                title: title || null,
+                title: title || 'Phone call',
                 timeType: timeType || 'FUTURE',
                 targetType: effectiveTargetType as any,
                 targetUserIds: resolvedTargetUserIds,

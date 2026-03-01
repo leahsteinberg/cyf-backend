@@ -88,7 +88,7 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             userFromId,
             scheduledFor,
             scheduledEnd,
-            backupScheduledTimes: backupScheduledTimes || [],
+            backupScheduledTimes: { set: backupScheduledTimes ?? [] },
             title,
             meetingState: meetingState || 'SEARCHING',  // Default to SEARCHING if not specified
 
@@ -100,7 +100,7 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             targetType: finalTargetType,
             sourceType: params.sourceType || null,
             intentLabel: params.intentLabel || null,
-            targetUserIds: params.targetUserIds || [],
+            targetUserIds: { set: params.targetUserIds ?? [] },
             suggestionReason: params.suggestionReason || null,
             minParticipants,
             maxParticipants,
@@ -160,7 +160,7 @@ export const setMeetingOpen = async ({meetingId}: {meetingId: string}): Promise<
         data: {
             meetingState: SEARCHING_MEETING_STATE,
             acceptedUserId: null,
-            acceptedUserIds: []
+            acceptedUserIds: { set: [] }
         }
     })
     return updatedMeeting;
@@ -188,7 +188,7 @@ export const unclaimBroadcastMeeting = async ({meetingId}: {meetingId: string}):
         data: {
             meetingState: SEARCHING_MEETING_STATE,
             acceptedUserId: null,
-            acceptedUserIds: [],
+            acceptedUserIds: { set: [] },
             broadcastMetadata: {
                 update: {
                     subState: UNCLAIMED_BROADCAST_STATE,
