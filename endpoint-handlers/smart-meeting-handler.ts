@@ -50,7 +50,15 @@ export const handleCreateSmartMeeting = async (req: Request, res: Response) => {
         // --- Resolve group if provided (same logic as handleCreateMeeting) ---
         // No explicit type annotations here so TypeScript infers `any` from req.body,
         // which avoids exactOptionalPropertyTypes conflicts on the spread call sites.
-        let resolvedTargetUserIds = targetUserIds || (targetUserId ? [targetUserId] : undefined);
+        // Normalize to string[] — body may send an object array, a single string, etc.
+        const rawTargetIds = Array.isArray(targetUserIds)
+            ? targetUserIds
+            : targetUserId
+            ? [targetUserId]
+            : null;
+        let resolvedTargetUserIds: string[] | undefined = rawTargetIds
+            ?.map((id: any) => (typeof id === 'string' ? id : String(id?.id ?? id)))
+            ?? undefined;
         let resolvedGroupName: string | undefined;
         let resolvedTargetType = targetType;
 
@@ -105,7 +113,7 @@ export const handleCreateSmartMeeting = async (req: Request, res: Response) => {
                 title: title || 'Phone call',
                 timeType: timeType || 'FUTURE',
                 targetType: effectiveTargetType as any,
-                targetUserIds: resolvedTargetUserIds,
+                ...(resolvedTargetUserIds ? { targetUserIds: resolvedTargetUserIds } : {}),
                 ...(meetingType ? { meetingType } : {}),
                 ...(sourceType ? { sourceType } : {}),
                 ...(intentLabel ? { intentLabel } : {}),
@@ -143,7 +151,7 @@ export const handleCreateSmartMeeting = async (req: Request, res: Response) => {
                 timeType: 'FUTURE',
                 targetType: (resolvedTargetType || 'FRIEND_SPECIFIC') as any,
                 sourceType: sourceType || 'SYSTEM_REAL_TIME' as any,
-                targetUserIds: resolvedTargetUserIds,
+                ...(resolvedTargetUserIds ? { targetUserIds: resolvedTargetUserIds } : {}),
                 suggestionReason: aiTime.reason,
                 ...(intentLabel ? { intentLabel } : {}),
                 ...(groupId ? { groupId } : {}),
