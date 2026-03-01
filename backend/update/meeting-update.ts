@@ -88,7 +88,7 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             userFromId,
             scheduledFor,
             scheduledEnd,
-            backupScheduledTimes: { set: backupScheduledTimes ?? [] },
+            backupScheduledTimes: backupScheduledTimes ?? [],
             title,
             meetingState: meetingState || 'SEARCHING',  // Default to SEARCHING if not specified
 
