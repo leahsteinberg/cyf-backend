@@ -4,7 +4,7 @@ import { toNodeHandler } from "better-auth/node";
 import cors from 'cors';
 import { handleMe, handleSignIn, handleSignUpPhone, handleSignOut } from './endpoint-handlers/auth-handler.js';
 import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites, handleGetFriendInvites, handleAcceptInvite, handleRemoveInvite } from './endpoint-handlers/invite-handler.js';
-import { handleGetUserByPhone, handleGetProfile } from './endpoint-handlers/user-handler.js';
+import { handleGetUserByPhone, handleGetProfile, handleDeleteUser } from './endpoint-handlers/user-handler.js';
 import { handleGetFriends } from './endpoint-handlers/friend-handler.js';
 import { handleCreateMeeting, handleGetMeetings, handleCancelMeeting } from './endpoint-handlers/meeting-handler.js';
 import { handleCreateSmartMeeting } from './endpoint-handlers/smart-meeting-handler.js';
@@ -49,6 +49,7 @@ app.post('/api/signout', handleSignOut)
 // USER ENDPOINTS
 app.post('/api/user-by-phone', handleGetUserByPhone);
 app.post('/api/get-profile', handleGetProfile);
+app.delete('/api/user', handleDeleteUser);
 
 
 // INVITE ENDPOINTS
