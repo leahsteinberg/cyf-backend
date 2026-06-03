@@ -16,6 +16,14 @@ export const getFriendshipsUser2Side = async (id: string): Promise<Friendship[]>
     return friendships || [];
 }
 
+export const getFriendIds = async ({ userId }: { userId: string }): Promise<Set<string>> => {
+    const [side1, side2] = await Promise.all([
+        prisma.friendship.findMany({ where: { userId1: userId }, select: { userId2: true } }),
+        prisma.friendship.findMany({ where: { userId2: userId }, select: { userId1: true } }),
+    ]);
+    return new Set([...side1.map(f => f.userId2), ...side2.map(f => f.userId1)]);
+};
+
 export const getFriendsWithDetails = async ({ userId }: { userId: string }) => {
     const friendshipsUser1 = await getFriendshipsUser1Side(userId);
     const friendshipsUser2 = await getFriendshipsUser2Side(userId);

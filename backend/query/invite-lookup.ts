@@ -2,6 +2,14 @@
 
 import { prisma } from "../auth.js";
 
+export const getPendingInvitePhoneNumbers = async ({ userFromId }: { userFromId: string }): Promise<Set<string>> => {
+    const invites = await prisma.invitation.findMany({
+        where: { userFromId },
+        select: { userToPhoneNumber: true },
+    });
+    return new Set(invites.map(i => i.userToPhoneNumber));
+};
+
 export const findInvite = async (token: string, userToPhoneNumber: string) => {
     const invite = await prisma.invitation.findFirst({
         where: { token, userToPhoneNumber },

@@ -5,7 +5,7 @@ import cors from 'cors';
 import { handleMe, handleSignIn, handleSignUpPhone, handleSignOut } from './endpoint-handlers/auth-handler.js';
 import { handleCreateInvite, handleInviteSignUp, handleGetSentInvites, handleGetFriendInvites, handleAcceptInvite, handleRemoveInvite } from './endpoint-handlers/invite-handler.js';
 import { handleGetUserByPhone, handleGetProfile, handleDeleteUser } from './endpoint-handlers/user-handler.js';
-import { handleGetFriends } from './endpoint-handlers/friend-handler.js';
+import { handleGetFriends, handleSearchUsers, handleSendFriendRequest } from './endpoint-handlers/friend-handler.js';
 import { handleCreateMeeting, handleGetMeetings, handleCancelMeeting } from './endpoint-handlers/meeting-handler.js';
 import { handleCreateSmartMeeting } from './endpoint-handlers/smart-meeting-handler.js';
 import { handleGetOffers, handleAcceptOffer, handleRejectOffer } from './endpoint-handlers/offer-handler.js';
@@ -64,6 +64,8 @@ app.post('/api/remove-invite', handleRemoveInvite);
 
 // FRIEND ENDPOINTS
 app.post('/api/get-friends', handleGetFriends);
+app.post('/api/search-users', handleSearchUsers);
+app.post('/api/send-friend-request', handleSendFriendRequest);
 
 // GROUP ENDPOINTS
 app.post('/api/create-group', handleCreateGroup);
