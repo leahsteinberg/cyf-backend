@@ -1,8 +1,9 @@
-import {auth} from '../backend/auth.js';  
+import {auth} from '../backend/auth.js';
 import type { Request, Response } from 'express';
 
-import { fromNodeHeaders } from "better-auth/node"; 
+import { fromNodeHeaders } from "better-auth/node";
 import { createUser } from '../backend/user.js';
+import { validateUsername } from '../backend/username-validation.js';
 
 export const handleSignIn = async (req: Request, res: Response) => {
     console.log("sign in - ", req.body.email)
@@ -63,8 +64,14 @@ export const handleMe = async (req: Request, res: Response) => {
 export const handleSignUpPhone = async (req: Request, res: Response) => {
     console.log("Sign Up Phone Endpoint", req.body);
     try {
-        const { email, phoneNumber, name, password } = req.body;
-        const user = await createUser({ email, phoneNumber, name, password });
+        const { email, phoneNumber, name, password, username } = req.body;
+
+        const validation = validateUsername(username);
+        if (!validation.valid) {
+            return res.status(400).json({ error: validation.error });
+        }
+
+        const user = await createUser({ email, phoneNumber, name, password, username });
         console.log("user is", user)
         return res.json(user);
     } catch (error) {

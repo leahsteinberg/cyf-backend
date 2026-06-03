@@ -1,6 +1,7 @@
 import { createFriendship } from "../backend/update/friendship-update.js";
 import { findUserByPhone, getUserPhoneNumber } from "../backend/query/user-lookup.js";
 import { createUser } from "../backend/user.js";
+import { validateUsername } from "../backend/username-validation.js";
 import type { Request, Response } from 'express';
 import { createInvite, deleteInvite } from "../backend/update/invite-update.js";
 import { findInvite, getSentInvites, getFriendInvites } from "../backend/query/invite-lookup.js";
@@ -15,14 +16,20 @@ export const handleCreateInvite = async (req: Request, res: Response) => {
 
 
 export const handleInviteSignUp = async (req: Request, res: Response) => {
-    const {token, email, phoneNumber, name, password} = req.body;
-    console.log("/api/sign-up-accept-invite", {token, email, phoneNumber, name, password})
+    const {token, email, phoneNumber, name, password, username} = req.body;
+    console.log("/api/sign-up-accept-invite", {token, email, phoneNumber, name, password, username})
+
+    const validation = validateUsername(username);
+    if (!validation.valid) {
+        return res.status(400).json({ error: validation.error });
+    }
+
     const userTo = await findUserByPhone(phoneNumber);
     if (!userTo) {
       const invite = await findInvite(token, phoneNumber);
       if (invite && invite.userToPhoneNumber === phoneNumber) {
         const {userFromId} = invite;
-        const newUser = await createUser({email, phoneNumber, name, password});
+        const newUser = await createUser({email, phoneNumber, name, password, username});
         const newFriendship = await createFriendship({userId1: userFromId, userId2: newUser.user.id})
         res.json(newUser);
       }
