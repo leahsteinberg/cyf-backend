@@ -117,6 +117,9 @@ export interface Meeting extends BaseEntity {
 
     groupId?: string | null;
     groupName?: string | null;
+    photoUrl?: string | null;
+    textContent?: string | null;
+    replacedByMeetingId?: string | null;
 }
 
 export interface Offer extends BaseEntity {

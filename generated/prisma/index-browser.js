@@ -212,7 +212,8 @@ exports.Prisma.MeetingScalarFieldEnum = {
   minParticipants: 'minParticipants',
   maxParticipants: 'maxParticipants',
   groupId: 'groupId',
-  groupName: 'groupName'
+  groupName: 'groupName',
+  replacedByMeetingId: 'replacedByMeetingId'
 };
 
 exports.Prisma.FriendGroupScalarFieldEnum = {

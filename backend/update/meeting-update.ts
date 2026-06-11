@@ -2,12 +2,13 @@ import type { Meeting, MeetingState, MeetingType, TimeType, TargetType, SourceTy
 import {
     meetingTypeToNew,
     newToMeetingType,
-    ACCEPTED_MEETING_STATE,
     SEARCHING_MEETING_STATE,
     IMMEDIATE_TIME_TYPE,
     OPEN_TARGET_TYPE,
     DISMISSED_DRAFT_MEETING_STATE,
-    UNCLAIMED_BROADCAST_STATE
+    UNCLAIMED_BROADCAST_STATE,
+    OPEN_OFFER_STATE,
+    EXPIRED_OFFER_STATE,
 } from "../../types.js";
 import { prisma } from "../auth.js";
 
@@ -32,6 +33,9 @@ type CreateMeetingParams = {
 
     groupId?: string;
     groupName?: string;
+    photoUrl?: string;
+    textContent?: string;
+    replacedByMeetingId?: string;
 };
 
 export const createMeeting = async (params: CreateMeetingParams): Promise<Meeting> => {
@@ -106,6 +110,9 @@ export const createMeeting = async (params: CreateMeetingParams): Promise<Meetin
             maxParticipants,
             groupId: params.groupId || null,
             groupName: params.groupName || null,
+            photoUrl: params.photoUrl || null,
+            textContent: params.textContent || null,
+            replacedByMeetingId: params.replacedByMeetingId || null,
 
             // Create broadcast metadata for immediate + open meetings (broadcasts)
             ...(needsBroadcastMetadata && {
@@ -250,6 +257,19 @@ export const updateMeetingMeta = async ({ meetingId, title, textContent, intentL
         },
     });
     return updatedMeeting;
+};
+
+export const cancelReplacedMeeting = async ({ meetingId }: { meetingId: string }): Promise<void> => {
+    await prisma.$transaction([
+        prisma.offer.updateMany({
+            where: { meetingId, offerState: OPEN_OFFER_STATE },
+            data: { offerState: EXPIRED_OFFER_STATE },
+        }),
+        prisma.meeting.update({
+            where: { id: meetingId },
+            data: { meetingState: 'CANCELED' },
+        }),
+    ]);
 };
 
 export const updateMeetingState = async (

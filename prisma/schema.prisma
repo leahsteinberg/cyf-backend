@@ -146,6 +146,8 @@ model Meeting {
   group             FriendGroup?        @relation(fields: [groupId], references: [id])
   groupName         String?             // Denormalized — readable even if group is later deleted
 
+  replacedByMeetingId String?           // Set when this meeting is superseded by a rescheduled one
+
   broadcastMetadata BroadcastMetadata?
 
   @@map("meeting")

@@ -9227,6 +9227,7 @@ export namespace Prisma {
     maxParticipants: number | null
     groupId: string | null
     groupName: string | null
+    replacedByMeetingId: string | null
   }
 
   export type MeetingMaxAggregateOutputType = {
@@ -9250,6 +9251,7 @@ export namespace Prisma {
     maxParticipants: number | null
     groupId: string | null
     groupName: string | null
+    replacedByMeetingId: string | null
   }
 
   export type MeetingCountAggregateOutputType = {
@@ -9276,6 +9278,7 @@ export namespace Prisma {
     maxParticipants: number
     groupId: number
     groupName: number
+    replacedByMeetingId: number
     _all: number
   }
 
@@ -9311,6 +9314,7 @@ export namespace Prisma {
     maxParticipants?: true
     groupId?: true
     groupName?: true
+    replacedByMeetingId?: true
   }
 
   export type MeetingMaxAggregateInputType = {
@@ -9334,6 +9338,7 @@ export namespace Prisma {
     maxParticipants?: true
     groupId?: true
     groupName?: true
+    replacedByMeetingId?: true
   }
 
   export type MeetingCountAggregateInputType = {
@@ -9360,6 +9365,7 @@ export namespace Prisma {
     maxParticipants?: true
     groupId?: true
     groupName?: true
+    replacedByMeetingId?: true
     _all?: true
   }
 
@@ -9473,6 +9479,7 @@ export namespace Prisma {
     maxParticipants: number
     groupId: string | null
     groupName: string | null
+    replacedByMeetingId: string | null
     _count: MeetingCountAggregateOutputType | null
     _avg: MeetingAvgAggregateOutputType | null
     _sum: MeetingSumAggregateOutputType | null
@@ -9518,6 +9525,7 @@ export namespace Prisma {
     maxParticipants?: boolean
     groupId?: boolean
     groupName?: boolean
+    replacedByMeetingId?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
     offers?: boolean | Meeting$offersArgs<ExtArgs>
@@ -9550,6 +9558,7 @@ export namespace Prisma {
     maxParticipants?: boolean
     groupId?: boolean
     groupName?: boolean
+    replacedByMeetingId?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
     group?: boolean | Meeting$groupArgs<ExtArgs>
@@ -9579,6 +9588,7 @@ export namespace Prisma {
     maxParticipants?: boolean
     groupId?: boolean
     groupName?: boolean
+    replacedByMeetingId?: boolean
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
     group?: boolean | Meeting$groupArgs<ExtArgs>
@@ -9608,9 +9618,10 @@ export namespace Prisma {
     maxParticipants?: boolean
     groupId?: boolean
     groupName?: boolean
+    replacedByMeetingId?: boolean
   }
 
-  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "acceptedUserId" | "acceptedUserIds" | "createdAt" | "scheduledFor" | "scheduledEnd" | "backupScheduledTimes" | "title" | "textContent" | "photoUrl" | "meetingState" | "meetingType" | "timeType" | "targetType" | "sourceType" | "intentLabel" | "targetUserIds" | "suggestionReason" | "minParticipants" | "maxParticipants" | "groupId" | "groupName", ExtArgs["result"]["meeting"]>
+  export type MeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userFromId" | "acceptedUserId" | "acceptedUserIds" | "createdAt" | "scheduledFor" | "scheduledEnd" | "backupScheduledTimes" | "title" | "textContent" | "photoUrl" | "meetingState" | "meetingType" | "timeType" | "targetType" | "sourceType" | "intentLabel" | "targetUserIds" | "suggestionReason" | "minParticipants" | "maxParticipants" | "groupId" | "groupName" | "replacedByMeetingId", ExtArgs["result"]["meeting"]>
   export type MeetingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userFrom?: boolean | UserDefaultArgs<ExtArgs>
     acceptedUser?: boolean | Meeting$acceptedUserArgs<ExtArgs>
@@ -9663,6 +9674,7 @@ export namespace Prisma {
       maxParticipants: number
       groupId: string | null
       groupName: string | null
+      replacedByMeetingId: string | null
     }, ExtArgs["result"]["meeting"]>
     composites: {}
   }
@@ -10114,6 +10126,7 @@ export namespace Prisma {
     readonly maxParticipants: FieldRef<"Meeting", 'Int'>
     readonly groupId: FieldRef<"Meeting", 'String'>
     readonly groupName: FieldRef<"Meeting", 'String'>
+    readonly replacedByMeetingId: FieldRef<"Meeting", 'String'>
   }
     
 
@@ -17217,7 +17230,8 @@ export namespace Prisma {
     minParticipants: 'minParticipants',
     maxParticipants: 'maxParticipants',
     groupId: 'groupId',
-    groupName: 'groupName'
+    groupName: 'groupName',
+    replacedByMeetingId: 'replacedByMeetingId'
   };
 
   export type MeetingScalarFieldEnum = (typeof MeetingScalarFieldEnum)[keyof typeof MeetingScalarFieldEnum]
@@ -18030,6 +18044,7 @@ export namespace Prisma {
     maxParticipants?: IntFilter<"Meeting"> | number
     groupId?: StringNullableFilter<"Meeting"> | string | null
     groupName?: StringNullableFilter<"Meeting"> | string | null
+    replacedByMeetingId?: StringNullableFilter<"Meeting"> | string | null
     userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
     acceptedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     offers?: OfferListRelationFilter
@@ -18061,6 +18076,7 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     groupId?: SortOrderInput | SortOrder
     groupName?: SortOrderInput | SortOrder
+    replacedByMeetingId?: SortOrderInput | SortOrder
     userFrom?: UserOrderByWithRelationInput
     acceptedUser?: UserOrderByWithRelationInput
     offers?: OfferOrderByRelationAggregateInput
@@ -18095,6 +18111,7 @@ export namespace Prisma {
     maxParticipants?: IntFilter<"Meeting"> | number
     groupId?: StringNullableFilter<"Meeting"> | string | null
     groupName?: StringNullableFilter<"Meeting"> | string | null
+    replacedByMeetingId?: StringNullableFilter<"Meeting"> | string | null
     userFrom?: XOR<UserScalarRelationFilter, UserWhereInput>
     acceptedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     offers?: OfferListRelationFilter
@@ -18126,6 +18143,7 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     groupId?: SortOrderInput | SortOrder
     groupName?: SortOrderInput | SortOrder
+    replacedByMeetingId?: SortOrderInput | SortOrder
     _count?: MeetingCountOrderByAggregateInput
     _avg?: MeetingAvgOrderByAggregateInput
     _max?: MeetingMaxOrderByAggregateInput
@@ -18160,6 +18178,7 @@ export namespace Prisma {
     maxParticipants?: IntWithAggregatesFilter<"Meeting"> | number
     groupId?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
     groupName?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
+    replacedByMeetingId?: StringNullableWithAggregatesFilter<"Meeting"> | string | null
   }
 
   export type FriendGroupWhereInput = {
@@ -19063,6 +19082,7 @@ export namespace Prisma {
     minParticipants?: number
     maxParticipants?: number
     groupName?: string | null
+    replacedByMeetingId?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
@@ -19094,6 +19114,7 @@ export namespace Prisma {
     maxParticipants?: number
     groupId?: string | null
     groupName?: string | null
+    replacedByMeetingId?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
@@ -19119,6 +19140,7 @@ export namespace Prisma {
     minParticipants?: IntFieldUpdateOperationsInput | number
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
@@ -19150,6 +19172,7 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupId?: NullableStringFieldUpdateOperationsInput | string | null
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
@@ -19178,6 +19201,7 @@ export namespace Prisma {
     maxParticipants?: number
     groupId?: string | null
     groupName?: string | null
+    replacedByMeetingId?: string | null
   }
 
   export type MeetingUpdateManyMutationInput = {
@@ -19201,6 +19225,7 @@ export namespace Prisma {
     minParticipants?: IntFieldUpdateOperationsInput | number
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MeetingUncheckedUpdateManyInput = {
@@ -19227,6 +19252,7 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupId?: NullableStringFieldUpdateOperationsInput | string | null
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FriendGroupCreateInput = {
@@ -20135,6 +20161,7 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     groupId?: SortOrder
     groupName?: SortOrder
+    replacedByMeetingId?: SortOrder
   }
 
   export type MeetingAvgOrderByAggregateInput = {
@@ -20163,6 +20190,7 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     groupId?: SortOrder
     groupName?: SortOrder
+    replacedByMeetingId?: SortOrder
   }
 
   export type MeetingMinOrderByAggregateInput = {
@@ -20186,6 +20214,7 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     groupId?: SortOrder
     groupName?: SortOrder
+    replacedByMeetingId?: SortOrder
   }
 
   export type MeetingSumOrderByAggregateInput = {
@@ -22146,6 +22175,7 @@ export namespace Prisma {
     minParticipants?: number
     maxParticipants?: number
     groupName?: string | null
+    replacedByMeetingId?: string | null
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
     group?: FriendGroupCreateNestedOneWithoutMeetingsInput
@@ -22175,6 +22205,7 @@ export namespace Prisma {
     maxParticipants?: number
     groupId?: string | null
     groupName?: string | null
+    replacedByMeetingId?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
@@ -22238,6 +22269,7 @@ export namespace Prisma {
     minParticipants?: number
     maxParticipants?: number
     groupName?: string | null
+    replacedByMeetingId?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
     group?: FriendGroupCreateNestedOneWithoutMeetingsInput
@@ -22267,6 +22299,7 @@ export namespace Prisma {
     maxParticipants?: number
     groupId?: string | null
     groupName?: string | null
+    replacedByMeetingId?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
@@ -22558,6 +22591,7 @@ export namespace Prisma {
     maxParticipants?: IntFilter<"Meeting"> | number
     groupId?: StringNullableFilter<"Meeting"> | string | null
     groupName?: StringNullableFilter<"Meeting"> | string | null
+    replacedByMeetingId?: StringNullableFilter<"Meeting"> | string | null
   }
 
   export type OfferUpsertWithWhereUniqueWithoutUserOfferedInput = {
@@ -23878,6 +23912,7 @@ export namespace Prisma {
     minParticipants?: number
     maxParticipants?: number
     groupName?: string | null
+    replacedByMeetingId?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
@@ -23907,6 +23942,7 @@ export namespace Prisma {
     minParticipants?: number
     maxParticipants?: number
     groupName?: string | null
+    replacedByMeetingId?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
@@ -24223,6 +24259,7 @@ export namespace Prisma {
     minParticipants?: number
     maxParticipants?: number
     groupName?: string | null
+    replacedByMeetingId?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     offers?: OfferCreateNestedManyWithoutMeetingInput
@@ -24253,6 +24290,7 @@ export namespace Prisma {
     maxParticipants?: number
     groupId?: string | null
     groupName?: string | null
+    replacedByMeetingId?: string | null
     offers?: OfferUncheckedCreateNestedManyWithoutMeetingInput
   }
 
@@ -24316,6 +24354,7 @@ export namespace Prisma {
     minParticipants?: IntFieldUpdateOperationsInput | number
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
@@ -24346,6 +24385,7 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupId?: NullableStringFieldUpdateOperationsInput | string | null
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
   }
 
@@ -24399,6 +24439,7 @@ export namespace Prisma {
     minParticipants?: number
     maxParticipants?: number
     groupName?: string | null
+    replacedByMeetingId?: string | null
     userFrom: UserCreateNestedOneWithoutMeetingsCreatedInput
     acceptedUser?: UserCreateNestedOneWithoutMeetingsAcceptedInput
     group?: FriendGroupCreateNestedOneWithoutMeetingsInput
@@ -24429,6 +24470,7 @@ export namespace Prisma {
     maxParticipants?: number
     groupId?: string | null
     groupName?: string | null
+    replacedByMeetingId?: string | null
     broadcastMetadata?: BroadcastMetadataUncheckedCreateNestedOneWithoutMeetingInput
   }
 
@@ -24556,6 +24598,7 @@ export namespace Prisma {
     minParticipants?: IntFieldUpdateOperationsInput | number
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     group?: FriendGroupUpdateOneWithoutMeetingsNestedInput
@@ -24586,6 +24629,7 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupId?: NullableStringFieldUpdateOperationsInput | string | null
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
 
@@ -25015,6 +25059,7 @@ export namespace Prisma {
     maxParticipants?: number
     groupId?: string | null
     groupName?: string | null
+    replacedByMeetingId?: string | null
   }
 
   export type OfferCreateManyUserOfferedInput = {
@@ -25048,6 +25093,7 @@ export namespace Prisma {
     maxParticipants?: number
     groupId?: string | null
     groupName?: string | null
+    replacedByMeetingId?: string | null
   }
 
   export type UserSignalCreateManyUserInput = {
@@ -25228,6 +25274,7 @@ export namespace Prisma {
     minParticipants?: IntFieldUpdateOperationsInput | number
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
     group?: FriendGroupUpdateOneWithoutMeetingsNestedInput
@@ -25257,6 +25304,7 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupId?: NullableStringFieldUpdateOperationsInput | string | null
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
@@ -25284,6 +25332,7 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupId?: NullableStringFieldUpdateOperationsInput | string | null
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OfferUpdateWithoutUserOfferedInput = {
@@ -25333,6 +25382,7 @@ export namespace Prisma {
     minParticipants?: IntFieldUpdateOperationsInput | number
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
     group?: FriendGroupUpdateOneWithoutMeetingsNestedInput
@@ -25362,6 +25412,7 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupId?: NullableStringFieldUpdateOperationsInput | string | null
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
@@ -25389,6 +25440,7 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupId?: NullableStringFieldUpdateOperationsInput | string | null
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserSignalUpdateWithoutUserInput = {
@@ -25542,6 +25594,7 @@ export namespace Prisma {
     minParticipants?: number
     maxParticipants?: number
     groupName?: string | null
+    replacedByMeetingId?: string | null
   }
 
   export type GroupMemberUpdateWithoutGroupInput = {
@@ -25583,6 +25636,7 @@ export namespace Prisma {
     minParticipants?: IntFieldUpdateOperationsInput | number
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     userFrom?: UserUpdateOneRequiredWithoutMeetingsCreatedNestedInput
     acceptedUser?: UserUpdateOneWithoutMeetingsAcceptedNestedInput
     offers?: OfferUpdateManyWithoutMeetingNestedInput
@@ -25612,6 +25666,7 @@ export namespace Prisma {
     minParticipants?: IntFieldUpdateOperationsInput | number
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
     offers?: OfferUncheckedUpdateManyWithoutMeetingNestedInput
     broadcastMetadata?: BroadcastMetadataUncheckedUpdateOneWithoutMeetingNestedInput
   }
@@ -25639,6 +25694,7 @@ export namespace Prisma {
     minParticipants?: IntFieldUpdateOperationsInput | number
     maxParticipants?: IntFieldUpdateOperationsInput | number
     groupName?: NullableStringFieldUpdateOperationsInput | string | null
+    replacedByMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BroadcastMetadataCreateManyOfferClaimedInput = {

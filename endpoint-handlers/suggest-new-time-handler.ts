@@ -2,9 +2,8 @@ import type { Request, Response } from 'express';
 import { getMeetingById, enrichMeetingsWithAcceptedUsers } from '../backend/query/meeting-lookup.js';
 import { suggestNewTime } from '../backend/ai/suggest-new-time-service.js';
 import { createDraftMeeting } from '../backend/draft-meeting.js';
-import { createMeeting } from '../backend/update/meeting-update.js';
+import { createMeeting, cancelReplacedMeeting } from '../backend/update/meeting-update.js';
 import { processOffersForNewMeeting } from '../backend/process-meeting.js';
-import { transitionMeeting } from '../backend/transition-meeting.js';
 import {
     DRAFT_MEETING_STATE,
     SEARCHING_MEETING_STATE,
@@ -71,6 +70,23 @@ export const handleSuggestNewTime = async (req: Request, res: Response) => {
             ? DRAFT_MEETING_STATE
             : SEARCHING_MEETING_STATE;
 
+        const sharedMetadata = {
+            title: originalMeeting.title || 'Rescheduled meeting',
+            timeType: FUTURE_TIME_TYPE,
+            targetType: originalMeeting.targetType || 'FRIEND_SPECIFIC',
+            sourceType: SYSTEM_PATTERN_SOURCE_TYPE,
+            targetUserIds: originalMeeting.targetUserIds,
+            minParticipants: originalMeeting.minParticipants ?? 1,
+            maxParticipants: originalMeeting.maxParticipants ?? 1,
+            replacedByMeetingId: originalMeeting.id,
+            ...(originalMeeting.intentLabel && { intentLabel: originalMeeting.intentLabel }),
+            ...(suggestion.reason && { suggestionReason: suggestion.reason }),
+            ...(originalMeeting.photoUrl && { photoUrl: originalMeeting.photoUrl }),
+            ...(originalMeeting.textContent && { textContent: originalMeeting.textContent }),
+            ...(originalMeeting.groupId && { groupId: originalMeeting.groupId }),
+            ...(originalMeeting.groupName && { groupName: originalMeeting.groupName }),
+        };
+
         // 5. Create new meeting with properties from original
         let newMeeting;
         if (newMeetingState === DRAFT_MEETING_STATE) {
@@ -78,38 +94,22 @@ export const handleSuggestNewTime = async (req: Request, res: Response) => {
                 userFromId: originalMeeting.userFromId,
                 scheduledFor: newScheduledFor,
                 scheduledEnd: newScheduledEnd,
-                title: originalMeeting.title || 'Rescheduled meeting',
-                timeType: FUTURE_TIME_TYPE,
-                targetType: originalMeeting.targetType || 'FRIEND_SPECIFIC',
-                sourceType: SYSTEM_PATTERN_SOURCE_TYPE,
-                targetUserIds: originalMeeting.targetUserIds,
-                ...(originalMeeting.intentLabel && { intentLabel: originalMeeting.intentLabel }),
-                ...(suggestion.reason && { suggestionReason: suggestion.reason }),
-                minParticipants: originalMeeting.minParticipants ?? 1,
-                maxParticipants: originalMeeting.maxParticipants ?? 1,
+                ...sharedMetadata,
             });
         } else {
             newMeeting = await createMeeting({
                 userFromId: originalMeeting.userFromId,
                 scheduledFor: newScheduledFor,
                 scheduledEnd: newScheduledEnd,
-                title: originalMeeting.title || 'Rescheduled meeting',
                 meetingState: SEARCHING_MEETING_STATE,
-                timeType: FUTURE_TIME_TYPE,
-                targetType: originalMeeting.targetType || 'FRIEND_SPECIFIC',
-                sourceType: SYSTEM_PATTERN_SOURCE_TYPE,
-                targetUserIds: originalMeeting.targetUserIds,
-                ...(originalMeeting.intentLabel && { intentLabel: originalMeeting.intentLabel }),
-                ...(suggestion.reason && { suggestionReason: suggestion.reason }),
-                minParticipants: originalMeeting.minParticipants ?? 1,
-                maxParticipants: originalMeeting.maxParticipants ?? 1,
+                ...sharedMetadata,
             });
 
             // Process offers for SEARCHING meetings
             await processOffersForNewMeeting(newMeeting);
         }
 
-        // 6. Transition old meeting to terminal state if not already terminal
+        // 6. Cancel old meeting now that new one is linked via replacedByMeetingId
         let oldMeetingTransition = null;
         if (!TERMINAL_STATES.includes(oldState)) {
             const toState = oldState === DRAFT_MEETING_STATE
@@ -117,16 +117,11 @@ export const handleSuggestNewTime = async (req: Request, res: Response) => {
                 : CANCELED_MEETING_STATE;
 
             try {
-                await transitionMeeting({
-                    meetingId: originalMeeting.id,
-                    toState,
-                    actorId: userId,
-                });
+                await cancelReplacedMeeting({ meetingId: originalMeeting.id });
                 oldMeetingTransition = { from: oldState, to: toState };
             } catch (transitionError) {
-                console.error('Failed to transition old meeting:', transitionError);
-                // Continue - the new meeting was already created successfully
-                oldMeetingTransition = { from: oldState, to: toState, error: 'transition failed' };
+                console.error('Failed to cancel old meeting:', transitionError);
+                oldMeetingTransition = { from: oldState, to: toState, error: 'cancellation failed' };
             }
         }
 
