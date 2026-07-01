@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { createMeeting } from '../backend/update/meeting-update.js';
 import { addHour, determineTargetType } from '../backend/utils.js';
+import { resolveGroupForMeeting } from '../backend/group.js';
 import { processOffersForNewMeeting } from '../backend/process-meeting.js';
 import { setOffersExpired } from '../backend/offer.js';
 import { getCreatedMeetings } from '../backend/query/meeting-lookup.js';
@@ -20,7 +21,7 @@ import { shouldShowMeeting } from '../backend/meeting-staleness.js';
 import { eventBus, EVENT_TYPES } from '../backend/events/index.js';
 
 export const handleBroadcastNow = async (req: Request, res: Response) => {
-    const { userId, targetUserIds, intentLabel } = req.body;
+    const { userId, targetUserIds, intentLabel, groupId } = req.body;
     console.log("broadcast now --", { userId });
 
     if (!userId) {
@@ -43,19 +44,27 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
         if (activeBroadcast) {
             // do not make a new broadcast and use the existing one.
             const offers = await getMeetingOffers({meetingId: activeBroadcast.id});
-            const expiredOffers = await setOffersExpired(offers);
+            await setOffersExpired(offers);
         }
 
         const scheduledFor = new Date();
         const scheduledEnd = addHour(scheduledFor);
 
-        // Determine targetType based on targetUserIds
-        const targetType = determineTargetType(targetUserIds);
+        let resolvedTargetUserIds: string[] = targetUserIds || [];
+        let resolvedGroupName: string | undefined;
+        let resolvedTargetType = determineTargetType(resolvedTargetUserIds);
+
+        if (groupId) {
+            const resolved = await resolveGroupForMeeting({ groupId, requesterId: userId });
+            resolvedTargetUserIds = resolved.memberIds;
+            resolvedGroupName = resolved.groupName;
+            resolvedTargetType = 'GROUP';
+        }
 
         console.log('[METRICS] api.broadcast_now', {
             userId,
-            targetType,
-            targetUserCount: targetUserIds?.length || 'all'
+            targetType: resolvedTargetType,
+            targetUserCount: resolvedTargetUserIds.length || 'all'
         });
 
         const meeting = await createMeeting({
@@ -66,12 +75,14 @@ export const handleBroadcastNow = async (req: Request, res: Response) => {
             meetingState: SEARCHING_MEETING_STATE,
             meetingType: 'BROADCAST', // Keep for backwards compatibility
             timeType: IMMEDIATE_TIME_TYPE,
-            targetType,
+            targetType: resolvedTargetType,
             sourceType: USER_INTENT_SOURCE_TYPE,
-            targetUserIds: targetUserIds || [],
+            targetUserIds: resolvedTargetUserIds,
             minParticipants: 1,
             maxParticipants: 1,
             intentLabel: intentLabel || null,
+            ...(groupId && { groupId }),
+            ...(resolvedGroupName && { groupName: resolvedGroupName }),
         });
 
         // Validate meeting was created successfully before creating offers

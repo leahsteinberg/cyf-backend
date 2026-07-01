@@ -1,15 +1,13 @@
 import { createMeeting } from './update/meeting-update.js';
+import type { CreateMeetingParams } from './update/meeting-update.js';
 import { processOffersForNewMeeting } from './process-meeting.js';
-import { setIsBroadcasting } from './update/user-update.js';
 import type { Meeting } from '../types.js';
 import {
     FUTURE_TIME_TYPE,
     OPEN_TARGET_TYPE,
     SEARCHING_MEETING_STATE,
     SYSTEM_REAL_TIME_SOURCE_TYPE,
-    isOpenBroadcast
 } from '../types.js';
-import type { CreateDraftMeetingParams } from './draft-meeting.js';
 
 /**
  * Respawns a cancelled meeting by creating a new meeting in SEARCHING state.
@@ -49,8 +47,12 @@ export const respawnMeeting = async (cancelledMeeting: Meeting, suppressNotifica
         sourceType: SYSTEM_REAL_TIME_SOURCE_TYPE,
         minParticipants: cancelledMeeting.minParticipants ?? 1,
         maxParticipants: cancelledMeeting.maxParticipants ?? 1,
-        ...(cancelledMeeting.intentLabel && {intentLabel: cancelledMeeting.intentLabel}),
-    } as CreateDraftMeetingParams);
+        ...(cancelledMeeting.intentLabel && { intentLabel: cancelledMeeting.intentLabel }),
+        ...(cancelledMeeting.groupId && { groupId: cancelledMeeting.groupId }),
+        ...(cancelledMeeting.groupName && { groupName: cancelledMeeting.groupName }),
+        ...(cancelledMeeting.photoUrl && { photoUrl: cancelledMeeting.photoUrl }),
+        ...(cancelledMeeting.textContent && { textContent: cancelledMeeting.textContent }),
+    } as CreateMeetingParams);
 
     // Process offers using unified logic, excluding users who already interacted with original
     await processOffersForNewMeeting(respawnedMeeting, suppressNotificationUserIds);

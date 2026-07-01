@@ -12,7 +12,7 @@ import {
 } from "../../types.js";
 import { prisma } from "../auth.js";
 
-type CreateMeetingParams = {
+export type CreateMeetingParams = {
     userFromId: string;
     scheduledFor: Date;
     scheduledEnd: Date;
