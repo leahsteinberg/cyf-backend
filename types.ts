@@ -7,7 +7,7 @@ export type BroadcastSubState = "PENDING_CLAIMED" | "UNCLAIMED" | "CLAIMED";
 export type TimeType = "IMMEDIATE" | "FUTURE" | "UNKNOWN";
 export type TargetType = "OPEN" | "FRIEND_SPECIFIC" | "GROUP";
 export type SourceType = "USER_INTENT" | "SYSTEM_PATTERN" | "SYSTEM_REAL_TIME";
-export type SignalType = "WALK_PATTERN" | "CALL_INTENT" | "TIME_OF_DAY_PREFERENCE" | "WORK_HOURS";
+export type SignalType = "WALK_PATTERN" | "CALL_INTENT" | "TIME_OF_DAY_PREFERENCE" | "WORK_HOURS" | "SOCIAL_BATTERY";
 
 // HELPER TYPE 
 export type MeetingActorRole = "INITIATOR" | "ACCEPTOR" | "SPECIFIC_TARGET" | "OPEN_TARGET" | "SYSTEM";
@@ -59,6 +59,7 @@ export const WALK_PATTERN_SIGNAL_TYPE: SignalType = "WALK_PATTERN" as const;
 export const CALL_INTENT_SIGNAL_TYPE: SignalType = "CALL_INTENT" as const;
 export const TIME_OF_DAY_PREFERENCE_SIGNAL_TYPE: SignalType = "TIME_OF_DAY_PREFERENCE" as const;
 export const WORK_HOURS_SIGNAL_TYPE: SignalType = "WORK_HOURS" as const;
+export const SOCIAL_BATTERY_SIGNAL_TYPE: SignalType = "SOCIAL_BATTERY" as const;
 
 export type DomainEvent =
   | { type: 'MEETING_SUGGESTED'; meetingId: string }
@@ -155,14 +156,13 @@ type CallIntentPayload = {
     targetUserIds: string[];
 };
 
-// TODO: Define the structure for time of day preferences
-// Should include preferred times for calls (e.g., morning, afternoon, evening)
-// Possible fields: preferredTimeRanges, dayOfWeek, etc.
+// Weekly grid of preferred call time slots.
+// day: 0=Monday … 6=Sunday
+// band: index into six 3-hour blocks covering 6am–midnight: [6-9, 9-12, 12-15, 15-18, 18-21, 21-24]
+// Only "on" cells appear in slots (sparse). Empty array = nothing selected yet.
 type TimeOfDayPreferencePayload = {
-    // Example structure:
-    // preferredStartHour?: number; // 0-23
-    // preferredEndHour?: number;   // 0-23
-    // dayOfWeek?: string;          // "MONDAY", "TUESDAY", etc.
+    slots: { day: number; band: number }[];
+    timezone?: string;
 };
 
 // TODO: Define the structure for work hours when user cannot have calls
