@@ -40,6 +40,22 @@ export function buildWorkHoursContext(signals: UserSignal<SignalType>[]) {
         }));
 }
 
+// Returns the active SOCIAL_BATTERY signal (endsAt > now), or null if expired/absent.
+// This is the reset mechanism: once endsAt passes, the signal is ignored.
+export function buildSocialBatteryContext(signals: UserSignal<SignalType>[]): {
+    level: number;
+    endsAt: Date;
+} | null {
+    const now = new Date();
+    const active = signals
+        .filter(s => s.type === 'SOCIAL_BATTERY' && s.endsAt && new Date(s.endsAt) > now)
+        .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime())[0];
+
+    if (!active) return null;
+    const payload = active.payload as unknown as { level: number };
+    return { level: payload.level, endsAt: new Date(active.endsAt!) };
+}
+
 export function buildRecentMeetingsContext(
     createdMeetings: Meeting[],
     acceptedMeetings: Meeting[],

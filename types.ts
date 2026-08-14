@@ -175,11 +175,18 @@ type WorkHoursPayload = {
     // daysOfWeek?: string[]; // ["MONDAY", "TUESDAY", ...]
 };
 
+// How social the user is feeling right now. Expires at endsAt (the "reset" mechanism).
+// level: 1 = totally drained, 5 = fully charged.
+type SocialBatteryPayload = {
+    level: number; // 1–5
+};
+
 export type SignalPayloadMap = {
     WALK_PATTERN: WalkPatternPayload;
     CALL_INTENT: CallIntentPayload;
     TIME_OF_DAY_PREFERENCE: TimeOfDayPreferencePayload;
     WORK_HOURS: WorkHoursPayload;
+    SOCIAL_BATTERY: SocialBatteryPayload;
 }
 
 export interface UserSignal<T extends SignalType> extends BaseEntity {

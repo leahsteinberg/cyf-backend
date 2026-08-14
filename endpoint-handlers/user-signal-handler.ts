@@ -28,7 +28,7 @@ export const handleGetUserSignals = async (req: Request, res: Response) => {
 };
 
 export const handleAddUserSignal = async (req: Request, res: Response) => {
-    const { userId, payload, type } = req.body;
+    const { userId, payload, type, startsAt, endsAt } = req.body;
     console.log("Add user signal from ",userId, type);
 
     try {
@@ -69,7 +69,13 @@ export const handleAddUserSignal = async (req: Request, res: Response) => {
             }
         }
 
-        const signal = await addSignalForUser({userId, signalType: type, payload});
+        const signal = await addSignalForUser({
+            userId,
+            signalType: type,
+            payload,
+            ...(startsAt && { startsAt: new Date(startsAt) }),
+            ...(endsAt && { endsAt: new Date(endsAt) }),
+        });
 
         // Emit event for CALL_INTENT to notify target user
         if (type === CALL_INTENT_SIGNAL_TYPE && payload?.targetUserId && signal[0]) {

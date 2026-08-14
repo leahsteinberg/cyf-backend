@@ -53,6 +53,11 @@ export function formatContextForPrompt(context: Awaited<ReturnType<typeof buildS
   const now = toLocalISOString(new Date(), timezone);
 
   const signalSections: string[] = [];
+  if (context.signals.socialBattery) {
+    const { level, endsAt } = context.signals.socialBattery;
+    const label = level >= 4 ? 'high' : level >= 2 ? 'medium' : 'low';
+    signalSections.push(`Social battery: ${label} (${level}/5), resets at ${toLocalISOString(endsAt, timezone)}`);
+  }
   if (context.signals.callIntents.length > 0) {
     signalSections.push(`Call intents (who they want to call):\n${JSON.stringify(context.signals.callIntents, null, 2)}`);
   }

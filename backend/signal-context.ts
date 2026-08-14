@@ -8,6 +8,7 @@ import {
     buildWalkPatternContext,
     buildTimeOfDayPreferenceContext,
     buildWorkHoursContext,
+    buildSocialBatteryContext,
     buildRecentMeetingsContext
 } from "./context-helper.js";
 
@@ -50,7 +51,8 @@ export async function buildSuggestionContext(userId: string) {
             callIntents: buildCallIntentContext(signals),
             walkPatterns: buildWalkPatternContext(signals),
             timeOfDayPreferences: buildTimeOfDayPreferenceContext(signals),
-            workHours: buildWorkHoursContext(signals)
+            workHours: buildWorkHoursContext(signals),
+            socialBattery: buildSocialBatteryContext(signals),
         },
         friends: enrichedFriends,
         recentMeetings: buildRecentMeetingsContext(createdMeetings, acceptedMeetings)
